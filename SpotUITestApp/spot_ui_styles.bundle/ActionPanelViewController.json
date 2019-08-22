@@ -1,0 +1,7 @@
+{
+"action_panel_view_controller":{"background-color":"$mask_bg_color"},
+"action_panel_view_controller.panel":{"background-color":"$bg_color","corner-radius":10,"mask-to-bounds":true,"padding":10},
+"action_panel_view_controller.title_view":{"text-align":"center","font":{"size":20,"weight":"bold"},"padding":16,"background-color":"#00000000"},
+"action_panel_view_controller.cancel_button":{"color":"$2nd_fg_text_color","padding":12,
+	"background-image":{"solid-color":"$bg_color"},"corner-radius":10,"mask-to-bounds":true}
+}

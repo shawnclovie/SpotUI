@@ -1,0 +1,11 @@
+{
+"alert_controller":{"background-color":"$mask_bg_color"},
+"alert_controller.panel_view":{"background-color":"$bg_color","corner-radius":20,"mask-to-bounds":true},
+"alert_controller.title_view":{"padding":{"left":10,"right":10,"top":20,"bottom":20}},
+"alert_controller.title":{"font":{"size":20,"weight":"bold"},"text-align":"center"},
+"alert_controller.message":{"font":{"size":14},"text-align":"center","padding":{"left":8,"right":8}},
+"alert_controller.button":{"padding":{"left":10,"right":10,"top":4,"bottom":4},"link-break-mode":"word-wrapping"},
+"alert_controller.button.default":{"color":{"normal":"$tint","disabled":"$2nd_fg_text_color"},"font":{"size":18}},
+"alert_controller.button.cancel":{"color":"$tint","font":{"size":18,"weight":"medium"}},
+"alert_controller.button.destructive":{"font":{"color":"#D0021B","size":18,"weight":"medium"}},
+}

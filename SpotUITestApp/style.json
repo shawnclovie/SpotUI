@@ -1,0 +1,33 @@
+{
+"bar-item": {"tint-color": "#ff00ff"},
+"bar": {"bar-tint-color": "#ffff00"},
+"bg": {"background-color": "$bg_color"},
+"color": {"color": "$text_color"},
+"button": {
+	"color": {"normal": "#004000", "highlighted": "#ff0000"},
+	"background-image":{
+		"normal":{"name":"images/action_color_picker.pdf","size":[300,300]},
+		"highlighted":{"solid-color":"$text_color"}
+	}
+},
+"text":{"color":"$tint"},
+"nil_color":{"color":{"highlighted":"#00ff00"}},
+"shadow": {
+	"shadow": {"color": "$tint", "offset": [10, 10], "radius": "$radius"},
+	"alpha": 0.7
+},
+"border": {"border": {"color": "$tint", "width": 5}},
+"font": {
+	"font": {"size": 12,"weight":"light"},
+	"text-align": "justify",
+	"padding": {"top": 2, "left": 10},
+	"link-break-mode":"char-wrapping",
+	"number-of-lines": 0,
+	"corner-radius":10,"mask-to-bounds":true
+},
+"font~pad":{"font":{"size":14}},
+"image": {
+	"content-mode":"scale-aspect-fit",
+	"image":{"placeholder":"images/186_52c0eca125447.jpg","_url":"http://cdn.cocimg.com/assets/images/logo.png"},
+	"border":{"color":"#ffffff","width":2}}
+}
