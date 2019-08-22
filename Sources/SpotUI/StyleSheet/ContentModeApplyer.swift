@@ -10,8 +10,8 @@
 import UIKit
 import Spot
 
-struct ContentModeApplyer: StyleApplyer {
-	static func parseContentMode(_ value: String) -> UIView.ContentMode? {
+public struct ContentModeApplyer: StyleApplyer {
+	public static func parseContentMode(_ value: String) -> UIView.ContentMode? {
 		switch value {
 		case "center":				return .center
 		case "top":					return .top
@@ -33,7 +33,7 @@ struct ContentModeApplyer: StyleApplyer {
 	
 	var value: UIView.ContentMode
 	
-	init(with value: Any, predefined: StyleValueSet) {
+	public init(with value: Any, predefined: StyleValueSet) {
 		if let value = predefined.value(for: value) as? String,
 			let mode = Self.parseContentMode(value) {
 			self.value = mode
@@ -46,7 +46,7 @@ struct ContentModeApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	public func apply(to: StyleApplyable, with trait: UITraitCollection) {
 		switch to {
 		case let view as UIButton:
 			view.imageView?.contentMode = value
