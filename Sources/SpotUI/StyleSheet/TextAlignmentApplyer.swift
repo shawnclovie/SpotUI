@@ -36,7 +36,21 @@ struct TextAlignmentApplyer: StyleApplyer {
 		case let view as UITextField:
 			view.textAlignment = value
 		case let view as UIButton:
-			view.titleLabel?.textAlignment = value
+			let align: UIControl.ContentHorizontalAlignment
+			switch value {
+			case .right:		align = .right
+			case .center:		align = .center
+			case .justified:	align = .fill
+			case .natural:
+				if #available(iOS 11.0, *) {
+					align = .leading
+				} else {
+					fallthrough
+				}
+			case .left:			fallthrough
+			@unknown default:	align = .left
+			}
+			view.contentHorizontalAlignment = align
 		default:break
 		}
 	}
