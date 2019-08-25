@@ -13,6 +13,7 @@ import SpotCache
 extension Style {
 	
 	/// UIView.isHidden | CALayer.isHidden
+	@discardableResult
 	public func hidden(_ v: Bool) -> Self {
 		set(BoolApplyer<HiddenApplying>(v))
 	}
