@@ -11,16 +11,28 @@ import UIKit
 import SpotCache
 
 extension Style {
+	
+	/// UIView.isHidden | CALayer.isHidden
+	public func hidden(_ v: Bool) -> Self {
+		set(BoolApplyer<HiddenApplying>(v))
+	}
+	
 	/// UIView.layer.masksToBounds | CALayer.masksToBounds
 	@discardableResult
 	public func maskToBounds(_ v: Bool) -> Self {
-		set(MaskToBoundsApplyer(v))
+		set(BoolApplyer<MaskToBoundsApplying>(v))
+	}
+	
+	/// UISegmentedControl.isMomentary
+	@discardableResult
+	public func momentary(_ v: Bool) -> Self {
+		set(BoolApplyer<MomentaryApplying>(v))
 	}
 	
 	/// UIView.isUserInteractionEnabled
 	@discardableResult
 	public func userInteractionEnabled(_ v: Bool) -> Self {
-		set(UserInteractionEnabledApplyer(v))
+		set(BoolApplyer<UserInteractionEnabledApplying>(v))
 	}
 	
 	/// UIButton.imageView?.contentMode |
@@ -67,13 +79,13 @@ extension Style {
 	/// UIView.backgroundColor | CALayer.backgroundColor
 	@discardableResult
 	public func backgroundColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
-		set(BackgroundColorApplyer(fn))
+		set(ColorApplyer<BackgroundColorApplying>(fn))
 	}
 	
 	/// UILabel.textColor | UITextField.textColor | UITextView.textColor
 	@discardableResult
 	public func textColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
-		set(TextColorApplyer(fn))
+		set(ColorApplyer<TextColorApplying>(fn))
 	}
 	
 	/// UIButton.setTitleColor
@@ -86,7 +98,7 @@ extension Style {
 	/// UIView.tintColor | UIBarButtonItem.tintColor
 	@discardableResult
 	public func tintColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
-		set(TintColorApplyer(fn))
+		set(ColorApplyer<TintColorApplying>(fn))
 	}
 	
 	/// UIToolbar.barTintColor |
@@ -95,19 +107,19 @@ extension Style {
 	/// UINavigationBar.barTintColor
 	@discardableResult
 	public func barTintColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
-		set(BarTintColorApplyer(fn))
+		set(ColorApplyer<BarTintColorApplying>(fn))
 	}
 	
 	/// CAShapeLayer.fillColor
 	@discardableResult
-	public func fillColor(_ fn: @escaping (UITraitCollection)->CGColor?) -> Self {
-		set(FillColorApplyer(fn))
+	public func fillColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+		set(ColorApplyer<FillColorApplying>(fn))
 	}
 	
 	/// CAShapeLayer.strokeColor
 	@discardableResult
-	public func strokeColor(_ fn: @escaping (UITraitCollection)->CGColor?) -> Self {
-		set(StrokeColorApplyer(fn))
+	public func strokeColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+		set(ColorApplyer<StrokeColorApplying>(fn))
 	}
 	
 	/// CAShapeLayer.lineDashPattern
@@ -125,7 +137,7 @@ extension Style {
 	/// UIButton.setBackgroundImage | UISearchBar.backgroundImage
 	@discardableResult
 	public func backgroundImage(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
-		set(BackgroundImageApplyer(fn))
+		set(StatefulImageApplyer<BackgroundImageApplying>(fn))
 	}
 	
 	/// CALayer.contents |
@@ -136,7 +148,7 @@ extension Style {
 	/// UIBarItem.image
 	@discardableResult
 	public func image(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
-		set(ImageApplyer(fn))
+		set(StatefulImageApplyer<ImageApplying>(fn))
 	}
 	
 	/// setMinimumTrackImage and setMaximumTrackImage of UISlider
@@ -148,13 +160,13 @@ extension Style {
 	/// UIView.alpha | CALayer.opacity
 	@discardableResult
 	public func alpha(_ v: CGFloat) -> Self {
-		set(AlphaApplyer(v))
+		set(NumberApplyer<AlphaApplying>(v))
 	}
 	
 	/// UIView.layer.cornerRadius | CALayer.cornerRadius
 	@discardableResult
 	public func cornerRadius(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
-		set(CornerRadiusApplyer(fn))
+		set(TraitNumberApplyer<CornerRadiusApplying>(fn))
 	}
 	
 	/// UILabel.numberOfLines |
@@ -162,27 +174,27 @@ extension Style {
 	/// UIButton.titleLabel?.numberOfLines
 	@discardableResult
 	public func numberOfLines(_ v: Int) -> Self {
-		set(NumberOfLinesApplyer(v))
+		set(NumberApplyer<NumberOfLinesApplying>(CGFloat(v)))
 	}
 	
 	/// UITextView.textContainer.lineFragmentPadding |
 	/// UICollectionView.UICollectionViewFlowLayout.minimumLineSpacing
 	@discardableResult
 	public func lineSpacing(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
-		set(LineSpacingApplyer(fn))
+		set(TraitNumberApplyer<LineSpacingApplying>(fn))
 	}
 	
 	/// CAShapeLayer.lineWIdth
 	@discardableResult
 	public func lineWidth(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
-		set(LineWidthApplyer(fn))
+		set(TraitNumberApplyer<LineWidthApplying>(fn))
 	}
 	
 	/// UICollectionView.UICollectionViewFlowLayout.minimumInteritemSpacing |
 	/// UIStackView.spacing
 	@discardableResult
 	public func spacing(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
-		set(SpacingApplyer(fn))
+		set(TraitNumberApplyer<SpacingApplying>(fn))
 	}
 	
 	/// UIView.layer.shadow | CALayer.shadow
@@ -215,8 +227,10 @@ extension Style {
 
 extension Style {
 	static var applyerTypes: [String: StyleApplyer.Type] = [
-		"mask-to-bounds": MaskToBoundsApplyer.self,
-		"user-interaction-enabled": UserInteractionEnabledApplyer.self,
+		"hidden": BoolApplyer<HiddenApplying>.self,
+		"mask-to-bounds": BoolApplyer<MaskToBoundsApplying>.self,
+		"momentary": BoolApplyer<MomentaryApplying>.self,
+		"user-interaction-enabled": BoolApplyer<UserInteractionEnabledApplying>.self,
 		
 		"content-mode": ContentModeApplyer.self,
 		
@@ -230,28 +244,28 @@ extension Style {
 		
 		"border": BorderApplyer.self,
 		
-		"color": TextColorApplyer.self,
+		"background-color": ColorApplyer<BackgroundColorApplying>.self,
+		"color": ColorApplyer<TextColorApplying>.self,
+		"tint-color": ColorApplyer<TintColorApplying>.self,
+		"bar-tint-color": ColorApplyer<BarTintColorApplying>.self,
+		"fill-color": ColorApplyer<FillColorApplying>.self,
+		"stroke-color": ColorApplyer<StrokeColorApplying>.self,
 		"stateful-title-color": StatefulTitleColorApplyer.self,
-		"background-color": BackgroundColorApplyer.self,
-		"tint-color": TintColorApplyer.self,
-		"bar-tint-color": BarTintColorApplyer.self,
-		"fill-color": FillColorApplyer.self,
-		"stroke-color": StrokeColorApplyer.self,
 		
 		"line-dash-pattern": LineDashPatternApplyer.self,
 		
 		"font": FontApplyer.self,
 		
-		"background-image": BackgroundImageApplyer.self,
-		"image": ImageApplyer.self,
+		"background-image": StatefulImageApplyer<BackgroundImageApplying>.self,
+		"image": StatefulImageApplyer<ImageApplying>.self,
 		"slide-track-image": SlideTrackImageApplyer.self,
 		
-		"alpha": AlphaApplyer.self,
-		"corner-radius": CornerRadiusApplyer.self,
-		"line-spacing": LineSpacingApplyer.self,
-		"line-width": LineWidthApplyer.self,
-		"number-of-lines": NumberOfLinesApplyer.self,
-		"spacing": SpacingApplyer.self,
+		"alpha": NumberApplyer<AlphaApplying>.self,
+		"number-of-lines": NumberApplyer<NumberOfLinesApplying>.self,
+		"corner-radius": TraitNumberApplyer<CornerRadiusApplying>.self,
+		"line-spacing": TraitNumberApplyer<LineSpacingApplying>.self,
+		"line-width": TraitNumberApplyer<LineWidthApplying>.self,
+		"spacing": TraitNumberApplyer<SpacingApplying>.self,
 		
 		"shadow": ShadowApplyer.self,
 		

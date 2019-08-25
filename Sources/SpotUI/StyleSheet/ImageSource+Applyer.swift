@@ -87,7 +87,11 @@ private func parseStatefulImages(with value: Any, predefined: StyleValueSet) -> 
 	return sources
 }
 
-struct BackgroundImageApplyer: StyleApplyer {
+protocol StatefulImageApplying {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection)->[UIControl.State: StyleImageSource], with trait: UITraitCollection)
+}
+
+struct StatefulImageApplyer<Applying: StatefulImageApplying>: StyleApplyer {
 	var producer: (UITraitCollection)->[UIControl.State: StyleImageSource]
 	
 	init(with value: Any, predefined: StyleValueSet) {
@@ -100,6 +104,12 @@ struct BackgroundImageApplyer: StyleApplyer {
 	}
 	
 	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+		Applying.apply(to: to, producer: producer, with: trait)
+	}
+}
+
+struct BackgroundImageApplying: StatefulImageApplying {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
 		for (state, source) in producer(trait) {
 			source.loadImage { [weak to] (image) in
 				switch to {
@@ -114,19 +124,8 @@ struct BackgroundImageApplyer: StyleApplyer {
 	}
 }
 
-struct ImageApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->[UIControl.State: StyleImageSource]
-	
-	init(with value: Any, predefined: StyleValueSet) {
-		let images = parseStatefulImages(with: value, predefined: predefined)
-		producer = {_ in images}
-	}
-	
-	init(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) {
-		producer = fn
-	}
-	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+struct ImageApplying: StatefulImageApplying {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
 		for (state, source) in producer(trait) {
 			source.loadImage { [weak to] (image) in
 				switch to {
