@@ -26,6 +26,7 @@
 		9B54C5F42273F70E006B79BC /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B54C5F32273F70D006B79BC /* AlertController.swift */; };
 		9B6477EE21E9F2DA00E0E21F /* WeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */; };
 		9B6FE86320A2BF15000D6148 /* PDFRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */; };
+		9BA3271E2314229500BCC851 /* AnimatableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3271D2314229500BCC851 /* AnimatableImage.swift */; };
 		9BC1BCC7215DF32500DA4A79 /* UIAlertController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC1BCC6215DF32500DA4A79 /* UIAlertController+.swift */; };
 		9BC7EFD9206CAFB7000D2305 /* UITextView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */; };
 		9BC821D02133F5AB001E1F28 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
@@ -69,8 +70,7 @@
 		9BF48F76204AC31200A06458 /* DataSourceTableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */; };
 		9BF48F77204AC31200A06458 /* UIImageView+ImageScaledSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */; };
 		9BF48F78204AC31200A06458 /* DocumentInteractionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */; };
-		9BF48F7A204AC31200A06458 /* AnimateImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6F204AC31200A06458 /* AnimateImage.swift */; };
-		9BF48F7B204AC31200A06458 /* AnimateImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F70204AC31200A06458 /* AnimateImageView.swift */; };
+		9BF48F7B204AC31200A06458 /* AnimatableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F70204AC31200A06458 /* AnimatableImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +133,7 @@
 		9B54C5F32273F70D006B79BC /* AlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakProxy.swift; sourceTree = "<group>"; };
 		9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFRenderer.swift; sourceTree = "<group>"; };
+		9BA3271D2314229500BCC851 /* AnimatableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableImage.swift; sourceTree = "<group>"; };
 		9BC1BCC6215DF32500DA4A79 /* UIAlertController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+.swift"; sourceTree = "<group>"; };
 		9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+.swift"; sourceTree = "<group>"; };
 		9BC821CB2133F5AB001E1F28 /* SpotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,8 +180,7 @@
 		9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceTableViews.swift; sourceTree = "<group>"; };
 		9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ImageScaledSize.swift"; sourceTree = "<group>"; };
 		9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentInteractionPresenter.swift; sourceTree = "<group>"; };
-		9BF48F6F204AC31200A06458 /* AnimateImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimateImage.swift; sourceTree = "<group>"; };
-		9BF48F70204AC31200A06458 /* AnimateImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimateImageView.swift; sourceTree = "<group>"; };
+		9BF48F70204AC31200A06458 /* AnimatableImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,11 +274,11 @@
 		9BE454F02300425300B93CFB /* SpotUI */ = {
 			isa = PBXGroup;
 			children = (
-				9B1A1A48230DA42800D82D4A /* ActionSheetViewController.swift */,
 				9B07ED8B230D1A0D00F376B9 /* ActionPanelController.swift */,
+				9B1A1A48230DA42800D82D4A /* ActionSheetViewController.swift */,
 				9B54C5F32273F70D006B79BC /* AlertController.swift */,
-				9BF48F6F204AC31200A06458 /* AnimateImage.swift */,
-				9BF48F70204AC31200A06458 /* AnimateImageView.swift */,
+				9BA3271D2314229500BCC851 /* AnimatableImage.swift */,
+				9BF48F70204AC31200A06458 /* AnimatableImageView.swift */,
 				9BF48F67204AC31200A06458 /* DataSource */,
 				9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */,
 				9B07ED93230D5E4A00F376B9 /* Extensions */,
@@ -579,8 +579,9 @@
 				9BF48EBE204AC0BE00A06458 /* BorderApplyer.swift in Sources */,
 				9BF48ED3204AC0BE00A06458 /* RectangleProgressLayer.swift in Sources */,
 				9BF48EB7204AC0BE00A06458 /* CG+.swift in Sources */,
-				9BF48F7B204AC31200A06458 /* AnimateImageView.swift in Sources */,
+				9BF48F7B204AC31200A06458 /* AnimatableImageView.swift in Sources */,
 				9BF48EBD204AC0BE00A06458 /* ShadowApplyer.swift in Sources */,
+				9BA3271E2314229500BCC851 /* AnimatableImage.swift in Sources */,
 				9BF48EC0204AC0BE00A06458 /* ImageSource+Applyer.swift in Sources */,
 				9B07ED92230D426500F376B9 /* WindowTraitCollectionAdjuster.swift in Sources */,
 				9BF48EBF204AC0BE00A06458 /* TextAlignmentApplyer.swift in Sources */,
@@ -594,7 +595,6 @@
 				9BF48EC5204AC0BE00A06458 /* ContentModeApplyer.swift in Sources */,
 				9BE29367230C146B004D6120 /* UITraitCollection+.swift in Sources */,
 				9BC1BCC7215DF32500DA4A79 /* UIAlertController+.swift in Sources */,
-				9BF48F7A204AC31200A06458 /* AnimateImage.swift in Sources */,
 				9BF48F77204AC31200A06458 /* UIImageView+ImageScaledSize.swift in Sources */,
 				9BE29369230CD1C7004D6120 /* Style+Applyers.swift in Sources */,
 				9BF48EC3204AC0BE00A06458 /* FontApplyer.swift in Sources */,

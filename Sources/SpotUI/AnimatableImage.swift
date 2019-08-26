@@ -13,10 +13,11 @@ import ImageIO
 import Spot
 import SpotCache
 
-private let DefaultDelayTime: TimeInterval = 0.1
-private let MinimumDelayTime: TimeInterval = 0.02
-
-open class AnimateImage {
+/// An images container, it can present animation with any UIImageView
+open class AnimatableImage {
+	
+	private static let defaultDelayTime: TimeInterval = 0.1
+	private static let minimumDelayTime: TimeInterval = 0.02
 	
 	private enum State {
 		case idle, rendering
@@ -25,7 +26,7 @@ open class AnimateImage {
 	/// Create image with image source for 1st frame.
 	/// - parameter source: Image source
 	/// - returns: Created image
-	public static func posterImage(with source: CGImageSource) -> UIImage? {
+	public static func createImage(from source: CGImageSource) -> UIImage? {
 		for index in 0..<CGImageSourceGetCount(source) {
 			if let frame = CGImageSourceCreateImageAtIndex(source, index, nil) {
 				return .init(cgImage: frame)
@@ -34,11 +35,9 @@ open class AnimateImage {
 		return nil
 	}
 	
-	public static func posterImage(with source: Data.Source) -> UIImage? {
-		if let imageSource = AnimateImage.imageSource(of: source) {
-			return posterImage(with: imageSource)
-		}
-		return nil
+	public static func createImage(from source: Data.Source) -> UIImage? {
+		guard let src = imageSource(of: source) else {return nil}
+		return createImage(from: src)
 	}
 	
 	public static func gifImageSize(with source: CGImageSource) -> CGSize? {
@@ -58,19 +57,19 @@ open class AnimateImage {
 	}
 	
 	public static func gifImageSize(with source: Data.Source) -> CGSize? {
-		if let imageSource = AnimateImage.imageSource(of: source) {
+		if let imageSource = AnimatableImage.imageSource(of: source) {
 			return gifImageSize(with: imageSource)
 		}
 		return nil
 	}
 	
 	public let dataSource: Data.Source
-	public let loopCount: UInt
+	public let loopCount: Int
 	public let size: CGSize
 	public let delayTimes: [TimeInterval]
 	public let duration: TimeInterval
 	
-	open var maxFrameCacheSize: UInt = 0 {
+	open var maxFrameCacheSize: Int = 0 {
 		didSet {
 			if maxFrameCacheSize != oldValue {
 				purgeFrameCacheIfNeeded()
@@ -78,27 +77,24 @@ open class AnimateImage {
 		}
 	}
 	
-	private var requestedFrameIndex: UInt = 0
-	private var cachedFrames: [UInt: UIImage]
-	private var cachedFrameIndexes: Set<UInt>
-	private var requestedFrameIndexes: Set<UInt>
+	private var requestedFrameIndex: Int = 0
+	private var cachedFrames: [Int: UIImage]
+	private var cachedFrameIndexes: Set<Int>
+	private var requestedFrameIndexes: Set<Int>
 	
 	private lazy var renderQueue: DispatchQueue = {
-		DispatchQueue(label: "animate_image_fetch_queue")
+		.init(label: "animate_image_render")
 	}()
 	private let imageSource: CGImageSource
 	private var state = State.idle
 	
 	public init?(_ source: Data.Source) {
-		guard let imageSource = AnimateImage.imageSource(of: source) else {
-			return nil
-		}
+		guard let imageSource = AnimatableImage.imageSource(of: source) else {return nil}
+		guard let containerType = CGImageSourceGetType(imageSource),
+			UTTypeConformsTo(containerType, kUTTypeGIF)
+			else {return nil}
 		self.imageSource = imageSource
 		dataSource = source
-		guard let containerType = CGImageSourceGetType(imageSource),
-			UTTypeConformsTo(containerType, kUTTypeGIF) else {
-				return nil
-		}
 		let imageCount = CGImageSourceGetCount(imageSource)
 		var imageSize = CGSize.zero
 		var delayTimes = [TimeInterval]()
@@ -117,9 +113,9 @@ open class AnimateImage {
 				?? gifProps.spot.unsafeCastValue(forKey: kCGImagePropertyGIFDelayTime) as NSNumber? {
 				delay = TimeInterval(number.doubleValue)
 			} else {
-				delay = index == 0 ? DefaultDelayTime : delayTimes[index - 1]
+				delay = index == 0 ? Self.defaultDelayTime : delayTimes[index - 1]
 			}
-			delay = max(delay, MinimumDelayTime)
+			delay = max(delay, Self.minimumDelayTime)
 			delayTimes.append(delay)
 			duration += delay
 		}
@@ -135,42 +131,54 @@ open class AnimateImage {
 		
 		// Get LoopCount, 0 means repeating the animation indefinitely.
 		// {FileSize=?, "{GIF}"={HasGlobalColorMap=1/0, LoopCount=?}}
-		var loopCount: UInt = 0
 		if let props = CGImageSourceCopyProperties(imageSource, nil),
 			let gifProps = props.spot.unsafeCastValue(forKey: kCGImagePropertyGIFDictionary) as CFDictionary?,
 			let number = gifProps.spot.unsafeCastValue(forKey: kCGImagePropertyGIFLoopCount) as NSNumber? {
-			loopCount = number.uintValue
+			loopCount = number.intValue
+		} else {
+			loopCount = 0
 		}
-		self.loopCount = loopCount
 	}
 	
-	open var currentFrameCacheSize: UInt {
+	private var currentFrameCacheSize: Int {
 		(1...frameCount).contains(maxFrameCacheSize)
 			? maxFrameCacheSize : frameCount
 	}
 	
-	open var frameCount: UInt {
-		UInt(delayTimes.count)
+	@inlinable
+	public var frameCount: Int {
+		delayTimes.count
 	}
 	
-	open var allFrameIndexes: Set<UInt> {
-		var indexes = Set<UInt>()
-		for index in 0..<delayTimes.count {
-			indexes.insert(UInt(index))
+	/// Try to create image iterate from first
+	public func createImage() -> UIImage? {
+		Self.createImage(from: imageSource)
+	}
+	
+	public func createImage(at index: Int, scaleToFit fitSize: CGSize? = nil) -> UIImage? {
+		guard index >= 0 && index < frameCount else {return nil}
+		if let fitSize = fitSize, fitSize.width > 0 && fitSize.height > 0 {
+			let opt = [
+				kCGImageSourceThumbnailMaxPixelSize: max(fitSize.width, fitSize.height),
+				kCGImageSourceCreateThumbnailFromImageAlways: true,
+			] as CFDictionary
+			guard let cg = CGImageSourceCreateThumbnailAtIndex(imageSource, index, opt) else {return nil}
+			return .init(cgImage: cg)
 		}
-		return indexes
-	}
-	
-	open var posterImage: UIImage? {
-		AnimateImage.posterImage(with: imageSource)
-	}
-	
-	open func image(at index: UInt) -> UIImage? {
-		guard index < frameCount,
-			let image = CGImageSourceCreateImageAtIndex(imageSource, Int(index), nil) else {
-			return nil
-		}
+		guard let image = CGImageSourceCreateImageAtIndex(imageSource, index, nil) else {return nil}
 		return .init(cgImage: image)
+	}
+	
+	/// Create image with UIImage.animatedImage for simple usage
+	/// - Parameter fitSize: Created image would scaled to fit the size if given and each width and height > 0
+	public func createAnimatedImages(scaleToFit fitSize: CGSize? = nil) -> UIImage? {
+		var images: [UIImage] = []
+		images.reserveCapacity(delayTimes.count)
+		for i in 0..<delayTimes.count {
+			guard let image = createImage(at: i, scaleToFit: fitSize) else {continue}
+			images.append(image)
+		}
+		return UIImage.animatedImage(with: images, duration: delayTimes.reduce(0, +))
 	}
 	
 	open func cancelCaching() {
@@ -179,12 +187,12 @@ open class AnimateImage {
 		}
 	}
 	
-	open func lazilyCachedImage(at index: UInt) -> UIImage? {
+	public func lazilyCachedImage(at index: Int) -> UIImage? {
 		guard index < frameCount else {
 			return nil
 		}
 		requestedFrameIndex = index
-		if UInt(cachedFrameIndexes.count) < frameCount {
+		if cachedFrameIndexes.count < frameCount {
 			let addingIndexes = frameIndexesForCache
 				.subtracting(cachedFrameIndexes)
 				.subtracting(requestedFrameIndexes)
@@ -197,7 +205,7 @@ open class AnimateImage {
 		return image
 	}
 	
-	private func cacheFrames(withIndexes indexes: Set<UInt>) {
+	private func cacheFrames(withIndexes indexes: Set<Int>) {
 		state = .rendering
 		let ranges = [(requestedFrameIndex..<frameCount), (0..<requestedFrameIndex)]
 		requestedFrameIndexes.formUnion(indexes)
@@ -207,7 +215,7 @@ open class AnimateImage {
 					if self == nil || self?.state != .rendering {
 						break
 					}
-					guard let image = self?.renderFrame(at: index) else {
+					guard let image = self?.createImage(at: index) else {
 						continue
 					}
 					DispatchQueue.main.async {
@@ -218,22 +226,22 @@ open class AnimateImage {
 		}
 	}
 	
-	private func frameDidCache(_ image: UIImage, at index: UInt) {
+	private func frameDidCache(_ image: UIImage, at index: Int) {
 		cachedFrames[index] = image
 		cachedFrameIndexes.insert(index)
 		requestedFrameIndexes.remove(index)
 	}
 	
-	private var frameIndexesForCache: Set<UInt> {
+	private var frameIndexesForCache: Set<Int> {
 		let curCacheSize = currentFrameCacheSize
 		if curCacheSize == frameCount {
-			return allFrameIndexes
+			return .init(0..<delayTimes.count)
 		}
 		// Add indexes in two blocks -
 		// 1st, starting from the requested frame index, up to limit or the end.
 		// 2nd if needed, the remaining number of frames beginning at index 0.
 		let firstLen = min(curCacheSize, frameCount - requestedFrameIndex)
-		var indexes = Set<UInt>((requestedFrameIndex...(requestedFrameIndex + firstLen)))
+		var indexes = Set<Int>((requestedFrameIndex...(requestedFrameIndex + firstLen)))
 		if curCacheSize > firstLen {
 			for index in 0...(curCacheSize - firstLen) {
 				indexes.insert(index)
@@ -242,15 +250,8 @@ open class AnimateImage {
 		return indexes
 	}
 	
-	private func renderFrame(at index: UInt) -> UIImage? {
-		guard let image = CGImageSourceCreateImageAtIndex(imageSource, Int(index), nil) else {
-			return nil
-		}
-		return AnimateImage.renderImage(.init(cgImage: image))
-	}
-	
 	private func purgeFrameCacheIfNeeded() {
-		if UInt(cachedFrameIndexes.count) > currentFrameCacheSize {
+		if cachedFrameIndexes.count > currentFrameCacheSize {
 			let purgingIndexes = cachedFrameIndexes.subtracting(frameIndexesForCache)
 			purgeFrameCache(forIndexes: purgingIndexes)
 		}
@@ -261,7 +262,7 @@ open class AnimateImage {
 		purgeFrameCache(forIndexes: cachedFrameIndexes)
 	}
 	
-	private func purgeFrameCache(forIndexes indexes: Set<UInt>) {
+	private func purgeFrameCache(forIndexes indexes: Set<Int>) {
 		guard !indexes.isEmpty else {
 			return
 		}
@@ -269,27 +270,6 @@ open class AnimateImage {
 			cachedFrames.removeValue(forKey: index)
 		}
 		cachedFrameIndexes.subtract(indexes)
-	}
-	
-	private static func renderImage(_ image: UIImage) -> UIImage {
-		guard let cg = image.cgImage else {
-			return image
-		}
-		var alphaInfo = cg.alphaInfo
-		switch alphaInfo {
-		case .none, .alphaOnly:	alphaInfo = .noneSkipFirst
-		case .first:		alphaInfo = .premultipliedFirst
-		case .last:			alphaInfo = .premultipliedLast
-		default:break
-		}
-		var newImage = image
-		CGContext.spot(width: Int(image.size.width), height: Int(image.size.height), alpha: alphaInfo) { ctx in
-			ctx.draw(cg, in: CGRect(origin: .zero, size: image.size))
-			if let newCGImage = ctx.makeImage() {
-				newImage = .init(cgImage: newCGImage)
-			}
-		}
-		return newImage
 	}
 	
 	private static func imageSource(of source: Data.Source) -> CGImageSource? {
@@ -302,11 +282,11 @@ open class AnimateImage {
 	}
 }
 
-extension AnimateImage: DataConvertable {
-	public typealias ItemType = AnimateImage
+extension AnimatableImage: DataConvertable {
+	public typealias ItemType = AnimatableImage
 	
 	public static func convert(from source: Data.Source) -> ItemType? {
-		AnimateImage(source)
+		AnimatableImage(source)
 	}
 	
 	public func convertToData() -> Data? {

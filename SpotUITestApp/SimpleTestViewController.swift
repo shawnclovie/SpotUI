@@ -25,7 +25,7 @@ class SimpleTestViewController: UIViewController {
 	let testImage = UIImage(named: "images/186_52c0eca125447.jpg")!
 	
 	let deviceInfoText = UITextView()
-	let testImageView = AnimateImageView()
+	let testImageView = AnimatableImageView()
 	
 	let actionTableView = UITableView(frame: .zero, style: .plain)
 	
@@ -67,9 +67,14 @@ class SimpleTestViewController: UIViewController {
 		}),
 		("gif", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
-			let image = AnimateImage(.url(path))!
-			vc.testImageView.animateImage = image
+			let image = AnimatableImage(.url(path))!
+			vc.testImageView.animatableImage = image
 //			vc.testImageView.image = vc.testImageView.image?.spot.flipped(axisX: false, axisY: true)
+		}),
+		("animatedImage", { vc in
+			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
+			let image = AnimatableImage(.url(path))!
+			vc.testImageView.image = image.createAnimatedImages(scaleToFit: CGSize(width: 100, height: 100))
 		}),
 		("ProgressLayer with URLTask", { vc in
 			let qs = "abc=2&xyz=fff".spot.parsedQueryString

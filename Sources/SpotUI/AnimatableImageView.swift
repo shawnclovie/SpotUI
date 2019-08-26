@@ -17,14 +17,17 @@ public protocol Animatable: class {
 	func stopAnimating()
 }
 
-open class AnimateImageView: UIImageView, Animatable {
+/// A subclass of UIImageView
+///
+/// It can present simple image (single framed and animated image), or AnimatableImage (low memory cost).
+open class AnimatableImageView: UIImageView, Animatable {
 
-	open var animateImage: AnimateImage? {
+	open var animatableImage: AnimatableImage? {
 		didSet {
-			guard animateImage !== oldValue else {
+			guard animatableImage !== oldValue else {
 				return
 			}
-			if animateImage == nil {
+			if animatableImage == nil {
 				stopAnimating()
 			} else {
 				super.image = nil
@@ -32,11 +35,11 @@ open class AnimateImageView: UIImageView, Animatable {
 				invalidateIntrinsicContentSize()
 			}
 			accumulator = 0
-			currentFrame = animateImage?.posterImage
+			currentFrame = animatableImage?.createImage()
 			super.image = currentFrame
 			currentFrameIndex = 0
-			let count = animateImage?.loopCount ?? 0
-			loopCountdown = count == 0 ? UInt.max : count
+			let count = animatableImage?.loopCount ?? 0
+			loopCountdown = count == 0 ? .max : count
 			
 			updateShouldAnimate()
 			if shouldAnimate {
@@ -47,8 +50,8 @@ open class AnimateImageView: UIImageView, Animatable {
 	}
 	
 	private var currentFrame: UIImage?
-	private var currentFrameIndex: UInt = 0
-	private var loopCountdown: UInt = 0
+	private var currentFrameIndex: Int = 0
+	private var loopCountdown: Int = 0
 	private var accumulator: TimeInterval = 0
 	private var displayLink: CADisplayLink?
 	private var shouldAnimate = false
@@ -57,8 +60,6 @@ open class AnimateImageView: UIImageView, Animatable {
 	deinit {
 		displayLink?.invalidate()
 	}
-	
-	// MARK: UIView functions
 	
 	open override func didMoveToSuperview() {
 		super.didMoveToSuperview()
@@ -79,47 +80,38 @@ open class AnimateImageView: UIImageView, Animatable {
 		}
 	}
 	
-	// MARK: Auto Layout
-	
 	open override var intrinsicContentSize: CGSize {
-		animateImage == nil
-			? super.intrinsicContentSize : (image?.size ?? .zero)
+		animatableImage == nil
+			? super.intrinsicContentSize : (currentFrame?.size ?? .zero)
 	}
 	
-	// MARK: ImageView functions
-	
 	open override var image: UIImage? {
-		get {animateImage == nil ? super.image : currentFrame}
+		get {animatableImage == nil ? super.image : currentFrame}
 		set {
-			if newValue != nil {
-    			animateImage = nil
-			}
+			animatableImage = nil
 			super.image = newValue
 		}
 	}
 	
-	open func setImage(withFile url: URL) {
-		if let animateImage = AnimateImage(.url(url)) {
-			self.animateImage = animateImage
-		} else {
-			image = UIImage(contentsOfFile: url.path)
-		}
+	public var imageSize: CGSize {
+		animatableImage?.size ?? image?.size ?? .zero
 	}
 	
-	open func clearImage() {
-		animateImage = nil
-		image = nil
+	open func setImage(path: URL) {
+		if let image = AnimatableImage(.url(path)) {
+			animatableImage = image
+		} else {
+			image = UIImage(contentsOfFile: path.path)
+		}
 	}
 	
 	open override var isAnimating: Bool {
-		if animateImage == nil {
-			return super.isAnimating
-		}
-		return !(displayLink?.isPaused ?? true)
+		animatableImage == nil
+			? super.isAnimating : !(displayLink?.isPaused ?? true)
 	}
 	
 	open override func startAnimating() {
-		if animateImage == nil {
+		if animatableImage == nil {
 			super.startAnimating()
 			return
 		}
@@ -136,7 +128,7 @@ open class AnimateImageView: UIImageView, Animatable {
 	}
 	
 	open override func stopAnimating() {
-		if animateImage == nil {
+		if animatableImage == nil {
 			super.stopAnimating()
 		} else {
 			displayLink?.isPaused = true
@@ -146,22 +138,21 @@ open class AnimateImageView: UIImageView, Animatable {
 	open override var isHighlighted: Bool {
 		get {super.isHighlighted}
 		set {
-			if animateImage == nil {
+			if animatableImage == nil {
     			super.isHighlighted = newValue
 			}
 		}
 	}
 	
 	private func updateShouldAnimate() {
-		shouldAnimate = animateImage != nil && window != nil && superview != nil
+		shouldAnimate = animatableImage != nil && window != nil && superview != nil
 	}
 	
 	@objc private func displayRefreshed(_ link: CADisplayLink) {
 		guard shouldAnimate,
-			let animate = animateImage,
-			let image = animate.lazilyCachedImage(at: currentFrameIndex) else {
-				return
-		}
+			let animate = animatableImage,
+			let image = animate.lazilyCachedImage(at: currentFrameIndex)
+			else {return}
 		currentFrame = image
 		if needDisplayWhenImageBecomesAvailable {
 			layer.setNeedsDisplay()
@@ -187,14 +178,6 @@ open class AnimateImageView: UIImageView, Animatable {
 	
 	open override func display(_ layer: CALayer) {
 		layer.contents = image?.cgImage
-	}
-}
-
-extension Suffix where Base: AnimateImageView {
-	public var imageSize: CGSize {
-		base.animateImage?.size
-			?? base.image?.size
-			?? .zero
 	}
 }
 #endif
