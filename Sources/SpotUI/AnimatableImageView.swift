@@ -98,7 +98,7 @@ open class AnimatableImageView: UIImageView, Animatable {
 	}
 	
 	open func setImage(path: URL, scaleToFit: CGSize? = nil) {
-		guard let image = AnimatableImage(.url(path)) else {return}
+		guard let image = AnimatableImage(.path(path)) else {return}
 		if image.frameCount > 1 {
 			animatableImage = image
 		} else {

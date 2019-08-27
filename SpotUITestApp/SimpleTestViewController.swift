@@ -42,7 +42,7 @@ class SimpleTestViewController: UIViewController {
 	private var rotateIndex = -1
 	
 	private let actions: [(title: String, action: (SimpleTestViewController)->Void)] = [
-		("rotate image", {vc in
+		("image: rotate", {vc in
 			vc.rotateIndex += 1
 			if vc.rotateIndex >= rotateOrientations.count {
 				vc.rotateIndex = 0
@@ -53,7 +53,7 @@ class SimpleTestViewController: UIViewController {
 			let data = image.cgImage!.spot.encode(as: .jpeg(quality: 1), orientation: .up)!
 			vc.testImageView.image = UIImage(data: data, scale: 2)
 		}),
-		("resizingCGImage", {vc in
+		("image: resizing", {vc in
 			let seed: CGFloat = 100
 			let scale = CGFloat(arc4random() % UInt32(seed) + 1) / seed * 0.3
 			let cg = vc.testImage.cgImage!
@@ -64,7 +64,7 @@ class SimpleTestViewController: UIViewController {
 				print("resize failed")
 			}
 		}),
-		("pdf image", { vc in
+		("image: pdf", { vc in
 			let path = Bundle.main.url(forResource: "images/action_color_picker.pdf", withExtension: nil)!
 			let image = UIImage.spot_fromPDF(path, contentSize: vc.testImageView.bounds.size)
 			vc.testImageView.contentMode = .scaleAspectFit
@@ -72,14 +72,17 @@ class SimpleTestViewController: UIViewController {
 			vc.testImageView.layer.borderColor = UIColor.black.cgColor
 			vc.testImageView.layer.borderWidth = 2
 		}),
-		("gif", { vc in
+		("image: still", { vc in
+			let path = Bundle.main.url(forResource: "images/186_52c0eca125447.jpg", withExtension: nil)!
+			vc.testImageView.setImage(path: path)
+		}),
+		("image: gif", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
 			vc.testImageView.setImage(path: path)
-//			vc.testImageView.image = vc.testImageView.image?.spot.flipped(axisX: false, axisY: true)
 		}),
-		("animatedImage", { vc in
+		("image: animated", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
-			let image = AnimatableImage(.url(path))!
+			let image = AnimatableImage(.path(path))!
 			vc.testImageView.image = image.createAnimatedImages(scaleToFit: CGSize(width: 100, height: 100))
 		}),
 		("ProgressLayer with URLTask", { vc in

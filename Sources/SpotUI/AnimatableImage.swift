@@ -86,17 +86,16 @@ open class AnimatableImage {
 	/// Create the AnimatableImage with CGImageSource
 	/// - Parameter source: Data source, data in memory or path
 	public init?(_ source: Data.Source) {
-		guard let imageSource = AnimatableImage.imageSource(of: source) else {return nil}
+		guard let imageSource = Self.imageSource(of: source) else {return nil}
 		let imageCount = CGImageSourceGetCount(imageSource)
 		guard imageCount > 0 else {return nil}
 		var delayTimes = [TimeInterval]()
 		delayTimes.reserveCapacity(imageCount)
 		for index in 0..<imageCount {
-			guard let props = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil) as? [AnyHashable: Any],
-				let gifProps = props[kCGImagePropertyGIFDictionary as String] as? [AnyHashable: Any]
-				else {continue}
 			var delay: TimeInterval
-			if let number = gifProps[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber
+			if let props = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil) as? [AnyHashable: Any],
+				let gifProps = props[kCGImagePropertyGIFDictionary as String] as? [AnyHashable: Any],
+				let number = gifProps[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber
 				?? gifProps[kCGImagePropertyGIFDelayTime as String] as? NSNumber {
 				delay = TimeInterval(number.doubleValue)
 			} else {
@@ -104,9 +103,6 @@ open class AnimatableImage {
 			}
 			delay = max(delay, Self.minimumDelayTime)
 			delayTimes.append(delay)
-		}
-		if delayTimes.count == 0 {
-			return nil
 		}
 		self.delayTimes = delayTimes
 		self.imageSource = imageSource
@@ -260,8 +256,8 @@ open class AnimatableImage {
 	
 	private static func imageSource(of source: Data.Source) -> CGImageSource? {
 		switch source {
-		case .url(let url):
-			return CGImageSourceCreateWithURL(url as CFURL, nil)
+		case .path(let it):
+			return CGImageSourceCreateWithURL(it as CFURL, nil)
 		case .data(let data):
 			return CGImageSourceCreateWithData(data as CFData, nil)
 		}
