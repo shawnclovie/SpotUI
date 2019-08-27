@@ -67,8 +67,7 @@ class SimpleTestViewController: UIViewController {
 		}),
 		("gif", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
-			let image = AnimatableImage(.url(path))!
-			vc.testImageView.animatableImage = image
+			vc.testImageView.setImage(path: path)
 //			vc.testImageView.image = vc.testImageView.image?.spot.flipped(axisX: false, axisY: true)
 		}),
 		("animatedImage", { vc in

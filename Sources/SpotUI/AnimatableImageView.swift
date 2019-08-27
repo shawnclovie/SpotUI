@@ -27,7 +27,7 @@ open class AnimatableImageView: UIImageView, Animatable {
 			guard animatableImage !== oldValue else {
 				return
 			}
-			if animatableImage == nil {
+			if animatableImage == nil || super.image?.images != nil {
 				stopAnimating()
 			} else {
 				super.image = nil
@@ -97,11 +97,12 @@ open class AnimatableImageView: UIImageView, Animatable {
 		animatableImage?.size ?? image?.size ?? .zero
 	}
 	
-	open func setImage(path: URL) {
-		if let image = AnimatableImage(.url(path)) {
+	open func setImage(path: URL, scaleToFit: CGSize? = nil) {
+		guard let image = AnimatableImage(.url(path)) else {return}
+		if image.frameCount > 1 {
 			animatableImage = image
 		} else {
-			image = UIImage(contentsOfFile: path.path)
+			self.image = image.createImage(at: 0, scaleToFit: scaleToFit)
 		}
 	}
 	
