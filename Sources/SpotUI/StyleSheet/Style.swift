@@ -12,7 +12,7 @@ import Spot
 
 public final class Style {
 	
-	public var applyers: [String: StyleApplyer] = [:]
+	public private(set) var applyers: [String: StyleApplyer] = [:]
 	
 	public var loadedData: [String: Any]
 	
@@ -29,11 +29,18 @@ public final class Style {
 		}
 	}
 	
-	@inlinable
 	@discardableResult
 	public func set(_ op: StyleApplyer) -> Self {
 		applyers["\(type(of: op))"] = op
 		return self
+	}
+	
+	public func remove(_ op: StyleApplyer) {
+		applyers.removeValue(forKey: "\(type(of: op))")
+	}
+	
+	public func removeAllApplyers() {
+		applyers.removeAll()
 	}
 	
 	public func apply(to: StyleApplyable, with trait: UITraitCollection) {
@@ -48,6 +55,19 @@ public final class Style {
 			it.merge(to: &result, with: trait)
 		}
 		return result
+	}
+}
+
+extension Style: Hashable, Equatable {
+	
+	public static func ==(l: Style, r: Style) -> Bool {
+		l === r
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		for it in applyers {
+			it.key.hash(into: &hasher)
+		}
 	}
 }
 #endif

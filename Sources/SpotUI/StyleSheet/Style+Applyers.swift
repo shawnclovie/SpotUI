@@ -73,7 +73,7 @@ extension Style {
 	
 	/// UIView.layer.border | CALayer.border
 	@discardableResult
-	public func border(_ fn: @escaping (UITraitCollection)->(CGColor?, CGFloat)) -> Self {
+	public func border(_ fn: @escaping (UITraitCollection)->(UIColor?, CGFloat)) -> Self {
 		set(BorderApplyer(fn))
 	}
 	

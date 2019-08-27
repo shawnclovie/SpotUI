@@ -15,7 +15,8 @@ public struct StyleSheet {
 	
 	public static var shared = StyleSheet()
 	
-	private var styles: [String: Style] = [:]
+	public var namedStyles: [String: Style] = [:]
+	public var boundApplyables: [Style: StyleApplyable] = [:]
 
 	public init() {}
 	
@@ -29,7 +30,7 @@ public struct StyleSheet {
 	
 	public mutating func load(from data: [String: [String: Any]], predefined: StyleValueSet = .init([:])) {
 		for (name, data) in data {
-			styles[name] = Style(with: data, predefined: predefined)
+			namedStyles[name] = Style(with: data, predefined: predefined)
 		}
 	}
 	
@@ -51,7 +52,36 @@ public struct StyleSheet {
 	}
 	
 	public subscript(key: String) -> Style? {
-		styles[key]
+		get {namedStyles[key]}
+		set {
+			if let newValue = newValue {
+				namedStyles[key] = newValue
+			} else {
+				namedStyles.removeValue(forKey: key)
+			}
+		}
+	}
+	
+	public subscript(style: Style) -> StyleApplyable? {
+		get {boundApplyables[style]}
+		set {
+			if let newValue = newValue {
+				boundApplyables[style] = newValue
+			} else {
+				boundApplyables.removeValue(forKey: style)
+			}
+		}
+	}
+	
+	@inlinable
+	public mutating func bind(_ applyable: StyleApplyable, _ style: Style) {
+		boundApplyables[style] = applyable
+	}
+	
+	public func applyBounds(with trait: UITraitCollection) {
+		for it in boundApplyables {
+			it.key.apply(to: it.value, with: trait)
+		}
 	}
 	
 	/// Apply style to the applyable with names
@@ -60,11 +90,11 @@ public struct StyleSheet {
 	/// - Parameter trait: TraitCollection from UIView or UIViewController
 	public func apply(styles names: [String], to view: StyleApplyable, with trait: UITraitCollection) {
 		for name in names {
-			styles[name]?.apply(to: view, with: trait)
+			namedStyles[name]?.apply(to: view, with: trait)
 		}
 		if UIDevice.current.userInterfaceIdiom == .pad {
 			for name in names {
-				styles[name + "~pad"]?.apply(to: view, with: trait)
+				namedStyles[name + "~pad"]?.apply(to: view, with: trait)
 			}
 		}
 	}
@@ -75,7 +105,7 @@ public struct StyleSheet {
 	public func stringAttributes(styles names: [String], with trait: UITraitCollection) -> [NSAttributedString.Key : Any] {
 		var attrs: [NSAttributedString.Key : Any] = [:]
 		for name in names {
-			if let style = styles[name] {
+			if let style = namedStyles[name] {
 				for (key, value) in style.stringAttributes(with: trait) {
 					attrs[key] = value
 				}
@@ -83,7 +113,7 @@ public struct StyleSheet {
 		}
 		if UIDevice.current.userInterfaceIdiom == .pad {
 			for name in names {
-				if let style = styles[name + "~pad"] {
+				if let style = namedStyles[name + "~pad"] {
 					for (key, value) in style.stringAttributes(with: trait) {
 						attrs[key] = value
 					}

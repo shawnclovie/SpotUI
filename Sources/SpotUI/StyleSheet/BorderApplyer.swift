@@ -11,15 +11,15 @@ import UIKit
 import Spot
 
 struct BorderApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->(CGColor?, CGFloat)
+	var producer: (UITraitCollection)->(UIColor?, CGFloat)
 	
 	init(with value: Any, predefined: StyleValueSet) {
-		var color: CGColor?
+		var color: UIColor?
 		var width: CGFloat = 0
 		if let data = predefined.value(for: value) as? [AnyHashable: Any] {
 			if let vColor = predefined.value(for: data["color"]) as? String,
 				let dColor = DecimalColor(hexARGB: vColor) {
-				color = dColor.colorValue.cgColor
+				color = dColor.colorValue
 			} else {
 				color = nil
 			}
@@ -28,7 +28,7 @@ struct BorderApplyer: StyleApplyer {
 		producer = {_ in (color, width)}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->(CGColor?, CGFloat)) {
+	init(_ fn: @escaping (UITraitCollection)->(UIColor?, CGFloat)) {
 		producer = fn
 	}
 	
@@ -44,7 +44,7 @@ struct BorderApplyer: StyleApplyer {
 	
 	private func apply(to layer: CALayer, with trait: UITraitCollection) {
 		let (color, width) = producer(trait)
-		layer.borderColor = color
+		layer.borderColor = color?.cgColor
 		layer.borderWidth = width
 	}
 }

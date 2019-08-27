@@ -10,7 +10,6 @@
 		"highlighted":{"solid-color":"$text_color"}
 	}
 },
-"text":{"color":"$tint"},
 "nil_color":{"color":{"highlighted":"#00ff00"}},
 "shadow": {
 	"shadow": {"color": "$tint", "offset": [10, 10], "radius": "$radius"},

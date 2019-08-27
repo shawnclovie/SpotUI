@@ -20,6 +20,11 @@ let rotateOrientations: [UIImage.Orientation] = [.left, .right, .up, .down, .lef
 
 class SimpleTestViewController: UIViewController {
 	
+	struct StyleSet {
+		let view = Style()
+			.backgroundColor(StyleShared.backgroundColorProducer)
+	}
+	
 	private let logger = Logger(tag: "\(classForCoder())", for: .trace)
 	var index = 0
 	let testImage = UIImage(named: "images/186_52c0eca125447.jpg")!
@@ -31,6 +36,8 @@ class SimpleTestViewController: UIViewController {
 	
 	var internetObserver = NetworkObserver.withInternet!
 	var wifiObserver = NetworkObserver.withWiFi
+	
+	private var style = StyleSheet()
 	
 	private var rotateIndex = -1
 	
@@ -154,6 +161,13 @@ class SimpleTestViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		style.bind(view, Style()
+			.backgroundColor(StyleShared.backgroundColorProducer))
+		style[Style()
+			.textColor(StyleShared.foregroundTextColorProducer)] = deviceInfoText
+		style["image"] = Style().border{($0.spot.userInterfaceStyle == .dark ? .white : .black, 2)}
+
 		let device = UIDevice.current
 		let text = "device\n" +
 			"VendorUDID: \(device.identifierForVendor?.uuidString ?? "")\n" +
@@ -165,9 +179,10 @@ class SimpleTestViewController: UIViewController {
 		print("\(file): ext=\(file.spot.pathExtension!), last=\(file.spot.lastPathComponent!)")
 		print("file.md5hashCode=", file.spot.md5HashCode)
 		deviceInfoText.text = text
-		deviceInfoText.spot.apply(styles: ["text", "bg", "shadow", "border", "font"], with: traitCollection)
+		deviceInfoText.spot.apply(styles: ["bg", "shadow", "border", "font"], with: traitCollection)
 		deviceInfoText.isEditable = false
 		view.addSubview(deviceInfoText)
+		
 		testImageView.spot.apply(styles: ["image"], with: traitCollection)
 		view.addSubview(testImageView)
 		StyleSheet.shared.apply(styles: ["image"], to: view.layer, with: traitCollection)
@@ -198,13 +213,17 @@ class SimpleTestViewController: UIViewController {
 			testImageView.rightAnchor.constraint(equalTo: view.rightAnchor),
 		].spot_set(active: true)
 		
+		style.applyBounds(with: traitCollection)
+		style.apply(styles: ["image"], to: testImageView, with: traitCollection)
+
 		internetObserver.startObserve()
 		wifiObserver!.startObserve()
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		print(view.tintColor as Any)
+		style.applyBounds(with: traitCollection)
+		style.apply(styles: ["image"], to: testImageView, with: traitCollection)
 	}
 	
 	@IBAction func touchedPushVC(_ sender: UIBarButtonItem) {
