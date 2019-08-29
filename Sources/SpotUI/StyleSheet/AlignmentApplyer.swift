@@ -1,5 +1,5 @@
 //
-//  TextAlignmentApplyer.swift
+//  AlignmentApplyer.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 27/9/2017.
@@ -11,7 +11,6 @@ import UIKit
 
 struct TextAlignmentApplyer: StyleApplyer {
 	var value: NSTextAlignment
-	
 	
 	init(with value: Any, predefined: StyleValueSet) {
 		switch predefined.value(for: value) as? String ?? "" {
@@ -59,6 +58,31 @@ struct TextAlignmentApplyer: StyleApplyer {
 		let style = to[.paragraphStyle] as? NSMutableParagraphStyle ?? .init()
 		style.alignment = value
 		to[.paragraphStyle] = style
+	}
+}
+
+struct VerticalAlignmentApplyer: StyleApplyer {
+	var value: UIControl.ContentVerticalAlignment
+	
+	init?(with value: Any, predefined: StyleValueSet) {
+		switch predefined.value(for: value) as? String ?? "" {
+		case "fill":	self.value = .fill
+		case "bottom":	self.value = .bottom
+		case "top":		self.value = .top
+		default:		self.value = .center
+		}
+	}
+	
+	init(_ value: UIControl.ContentVerticalAlignment) {
+		self.value = value
+	}
+	
+	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+		switch to {
+		case let view as UIControl:
+			view.contentVerticalAlignment = value
+		default:break
+		}
 	}
 }
 #endif

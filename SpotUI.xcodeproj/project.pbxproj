@@ -45,7 +45,7 @@
 		9BF48EBC204AC0BE00A06458 /* LayoutConstraintAxisApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E98204AC0BE00A06458 /* LayoutConstraintAxisApplyer.swift */; };
 		9BF48EBD204AC0BE00A06458 /* ShadowApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E99204AC0BE00A06458 /* ShadowApplyer.swift */; };
 		9BF48EBE204AC0BE00A06458 /* BorderApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9A204AC0BE00A06458 /* BorderApplyer.swift */; };
-		9BF48EBF204AC0BE00A06458 /* TextAlignmentApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9B204AC0BE00A06458 /* TextAlignmentApplyer.swift */; };
+		9BF48EBF204AC0BE00A06458 /* AlignmentApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9B204AC0BE00A06458 /* AlignmentApplyer.swift */; };
 		9BF48EC0204AC0BE00A06458 /* ImageSource+Applyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9C204AC0BE00A06458 /* ImageSource+Applyer.swift */; };
 		9BF48EC1204AC0BE00A06458 /* Number+Applyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9D204AC0BE00A06458 /* Number+Applyer.swift */; };
 		9BF48EC2204AC0BE00A06458 /* LineDashPatternApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E9E204AC0BE00A06458 /* LineDashPatternApplyer.swift */; };
@@ -155,7 +155,7 @@
 		9BF48E98204AC0BE00A06458 /* LayoutConstraintAxisApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraintAxisApplyer.swift; sourceTree = "<group>"; };
 		9BF48E99204AC0BE00A06458 /* ShadowApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowApplyer.swift; sourceTree = "<group>"; };
 		9BF48E9A204AC0BE00A06458 /* BorderApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderApplyer.swift; sourceTree = "<group>"; };
-		9BF48E9B204AC0BE00A06458 /* TextAlignmentApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextAlignmentApplyer.swift; sourceTree = "<group>"; };
+		9BF48E9B204AC0BE00A06458 /* AlignmentApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlignmentApplyer.swift; sourceTree = "<group>"; };
 		9BF48E9C204AC0BE00A06458 /* ImageSource+Applyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ImageSource+Applyer.swift"; sourceTree = "<group>"; };
 		9BF48E9D204AC0BE00A06458 /* Number+Applyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Number+Applyer.swift"; sourceTree = "<group>"; };
 		9BF48E9E204AC0BE00A06458 /* LineDashPatternApplyer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineDashPatternApplyer.swift; sourceTree = "<group>"; };
@@ -336,6 +336,7 @@
 		9BF48E96204AC0BE00A06458 /* StyleSheet */ = {
 			isa = PBXGroup;
 			children = (
+				9BF48E9B204AC0BE00A06458 /* AlignmentApplyer.swift */,
 				9BF48EA4204AC0BE00A06458 /* Bool+Applyer.swift */,
 				9BF48E9A204AC0BE00A06458 /* BorderApplyer.swift */,
 				9BF48EA6204AC0BE00A06458 /* Color+Applyer.swift */,
@@ -355,7 +356,6 @@
 				9B07ED94230D5EE500F376B9 /* StyleApplyer.swift */,
 				9BF48E97204AC0BE00A06458 /* StyleSheet.swift */,
 				9BCF7099230D765700A592AC /* StyleValueSet.swift */,
-				9BF48E9B204AC0BE00A06458 /* TextAlignmentApplyer.swift */,
 			);
 			path = StyleSheet;
 			sourceTree = "<group>";
@@ -584,7 +584,7 @@
 				9BA3271E2314229500BCC851 /* AnimatableImage.swift in Sources */,
 				9BF48EC0204AC0BE00A06458 /* ImageSource+Applyer.swift in Sources */,
 				9B07ED92230D426500F376B9 /* WindowTraitCollectionAdjuster.swift in Sources */,
-				9BF48EBF204AC0BE00A06458 /* TextAlignmentApplyer.swift in Sources */,
+				9BF48EBF204AC0BE00A06458 /* AlignmentApplyer.swift in Sources */,
 				9B6477EE21E9F2DA00E0E21F /* WeakProxy.swift in Sources */,
 				9BF48EC6204AC0BE00A06458 /* EdgeInsets+Applyer.swift in Sources */,
 				9BF48EC8204AC0BE00A06458 /* Bool+Applyer.swift in Sources */,

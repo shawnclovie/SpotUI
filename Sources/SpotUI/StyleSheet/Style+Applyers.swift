@@ -65,6 +65,12 @@ extension Style {
 		set(TextAlignmentApplyer(v))
 	}
 	
+	/// UIControl.contentVerticalAlignment
+	@discardableResult
+	public func verticalAlignment(_ v: UIControl.ContentVerticalAlignment) -> Self {
+		set(VerticalAlignmentApplyer(v))
+	}
+	
 	/// UICollectionView.UICollectionViewFlowLayout.itemSize
 	@discardableResult
 	public func itemSize(_ fn: @escaping (UITraitCollection)->CGSize) -> Self {
@@ -240,6 +246,7 @@ extension Style {
 		"line-break-mode": LineBreakModeApplyer.self,
 		
 		"text-align": TextAlignmentApplyer.self,
+		"vertical-align": VerticalAlignmentApplyer.self,
 		
 		"item-size": ItemSizeApplyer.self,
 		

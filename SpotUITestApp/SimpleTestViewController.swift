@@ -30,6 +30,7 @@ class SimpleTestViewController: UIViewController {
 	let testImage = UIImage(named: "images/186_52c0eca125447.jpg")!
 	
 	let deviceInfoText = UITextView()
+	let testButton = UIButton(type: .custom)
 	let testImageView = AnimatableImageView()
 	
 	let actionTableView = UITableView(frame: .zero, style: .plain)
@@ -167,6 +168,12 @@ class SimpleTestViewController: UIViewController {
 		
 		style.bind(view, Style()
 			.backgroundColor(StyleShared.backgroundColorProducer))
+		style.bind(testButton, Style()
+			.verticalAlignment(.top)
+			.textAlignment(.left)
+			.numberOfLines(0)
+			.padding{_ in .init(top: 4, left: 15, bottom: 20, right: 50)}
+			.textColor(StyleShared.foregroundTextColorProducer))
 		style[Style()
 			.textColor(StyleShared.foregroundTextColorProducer)] = deviceInfoText
 		style["image"] = Style().border{($0.spot.userInterfaceStyle == .dark ? .white : .black, 2)}
@@ -186,6 +193,9 @@ class SimpleTestViewController: UIViewController {
 		deviceInfoText.isEditable = false
 		view.addSubview(deviceInfoText)
 		
+		testButton.setTitle("Test Button", for: .normal)
+		view.addSubview(testButton)
+		
 		testImageView.spot.apply(styles: ["image"], with: traitCollection)
 		view.addSubview(testImageView)
 		StyleSheet.shared.apply(styles: ["image"], to: view.layer, with: traitCollection)
@@ -204,8 +214,12 @@ class SimpleTestViewController: UIViewController {
 		[
 			deviceInfoText.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
 			deviceInfoText.leftAnchor.constraint(equalTo: view.leftAnchor),
-			deviceInfoText.rightAnchor.constraint(equalTo: view.rightAnchor),
+			deviceInfoText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7),
 			deviceInfoText.heightAnchor.constraint(equalToConstant: 300),
+			testButton.topAnchor.constraint(equalTo: deviceInfoText.topAnchor),
+			testButton.leftAnchor.constraint(equalTo: deviceInfoText.rightAnchor),
+			testButton.rightAnchor.constraint(equalTo: view.rightAnchor),
+			testButton.heightAnchor.constraint(equalTo: deviceInfoText.heightAnchor),
 			actionTableView.topAnchor.constraint(equalTo: deviceInfoText.bottomAnchor),
 			actionTableView.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor),
 			actionTableView.leftAnchor.constraint(equalTo: view.leftAnchor),
