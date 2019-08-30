@@ -10,43 +10,59 @@
 import UIKit
 
 open class CircleProgressLayer: ProgressLayer {
-	/**
-	Create an shape layer with arc bezier path.
 	
-	- parameter radius:      Inner radius
-	- parameter lineWidth:   Border line width
-	- parameter color:       Stroke color, default is [black a0.4].
-	- parameter trackAlpha:  Track layer would use same color of above with the alpha.
-	*/
-	public convenience init(radius: CGFloat,
-	                        lineWidth: CGFloat,
-	                        _ color: UIColor? = nil,
-	                        trackAlpha: CGFloat = 0.2) {
+	public let track = CAShapeLayer()
+	
+	public override init(layer: Any) {
+		super.init(layer: layer)
+		if let layer = layer as? CircleProgressLayer {
+			track.strokeColor = layer.track.strokeColor
+			path = layer.path
+			lineWidth = layer.lineWidth
+			strokeColor = layer.strokeColor
+		}
+	}
+	
+	public override init() {
+		super.init()
+		fillColor = nil
+		lineCap = .butt
+		track.fillColor = nil
+		track.lineCap = lineCap
+		addSublayer(track)
+	}
+	
+	required convenience public init?(coder: NSCoder) {
 		self.init()
-		let color = color ?? .init(white: 0, alpha: 0.4)
+	}
+	
+	/// Set bezier path with arc radius and lineWidth
+	/// - Parameter radius: Inner radius
+	/// - Parameter lineWidth: Border line width
+	public func set(radius: CGFloat, lineWidth: CGFloat) {
 		path = UIBezierPath.spot(arcPathInnerRadius: radius,
 								 lineWidth: lineWidth,
 								 startAngle: -90, endAngle: 270.00001,
 								 clockwise: true).cgPath
-		fillColor = nil
-		strokeColor = color.cgColor
-		lineCap = .butt
 		self.lineWidth = CGFloat(lineWidth)
-		update()
-		let track = CAShapeLayer()
 		track.path = path
-		track.fillColor = nil
+		track.lineWidth = CGFloat(lineWidth)
+		update()
+	}
+	
+	/// Set stroke and track color
+	/// - Parameter color: Stroke color
+	/// - Parameter trackAlpha: Track layer would use same color of above with the alpha.
+	public func set(color: UIColor, trackAlpha: CGFloat = 0.2) {
+		strokeColor = color.cgColor
 		track.strokeColor = color.withAlphaComponent(trackAlpha).cgColor
-		track.lineCap = lineCap
-		track.lineWidth = self.lineWidth
-		addSublayer(track)
 	}
 	
 	open override func update() {
 		strokeEnd = CGFloat(percentage)
 	}
 	
-	override var animation: CABasicAnimation {
+	open override var animation: CABasicAnimation {
 		let ani = CABasicAnimation(keyPath: "strokeEnd")
 		ani.fromValue = CGFloat(1.0)
 		ani.toValue = CGFloat(0.0)

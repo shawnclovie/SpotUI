@@ -13,54 +13,62 @@ import AppKit
 #endif
 
 open class RectangleProgressLayer: ProgressLayer {
-	public static let DefaultOpacity: Float = 0.4
 	
 	public enum Direction {
 		case leftToRight, rightToLeft, topToBottom, bottomToTop
 	}
 	
-	open var direction = Direction.leftToRight {
-		didSet {
-			update()
+	public override init() {
+		super.init()
+	}
+	
+	public override init(layer: Any) {
+		super.init(layer: layer)
+		if let layer = layer as? RectangleProgressLayer {
+			bounds = layer.bounds
+			opacity = layer.opacity
+			fillColor = layer.fillColor
+			direction = layer.direction
 		}
 	}
 	
-	open var size = CGSize.zero {
-		didSet {
-			bounds.size = size
-			update()
-		}
-	}
-	
-	public convenience init(direction: Direction,
-	                        size: CGSize,
-	                        _ color: CGColor? = nil) {
+	required public convenience init?(coder: NSCoder) {
 		self.init()
-		self.direction = direction
+	}
+	
+	public var direction: Direction = .leftToRight {
+		didSet {
+			update()
+		}
+	}
+	
+	public func set(direction: Direction, size: CGSize, _ color: CGColor? = nil) {
 		fillColor = color
-		opacity = RectangleProgressLayer.DefaultOpacity
-		self.size = size
+		self.direction = direction
+		bounds.size = size
+		update()
 	}
 	
 	open override func update() {
-		path = path(withPercentage: percentage)
+		path = makePath(percentage: percentage)
 	}
 	
-	private func path(withPercentage percent: Double) -> CGPath {
+	private func makePath(percentage: Double) -> CGPath {
+		let size = bounds.size
 		var rect = CGRect(origin: .zero, size: size)
 		switch direction {
 		case .leftToRight:
-			rect.size.width *= CGFloat(percent)
+			rect.size.width *= CGFloat(percentage)
 		case .rightToLeft:
-			rect.size.width *= CGFloat(percent)
+			rect.size.width *= CGFloat(percentage)
 			rect.origin.x = size.width - rect.width
 		case .bottomToTop:
-			rect.size.height *= CGFloat(percent)
+			rect.size.height *= CGFloat(percentage)
 			#if !os(OSX)
 			rect.origin.y = size.height - rect.height
 			#endif
 		case .topToBottom:
-			rect.size.height *= CGFloat(percent)
+			rect.size.height *= CGFloat(percentage)
 			#if os(OSX)
 			rect.origin.y = size.height - rect.height
 			#endif
@@ -72,10 +80,10 @@ open class RectangleProgressLayer: ProgressLayer {
 		#endif
 	}
 	
-	override var animation: CABasicAnimation {
+	open override var animation: CABasicAnimation {
 		let ani = CABasicAnimation(keyPath: "path")
-		ani.fromValue = path(withPercentage: 0)
-		ani.toValue = path(withPercentage: 1)
+		ani.fromValue = makePath(percentage: 0)
+		ani.toValue = makePath(percentage: 1)
 		return ani
 	}
 }

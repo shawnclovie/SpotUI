@@ -41,6 +41,7 @@ class SimpleTestViewController: UIViewController {
 	private var style = StyleSheet()
 	
 	private var rotateIndex = -1
+	private var progressTimer: WeakTimer?
 	
 	private let actions: [(title: String, action: (SimpleTestViewController)->Void)] = [
 		("image: rotate", {vc in
@@ -86,21 +87,41 @@ class SimpleTestViewController: UIViewController {
 			let image = AnimatableImage(.path(path))!
 			vc.testImageView.image = image.createAnimatedImages(scaleToFit: CGSize(width: 100, height: 100))
 		}),
-		("ProgressLayer with URLTask", { vc in
-			let qs = "abc=2&xyz=fff".spot.parsedQueryString
-			print(qs)
-			let progressLayer = RectangleProgressLayer(direction: .bottomToTop, size: vc.view.bounds.size, UIColor.gray.cgColor)
-			vc.view.layer.addSublayer(progressLayer)
-			progressLayer.percentage = 1
-			let cn = URLConnection()
-			cn.config.requestCachePolicy = .reloadIgnoringLocalCacheData
-			cn.config.urlCache = nil
-			URLTask(.spot(.get, URL(string: "https://tb1.bdstatic.com/tb/cms/frs/bg/default_head20141014.jpg")!))
-				.request(with: cn, progression: { progress in
-					progressLayer.percentage = 1 - progress.percentage
-				}) { task, result in
-					print(result)
-					progressLayer.removeFromSuperlayer()
+		("RectangleProgressLayer", { vc in
+			vc.progressTimer?.invalidate()
+			let viewSize = vc.view.bounds.size
+			let progress = RectangleProgressLayer()
+			progress.set(direction: .leftToRight, size: .init(width: viewSize.width, height: 200), UIColor.red.cgColor)
+			progress.position = .init(x: viewSize.width / 2, y: viewSize.height / 2)
+			vc.view.layer.addSublayer(progress)
+			progress.percentage = 0
+			vc.progressTimer = WeakTimer(interval: 0.05, repeats: true) { (timer) in
+				progress.percentage += 0.03
+				if progress.percentage > 1 {
+					timer.invalidate()
+					DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+						progress.removeFromSuperlayer()
+					}
+				}
+			}
+		}),
+		("CircleProgressLayer", { vc in
+			vc.progressTimer?.invalidate()
+			let viewSize = vc.view.bounds.size
+			let progress = CircleProgressLayer()
+			progress.set(radius: viewSize.width * 0.4, lineWidth: 20)
+			progress.set(color: .red)
+			progress.position = .init(x: viewSize.width / 2, y: viewSize.height / 2)
+			vc.view.layer.addSublayer(progress)
+			progress.percentage = 0
+			vc.progressTimer = WeakTimer(interval: 0.05, repeats: true) { (timer) in
+				progress.percentage += 0.03
+				if progress.percentage > 1 {
+					timer.invalidate()
+					DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+						progress.removeFromSuperlayer()
+					}
+				}
 			}
 		}),
 		("DataSourceTable", { vc in

@@ -10,9 +10,8 @@ import CoreGraphics
 import QuartzCore
 
 open class ProgressLayer: CAShapeLayer, CAAnimationDelegate {
-	public typealias Completion = (Bool)->Void
 	
-	@objc open var percentage = 0.0 {
+	public var percentage = 0.0 {
 		didSet {
 			update()
 		}
@@ -21,7 +20,7 @@ open class ProgressLayer: CAShapeLayer, CAAnimationDelegate {
 	open func update() {
 	}
 	
-	var animation: CABasicAnimation {
+	open var animation: CABasicAnimation {
 		CABasicAnimation(keyPath: "bounds")
 	}
 	
