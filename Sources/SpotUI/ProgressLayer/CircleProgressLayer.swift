@@ -12,6 +12,7 @@ import UIKit
 open class CircleProgressLayer: ProgressLayer {
 	
 	public let track = CAShapeLayer()
+	public private(set) var radius: CGFloat = 0
 	
 	public override init(layer: Any) {
 		super.init(layer: layer)
@@ -40,13 +41,14 @@ open class CircleProgressLayer: ProgressLayer {
 	/// - Parameter radius: Inner radius
 	/// - Parameter lineWidth: Border line width
 	public func set(radius: CGFloat, lineWidth: CGFloat) {
+		self.radius = radius
 		path = UIBezierPath.spot(arcPathInnerRadius: radius,
 								 lineWidth: lineWidth,
 								 startAngle: -90, endAngle: 270.00001,
 								 clockwise: true).cgPath
-		self.lineWidth = CGFloat(lineWidth)
+		self.lineWidth = lineWidth
 		track.path = path
-		track.lineWidth = CGFloat(lineWidth)
+		track.lineWidth = lineWidth
 		update()
 	}
 	

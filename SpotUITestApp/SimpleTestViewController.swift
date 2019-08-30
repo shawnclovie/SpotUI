@@ -41,6 +41,7 @@ class SimpleTestViewController: UIViewController {
 	private var style = StyleSheet()
 	
 	private var rotateIndex = -1
+	private var progressLayer: ProgressLayer?
 	private var progressTimer: WeakTimer?
 	
 	private let actions: [(title: String, action: (SimpleTestViewController)->Void)] = [
@@ -89,12 +90,10 @@ class SimpleTestViewController: UIViewController {
 		}),
 		("RectangleProgressLayer", { vc in
 			vc.progressTimer?.invalidate()
-			let viewSize = vc.view.bounds.size
-			let progress = RectangleProgressLayer()
-			progress.set(direction: .leftToRight, size: .init(width: viewSize.width, height: 200), UIColor.red.cgColor)
-			progress.position = .init(x: viewSize.width / 2, y: viewSize.height / 2)
-			vc.view.layer.addSublayer(progress)
-			progress.percentage = 0
+			let progress = vc.progressLayer as? RectangleProgressLayer ?? .init()
+			vc.progressLayer = progress
+			progress.set(direction: .leftToRight, size: .init(width: vc.view.bounds.width, height: 200), UIColor.red.cgColor)
+			prepareProgress(progress, parent: vc.view)
 			vc.progressTimer = WeakTimer(interval: 0.05, repeats: true) { (timer) in
 				progress.percentage += 0.03
 				if progress.percentage > 1 {
@@ -107,13 +106,11 @@ class SimpleTestViewController: UIViewController {
 		}),
 		("CircleProgressLayer", { vc in
 			vc.progressTimer?.invalidate()
-			let viewSize = vc.view.bounds.size
-			let progress = CircleProgressLayer()
-			progress.set(radius: viewSize.width * 0.4, lineWidth: 20)
+			let progress = vc.progressLayer as? CircleProgressLayer ?? .init()
+			vc.progressLayer = progress
+			progress.set(radius: vc.view.bounds.width * 0.4, lineWidth: 20)
 			progress.set(color: .red)
-			progress.position = .init(x: viewSize.width / 2, y: viewSize.height / 2)
-			vc.view.layer.addSublayer(progress)
-			progress.percentage = 0
+			prepareProgress(progress, parent: vc.view)
 			vc.progressTimer = WeakTimer(interval: 0.05, repeats: true) { (timer) in
 				progress.percentage += 0.03
 				if progress.percentage > 1 {
@@ -271,6 +268,16 @@ class SimpleTestViewController: UIViewController {
 		let vc = initializeStoryboardViewController(name: vcID)
 		navigationController?.pushViewController(vc, animated: true)
 	}
+}
+
+private func prepareProgress(_ layer: ProgressLayer, parent: UIView) {
+	let viewSize = parent.bounds.size
+	layer.position = .init(x: viewSize.width / 2, y: viewSize.height / 2)
+	if layer.superlayer == nil {
+		parent.layer.addSublayer(layer)
+	}
+	layer.resetPercentage()
+//	layer.percentage = 0
 }
 
 extension SimpleTestViewController: UITableViewDataSource, UITableViewDelegate {

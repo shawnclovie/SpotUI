@@ -17,6 +17,15 @@ open class ProgressLayer: CAShapeLayer, CAAnimationDelegate {
 		}
 	}
 	
+	/// Set percentage to 0 by default without animation.
+	/// - Parameter to: To percentage
+	public func resetPercentage(to: Double = 0) {
+		CATransaction.begin()
+		CATransaction.setDisableActions(true)
+		percentage = to
+		CATransaction.commit()
+	}
+	
 	open func update() {
 	}
 	
