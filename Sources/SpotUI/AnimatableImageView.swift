@@ -97,10 +97,19 @@ open class AnimatableImageView: UIImageView, Animatable {
 		animatableImage?.size ?? image?.size ?? .zero
 	}
 	
-	open func setImage(path: URL, scaleToFit: CGSize? = nil) {
+	open func setImage(path: URL, scaleToFit: CGSize? = nil, scaleQueue: DispatchQueue? = nil) {
 		guard let image = AnimatableImage(.path(path)) else {return}
 		if image.frameCount > 1 {
 			animatableImage = image
+			return
+		}
+		if scaleToFit != nil, let queue = scaleQueue {
+			queue.async { [weak self] in
+				let scaled = image.createImage(at: 0, scaleToFit: scaleToFit)
+				DispatchQueue.main.async {
+					self?.image = scaled
+				}
+			}
 		} else {
 			self.image = image.createImage(at: 0, scaleToFit: scaleToFit)
 		}
