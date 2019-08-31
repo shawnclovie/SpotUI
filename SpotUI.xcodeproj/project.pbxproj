@@ -23,6 +23,7 @@
 		9B3E59C8218583B1002A3F33 /* SimpleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E59C7218583B1002A3F33 /* SimpleTestViewController.swift */; };
 		9B3E59C9218587DD002A3F33 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
 		9B3E59CB21858900002A3F33 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59CA218588FF002A3F33 /* images */; };
+		9B549B00231A3F3A009BDDC3 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B549AFF231A3F3A009BDDC3 /* UITableView+.swift */; };
 		9B54C5F42273F70E006B79BC /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B54C5F32273F70D006B79BC /* AlertController.swift */; };
 		9B6477EE21E9F2DA00E0E21F /* WeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */; };
 		9B6FE86320A2BF15000D6148 /* PDFRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */; };
@@ -130,6 +131,7 @@
 		9B3E59C521858389002A3F33 /* style_defines.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = style_defines.json; sourceTree = "<group>"; };
 		9B3E59C7218583B1002A3F33 /* SimpleTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleTestViewController.swift; sourceTree = "<group>"; };
 		9B3E59CA218588FF002A3F33 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		9B549AFF231A3F3A009BDDC3 /* UITableView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
 		9B54C5F32273F70D006B79BC /* AlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakProxy.swift; sourceTree = "<group>"; };
 		9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFRenderer.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				9BF48EB2204AC0BE00A06458 /* UIFont+.swift */,
 				9BF48EAB204AC0BE00A06458 /* UIImage+.swift */,
 				9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */,
+				9B549AFF231A3F3A009BDDC3 /* UITableView+.swift */,
 				9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */,
 				9BE29366230C146B004D6120 /* UITraitCollection+.swift */,
 				9BF48EAC204AC0BE00A06458 /* UIView+.swift */,
@@ -602,6 +605,7 @@
 				9BC7EFD9206CAFB7000D2305 /* UITextView+.swift in Sources */,
 				9B07ED8C230D1A0D00F376B9 /* ActionPanelController.swift in Sources */,
 				9B6FE86320A2BF15000D6148 /* PDFRenderer.swift in Sources */,
+				9B549B00231A3F3A009BDDC3 /* UITableView+.swift in Sources */,
 				9BF48EC4204AC0BE00A06458 /* ItemSizeApplyer.swift in Sources */,
 				9BF48F76204AC31200A06458 /* DataSourceTableViews.swift in Sources */,
 				9BF48EC7204AC0BE00A06458 /* Style.swift in Sources */,
