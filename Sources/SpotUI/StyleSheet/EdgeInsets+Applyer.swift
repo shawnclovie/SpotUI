@@ -9,7 +9,7 @@
 #if canImport(UIKit)
 import UIKit
 
-struct ParagraphSpacing: StyleApplyer {
+struct ParagraphSpacingApplyer: StyleApplyer {
 	
 	var value: UIEdgeInsets
 	

@@ -77,11 +77,11 @@ class SimpleTestViewController: UIViewController {
 		}),
 		("image: still", { vc in
 			let path = Bundle.main.url(forResource: "images/186_52c0eca125447.jpg", withExtension: nil)!
-			vc.testImageView.setImage(path: path)
+			setImage(path: path, to: vc.testImageView)
 		}),
 		("image: gif", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
-			vc.testImageView.setImage(path: path)
+			setImage(path: path, to: vc.testImageView)
 		}),
 		("image: animated", { vc in
 			let path = Bundle.main.url(forResource: "images/Cat-party.gif", withExtension: nil)!
@@ -186,12 +186,14 @@ class SimpleTestViewController: UIViewController {
 		
 		style.bind(view, Style()
 			.backgroundColor(StyleShared.backgroundColorProducer))
-		style.bind(testButton, Style()
+		let testButtonStyle = Style()
 			.verticalAlignment(.top)
 			.textAlignment(.left)
 			.numberOfLines(0)
 			.padding{_ in .init(top: 4, left: 15, bottom: 20, right: 50)}
-			.textColor(StyleShared.foregroundTextColorProducer))
+			.textColor(StyleShared.foregroundTextColorProducer)
+		print("testButton.padding=", testButtonStyle.getPadding(with: traitCollection))
+		style.bind(testButton, testButtonStyle)
 		style[Style()
 			.textColor(StyleShared.foregroundTextColorProducer)] = deviceInfoText
 		style["image"] = Style().border{($0.spot.userInterfaceStyle == .dark ? .white : .black, 2)}
@@ -278,6 +280,17 @@ private func prepareProgress(_ layer: ProgressLayer, parent: UIView) {
 	}
 	layer.resetPercentage()
 //	layer.percentage = 0
+}
+
+private func setImage(path: URL, to: AnimatableImageView) {
+	guard let image = AnimatableImage(.path(path)) else {
+		return
+	}
+	if image.frameCount > 1 {
+		to.animatableImage = image
+	} else {
+		to.image = image.createImage(at: 0)
+	}
 }
 
 extension SimpleTestViewController: UITableViewDataSource, UITableViewDelegate {

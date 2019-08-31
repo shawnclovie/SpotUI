@@ -12,10 +12,18 @@ import SpotCache
 
 extension Style {
 	
+	func applyer<T>() -> T? where T: StyleApplyer {
+		applyers["\(T.self)"] as? T
+	}
+	
 	/// UIView.isHidden | CALayer.isHidden
 	@discardableResult
 	public func hidden(_ v: Bool) -> Self {
 		set(BoolApplyer<HiddenApplying>(v))
+	}
+	
+	public func isHidden(default: Bool = false) -> Bool {
+		(applyer() as BoolApplyer<HiddenApplying>?)?.value ?? `default`
 	}
 	
 	/// UIView.layer.masksToBounds | CALayer.masksToBounds
@@ -24,16 +32,28 @@ extension Style {
 		set(BoolApplyer<MaskToBoundsApplying>(v))
 	}
 	
+	public func isMaskToBound(default: Bool = false) -> Bool {
+		(applyer() as BoolApplyer<MaskToBoundsApplying>?)?.value ?? `default`
+	}
+	
 	/// UISegmentedControl.isMomentary
 	@discardableResult
 	public func momentary(_ v: Bool) -> Self {
 		set(BoolApplyer<MomentaryApplying>(v))
 	}
 	
+	public func isMomentary(default: Bool = false) -> Bool {
+		(applyer() as BoolApplyer<MomentaryApplying>?)?.value ?? `default`
+	}
+	
 	/// UIView.isUserInteractionEnabled
 	@discardableResult
 	public func userInteractionEnabled(_ v: Bool) -> Self {
 		set(BoolApplyer<UserInteractionEnabledApplying>(v))
+	}
+	
+	public func isUserInteractionEnabled(default: Bool = false) -> Bool {
+		(applyer() as BoolApplyer<UserInteractionEnabledApplying>?)?.value ?? `default`
 	}
 	
 	/// UIButton.imageView?.contentMode |
@@ -43,11 +63,19 @@ extension Style {
 		set(ContentModeApplyer(v))
 	}
 	
+	public func getContentMode(default: UIView.ContentMode = .scaleToFill) -> UIView.ContentMode {
+		(applyer() as ContentModeApplyer?)?.value ?? `default`
+	}
+	
 	/// UIStackView.axis |
 	/// UICollectionView.UICollectionViewFlowLayout.scrollDirection
 	@discardableResult
 	public func axis(_ v: NSLayoutConstraint.Axis) -> Self {
 		set(LayoutConstraintAxisApplyer(v))
+	}
+	
+	public func getAxis(default: NSLayoutConstraint.Axis) -> NSLayoutConstraint.Axis {
+		(applyer() as LayoutConstraintAxisApplyer?)?.value ?? `default`
 	}
 	
 	/// UILabel.lineBreakMode |
@@ -58,11 +86,19 @@ extension Style {
 		set(LineBreakModeApplyer(v))
 	}
 	
+	public func getLineBreakMode(default: NSLineBreakMode) -> NSLineBreakMode {
+		(applyer() as LineBreakModeApplyer?)?.value ?? `default`
+	}
+	
 	/// UILabel.textAlignment | UITextView.textAlignment |
 	/// UITextField.textAlignment | UIButton.titleLabel?.textAlignment
 	@discardableResult
 	public func textAlignment(_ v: NSTextAlignment) -> Self {
 		set(TextAlignmentApplyer(v))
+	}
+	
+	public func getTextAlignment(default: NSTextAlignment) -> NSTextAlignment {
+		(applyer() as TextAlignmentApplyer?)?.value ?? `default`
 	}
 	
 	/// UIControl.contentVerticalAlignment
@@ -71,10 +107,18 @@ extension Style {
 		set(VerticalAlignmentApplyer(v))
 	}
 	
+	public func getVerticalAlignment(default: UIControl.ContentVerticalAlignment) -> UIControl.ContentVerticalAlignment {
+		(applyer() as VerticalAlignmentApplyer?)?.value ?? `default`
+	}
+	
 	/// UICollectionView.UICollectionViewFlowLayout.itemSize
 	@discardableResult
 	public func itemSize(_ fn: @escaping (UITraitCollection)->CGSize) -> Self {
 		set(ItemSizeApplyer(fn))
+	}
+	
+	public func getItemSize(with trait: UITraitCollection, default: CGSize = .zero) -> CGSize {
+		(applyer() as ItemSizeApplyer?)?.producer(trait) ?? `default`
 	}
 	
 	/// UIView.layer.border | CALayer.border
@@ -83,16 +127,28 @@ extension Style {
 		set(BorderApplyer(fn))
 	}
 	
+	public func getBorder(with trait: UITraitCollection, default: (UIColor?, CGFloat) = (nil, 0)) -> (UIColor?, CGFloat) {
+		(applyer() as BorderApplyer?)?.producer(trait) ?? `default`
+	}
+	
 	/// UIView.backgroundColor | CALayer.backgroundColor
 	@discardableResult
 	public func backgroundColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
 		set(ColorApplyer<BackgroundColorApplying>(fn))
 	}
 	
+	public func getBackgroundColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<BackgroundColorApplying>?)?.producer(trait) ?? `default`
+	}
+	
 	/// UILabel.textColor | UITextField.textColor | UITextView.textColor
 	@discardableResult
 	public func textColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
 		set(ColorApplyer<TextColorApplying>(fn))
+	}
+	
+	public func getTextColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<TextColorApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// UIButton.setTitleColor
@@ -102,10 +158,18 @@ extension Style {
 		set(StatefulTitleColorApplyer(for: states, fn))
 	}
 	
+	public func getButtonTitleColor(state: UIControl.State, with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as StatefulTitleColorApplyer?)?.producer(state, trait) ?? `default`
+	}
+	
 	/// UIView.tintColor | UIBarButtonItem.tintColor
 	@discardableResult
 	public func tintColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
 		set(ColorApplyer<TintColorApplying>(fn))
+	}
+	
+	public func getTintColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<TintColorApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// UIToolbar.barTintColor |
@@ -117,10 +181,18 @@ extension Style {
 		set(ColorApplyer<BarTintColorApplying>(fn))
 	}
 	
+	public func getBarTintColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<BarTintColorApplying>?)?.producer(trait) ?? `default`
+	}
+	
 	/// CAShapeLayer.fillColor
 	@discardableResult
 	public func fillColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
 		set(ColorApplyer<FillColorApplying>(fn))
+	}
+	
+	public func getFillColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<FillColorApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// CAShapeLayer.strokeColor
@@ -129,10 +201,18 @@ extension Style {
 		set(ColorApplyer<StrokeColorApplying>(fn))
 	}
 	
+	public func getStrokeColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
+		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(trait) ?? `default`
+	}
+	
 	/// CAShapeLayer.lineDashPattern
 	@discardableResult
 	public func lineDashPattern(_ fn: @escaping (UITraitCollection)->[Double]) -> Self {
 		set(LineDashPatternApplyer(fn))
+	}
+	
+	public func getLineDashPattern(with trait: UITraitCollection, default: [Double] = []) -> [Double] {
+		(applyer() as LineDashPatternApplyer?)?.producer(trait) ?? `default`
 	}
 	
 	/// UILabel.font | UIButton.titleLabel?.font | UITextView.font
@@ -141,10 +221,18 @@ extension Style {
 		set(FontApplyer(fn))
 	}
 	
+	public func getFont(with trait: UITraitCollection, default: UIFont = .systemFont(ofSize: 17)) -> UIFont {
+		(applyer() as FontApplyer?)?.producer(trait) ?? `default`
+	}
+	
 	/// UIButton.setBackgroundImage | UISearchBar.backgroundImage
 	@discardableResult
 	public func backgroundImage(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
 		set(StatefulImageApplyer<BackgroundImageApplying>(fn))
+	}
+	
+	public func getBackgroundImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
+		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// CALayer.contents |
@@ -156,6 +244,10 @@ extension Style {
 	@discardableResult
 	public func image(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
 		set(StatefulImageApplyer<ImageApplying>(fn))
+	}
+	
+	public func getImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
+		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// setMinimumTrackImage and setMaximumTrackImage of UISlider
@@ -170,10 +262,18 @@ extension Style {
 		set(NumberApplyer<AlphaApplying>(v))
 	}
 	
+	public func getAlpha(default: CGFloat = 1) -> CGFloat {
+		(applyer() as NumberApplyer<AlphaApplying>?)?.value ?? `default`
+	}
+	
 	/// UIView.layer.cornerRadius | CALayer.cornerRadius
 	@discardableResult
 	public func cornerRadius(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
 		set(TraitNumberApplyer<CornerRadiusApplying>(fn))
+	}
+	
+	public func getCornerRadius(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+		(applyer() as TraitNumberApplyer<CornerRadiusApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// UILabel.numberOfLines |
@@ -184,6 +284,10 @@ extension Style {
 		set(NumberApplyer<NumberOfLinesApplying>(CGFloat(v)))
 	}
 	
+	public func getNumberOfLines(default: Int = 1) -> Int {
+		((applyer() as NumberApplyer<NumberOfLinesApplying>?)?.value).map(Int.init) ?? `default`
+	}
+	
 	/// UITextView.textContainer.lineFragmentPadding |
 	/// UICollectionView.UICollectionViewFlowLayout.minimumLineSpacing
 	@discardableResult
@@ -191,10 +295,18 @@ extension Style {
 		set(TraitNumberApplyer<LineSpacingApplying>(fn))
 	}
 	
+	public func getLineSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+		(applyer() as TraitNumberApplyer<LineSpacingApplying>?)?.producer(trait) ?? `default`
+	}
+	
 	/// CAShapeLayer.lineWIdth
 	@discardableResult
 	public func lineWidth(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
 		set(TraitNumberApplyer<LineWidthApplying>(fn))
+	}
+	
+	public func getLineWidth(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+		(applyer() as TraitNumberApplyer<LineWidthApplying>?)?.producer(trait) ?? `default`
 	}
 	
 	/// UICollectionView.UICollectionViewFlowLayout.minimumInteritemSpacing |
@@ -204,15 +316,27 @@ extension Style {
 		set(TraitNumberApplyer<SpacingApplying>(fn))
 	}
 	
+	public func getSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(trait) ?? `default`
+	}
+	
 	/// UIView.layer.shadow | CALayer.shadow
 	@discardableResult
 	public func shadow(_ fn: @escaping (UITraitCollection)->StyleShadow) -> Self {
 		set(ShadowApplyer(fn))
 	}
 	
+	public func getShadow(with trait: UITraitCollection, default: StyleShadow = .init()) -> StyleShadow {
+		(applyer() as ShadowApplyer?)?.producer(trait) ?? `default`
+	}
+	
 	@discardableResult
 	public func paragraphSpacing(_ v: UIEdgeInsets) -> Self {
-		set(ParagraphSpacing(v))
+		set(ParagraphSpacingApplyer(v))
+	}
+	
+	public func getParagraphSpacing(default: UIEdgeInsets = .zero) -> UIEdgeInsets {
+		(applyer() as ParagraphSpacingApplyer?)?.value ?? `default`
 	}
 	
 	/// UIButton.contentEdgeInsets |
@@ -223,10 +347,18 @@ extension Style {
 		set(PaddingApplyer(fn))
 	}
 	
+	public func getPadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
+		(applyer() as PaddingApplyer?)?.producer(trait) ?? `default`
+	}
+	
 	/// UIButton.titleEdgeInsets
 	@discardableResult
 	public func titlePadding(_ fn: @escaping (UITraitCollection)->UIEdgeInsets) -> Self {
 		set(TitlePaddingApplyer(fn))
+	}
+	
+	public func getTitlePadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
+		(applyer() as TitlePaddingApplyer?)?.producer(trait) ?? `default`
 	}
 }
 
@@ -277,7 +409,7 @@ extension Style {
 		
 		"shadow": ShadowApplyer.self,
 		
-		"paragraph-spacing": ParagraphSpacing.self,
+		"paragraph-spacing": ParagraphSpacingApplyer.self,
 		"padding": PaddingApplyer.self,
 		"title-padding": TitlePaddingApplyer.self,
 	]
