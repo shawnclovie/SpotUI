@@ -235,6 +235,15 @@ extension Style {
 		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(trait) ?? `default`
 	}
 	
+	@discardableResult
+	public func image(_ fn: @escaping (UITraitCollection)->StyleImageSource) -> Self {
+		set(StillImageApplyer(fn))
+	}
+	
+	public func getImage(with trait: UITraitCollection, default: StyleImageSource = .empty) -> StyleImageSource {
+		(applyer() as StillImageApplyer?)?.producer(trait) ?? `default`
+	}
+	
 	/// CALayer.contents |
 	/// UIImageView.image / .highlightedImage |
 	/// UIButton.setImage for each state |
@@ -242,11 +251,11 @@ extension Style {
 	/// UITabBarItem.selectedImage for highlighed |
 	/// UIBarItem.image
 	@discardableResult
-	public func image(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
+	public func statefulImage(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
 		set(StatefulImageApplyer<ImageApplying>(fn))
 	}
 	
-	public func getImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
+	public func getStatefulImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
 		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(trait) ?? `default`
 	}
 	

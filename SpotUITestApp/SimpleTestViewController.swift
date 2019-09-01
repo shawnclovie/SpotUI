@@ -192,11 +192,17 @@ class SimpleTestViewController: UIViewController {
 			.numberOfLines(0)
 			.padding{_ in .init(top: 4, left: 15, bottom: 20, right: 50)}
 			.textColor(StyleShared.foregroundTextColorProducer)
+			.statefulImage{_ in [
+				.normal: .solidColor(.red, size: .init(width: 10, height: 20)),
+				.highlighted: .solidColor(.blue, size: .init(width: 20, height: 10)),
+				]}
 		print("testButton.padding=", testButtonStyle.getPadding(with: traitCollection))
 		style.bind(testButton, testButtonStyle)
 		style[Style()
 			.textColor(StyleShared.foregroundTextColorProducer)] = deviceInfoText
-		style["image"] = Style().border{($0.spot.userInterfaceStyle == .dark ? .white : .black, 2)}
+		style["image"] = Style()
+			.border{($0.spot.userInterfaceStyle == .dark ? .white : .black, 2)}
+			.image{_ in .solidColor(.yellow, size: .init(width: 30, height: 30))}
 
 		let device = UIDevice.current
 		let text = "device\n" +
@@ -214,6 +220,7 @@ class SimpleTestViewController: UIViewController {
 		view.addSubview(deviceInfoText)
 		
 		testButton.setTitle("Test Button", for: .normal)
+		testButton.addTarget(self, action: #selector(touchUp(test:)), for: .touchUpInside)
 		view.addSubview(testButton)
 		
 		testImageView.spot.apply(styles: ["image"], with: traitCollection)
@@ -269,6 +276,10 @@ class SimpleTestViewController: UIViewController {
 		}
 		let vc = initializeStoryboardViewController(name: vcID)
 		navigationController?.pushViewController(vc, animated: true)
+	}
+	
+	@objc private func touchUp(test: UIButton) {
+		test.isHighlighted = test.state == .normal
 	}
 }
 

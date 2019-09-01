@@ -11,44 +11,67 @@ import UIKit
 import Spot
 import SpotCache
 
-public enum StyleImageSource {
-	case empty
-	case solidColor(UIColor)
-	case name(name: String, size: CGSize, template: Bool)
-	case url(url: URL, placeholder: String?, template: Bool)
+public struct StyleImageSource {
+	enum Source {
+		case empty
+		case solidColor(UIColor, size: CGSize)
+		case name(String, size: CGSize, template: Bool)
+		case url(URL, placeholder: String?, template: Bool)
+	}
+	
+	public static let empty = StyleImageSource(.empty)
+	
+	public static func solidColor(_ color: UIColor, size: CGSize = .init(width: 1, height: 1)) -> StyleImageSource {
+		.init(.solidColor(color, size: size))
+	}
+	
+	public static func name(_ name: String, size: CGSize = .zero, template: Bool = false) -> StyleImageSource {
+		.init(.name(name, size: size, template: template))
+	}
+	
+	public static func url(_ url: URL, placeholder: String? = nil, template: Bool = false) -> StyleImageSource {
+		.init(.url(url, placeholder: placeholder, template: template))
+	}
+	
+	let source: Source
+	
+	init(_ src: Source) {
+		source = src
+	}
 	
 	init(with data: [AnyHashable: Any], predefined: StyleValueSet) {
 		if let value = predefined.value(for: data["url"]) as? String,
 			let url = URL(string: value) {
-			self = .url(url: url,
+			source = .url(url,
 						placeholder: predefined.value(for: data["placeholder"]) as? String,
 						template: data["template"] as? Bool ?? false)
 		} else if let name = predefined.value(for: data["name"]) as? String {
-			self = .name(name: name,
+			source = .name(name,
 						 size: CGSize.spot(predefined.value(for: data["size"])) ?? .zero,
 						 template: data["template"] as? Bool ?? false)
 		} else if let value = predefined.value(for: data["solid-color"]) as? String,
 			let color = DecimalColor(hexARGB: value) {
-			self = .solidColor(color.colorValue)
+			let size = CGSize.spot(predefined.value(for: data["size"])) ?? .init(width: 1, height: 1)
+			source = .solidColor(color.colorValue, size: size)
 		} else {
-			self = .empty
+			source = .empty
 		}
 	}
 	
 	func loadImage(completion: @escaping (UIImage?)->Void) {
-		switch self {
+		switch source {
 		case .empty:
 			completion(nil)
 		case .name(let it):
-			completion(Self.loadImage(name: it.name, size: it.size, template: it.template))
-		case .solidColor(let color):
-			let image = color.cgColor
-				.spot.solidImage(width: 1, height: 1)
+			completion(Self.loadImage(name: it.0, size: it.size, template: it.template))
+		case .solidColor(let it):
+			let image = it.0.cgColor
+				.spot.solidImage(width: Int(it.size.width), height: Int(it.size.height))
 				.map(UIImage.init(cgImage:))
 			completion(image)
 		case .url(let it):
 			completion(Self.loadImage(name: it.placeholder, size: .zero, template: it.template))
-			Cache<UIImage>.shared.fetch(it.url) { result in
+			Cache<UIImage>.shared.fetch(it.0) { result in
 				guard case .success(var image) = result else {return}
 				if it.template {
 					image = image.withRenderingMode(.alwaysTemplate)
@@ -72,6 +95,40 @@ public enum StyleImageSource {
 		return template ? image?.withRenderingMode(.alwaysTemplate) : image
 	}
 }
+
+struct StillImageApplyer: StyleApplyer {
+	var producer: (UITraitCollection)->StyleImageSource
+	
+	init?(with value: Any, predefined: StyleValueSet) {
+		guard let data = predefined.value(for: value) as? [AnyHashable: Any] else {return nil}
+		let image = StyleImageSource(with: data, predefined: predefined)
+		producer = {_ in image}
+	}
+	
+	init(_ fn: @escaping (UITraitCollection)->StyleImageSource) {
+		producer = fn
+	}
+	
+	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+		producer(trait).loadImage { image in
+			switch to {
+			case let layer as CALayer:
+				layer.contents = image?.cgImage
+			case let view as UIImageView:
+				view.image = image
+			case let view as UIButton:
+				view.setImage(image, for: .normal)
+			case let view as UISlider:
+				view.setThumbImage(image, for: .normal)
+			case let item as UIBarItem:
+				item.image = image
+			default:break
+			}
+		}
+	}
+}
+
+// MARK: - Stateful
 
 private func parseStatefulImages(with value: Any, predefined: StyleValueSet) -> [UIControl.State: StyleImageSource] {
 	guard let data = predefined.value(for: value) as? [AnyHashable: Any] else {return [:]}
