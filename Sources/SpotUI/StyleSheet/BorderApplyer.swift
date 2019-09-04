@@ -10,25 +10,35 @@
 import UIKit
 import Spot
 
+public struct StyleBorder {
+	
+	public static var clear: Self {.init(.clear, width: 0)}
+	
+	public var color: UIColor
+	public var width: CGFloat
+	
+	public init(_ color: UIColor, width: CGFloat) {
+		self.color = color
+		self.width = width
+	}
+}
+
 struct BorderApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->(UIColor?, CGFloat)
+	var producer: (UITraitCollection)->StyleBorder
 	
 	init(with value: Any, predefined: StyleValueSet) {
-		var color: UIColor?
-		var width: CGFloat = 0
+		var border = StyleBorder.clear
 		if let data = predefined.value(for: value) as? [AnyHashable: Any] {
 			if let vColor = predefined.value(for: data["color"]) as? String,
 				let dColor = DecimalColor(hexARGB: vColor) {
-				color = dColor.colorValue
-			} else {
-				color = nil
+				border.color = dColor.colorValue
 			}
-			width = CGFloat(predefined.parseDouble(data["width"]))
+			border.width = CGFloat(predefined.parseDouble(data["width"]))
 		}
-		producer = {_ in (color, width)}
+		producer = {_ in border}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->(UIColor?, CGFloat)) {
+	init(_ fn: @escaping (UITraitCollection)->StyleBorder) {
 		producer = fn
 	}
 	
@@ -43,9 +53,9 @@ struct BorderApplyer: StyleApplyer {
 	}
 	
 	private func apply(to layer: CALayer, with trait: UITraitCollection) {
-		let (color, width) = producer(trait)
-		layer.borderColor = color?.cgColor
-		layer.borderWidth = width
+		let border = producer(trait)
+		layer.borderColor = border.color.cgColor
+		layer.borderWidth = border.width
 	}
 }
 #endif

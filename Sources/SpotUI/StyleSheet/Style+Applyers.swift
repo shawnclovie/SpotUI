@@ -123,11 +123,11 @@ extension Style {
 	
 	/// UIView.layer.border | CALayer.border
 	@discardableResult
-	public func border(_ fn: @escaping (UITraitCollection)->(UIColor?, CGFloat)) -> Self {
+	public func border(_ fn: @escaping (UITraitCollection)->StyleBorder) -> Self {
 		set(BorderApplyer(fn))
 	}
 	
-	public func getBorder(with trait: UITraitCollection, default: (UIColor?, CGFloat) = (nil, 0)) -> (UIColor?, CGFloat) {
+	public func getBorder(with trait: UITraitCollection, default: StyleBorder = .clear) -> StyleBorder {
 		(applyer() as BorderApplyer?)?.producer(trait) ?? `default`
 	}
 	

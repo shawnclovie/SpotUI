@@ -12,6 +12,7 @@ import Spot
 public enum StyleShared {
 	
 	public static var clearColorProducer: (UITraitCollection)->UIColor = {_ in .clear}
+	public static var clearBorderProducer: (UITraitCollection)->StyleBorder = {_ in .clear}
 	
 	public static var tintColorLight: UIColor = .systemBlue
 	public static var tintColorDark: UIColor = .systemBlue
