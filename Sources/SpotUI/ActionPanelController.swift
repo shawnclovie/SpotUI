@@ -10,6 +10,34 @@
 import UIKit
 import Spot
 
+public struct ActionPanelStyleSet {
+	public static var shared = ActionPanelStyleSet()
+	
+	public let view = Style()
+		.backgroundColor{_ in StyleShared.maskBackgroundColor}
+	
+	public let panelPadding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+	
+	public let panelView = Style()
+		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
+		.cornerRadius{_ in 10}
+		.maskToBounds(true)
+		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
+	
+	public let titleView = Style()
+		.textAlignment(.center)
+		.font{_ in .systemFont(ofSize: 20, weight: .bold)}
+		.padding{_ in .init(top: 16, left: 16, bottom: 16, right: 16)}
+		.backgroundColor(StyleShared.clearColorProducer)
+	
+	public let cancelButton = Style()
+		.buttonTitleColor{_, _ in StyleShared.secondForegroundTextColor}
+		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
+		.cornerRadius{_ in 10}
+		.maskToBounds(true)
+		.backgroundImage{[.normal: .solidColor(StyleShared.popupPanelBackgroundColorProducer($0))]}
+}
+
 /// ViewController to simulate ActionPanel
 /// - StyleSheet
 ///   - view: action_panel_view_controller
@@ -17,38 +45,11 @@ import Spot
 ///   - title: action_panel_view_controller.title_view
 ///   - cancel: action_panel_view_controller.cancel_button
 open class ActionPanelController: UIViewController {
-
-	public struct StyleSet {
-		public let view = Style()
-			.backgroundColor{_ in StyleShared.maskBackgroundColor}
-		
-		public let panelPadding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-		
-		public let panelView = Style()
-			.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
-			.cornerRadius{_ in 10}
-			.maskToBounds(true)
-			.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
-		
-		public let titleView = Style()
-			.textAlignment(.center)
-			.font{_ in .systemFont(ofSize: 20, weight: .bold)}
-			.padding{_ in .init(top: 16, left: 16, bottom: 16, right: 16)}
-			.backgroundColor(StyleShared.clearColorProducer)
-		
-		public let cancelButton = Style()
-			.buttonTitleColor{_, _ in StyleShared.secondForegroundTextColor}
-			.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
-			.cornerRadius{_ in 10}
-			.maskToBounds(true)
-			.backgroundImage{[.normal: .solidColor(StyleShared.popupPanelBackgroundColorProducer($0))]}
-	}
 	
 	public let panel = UIView()
 	public let titleView = UITextView()
 	public let contentView = UIView()
 	public let cancelButton = UIButton(type: .system)
-	public var style = StyleSet()
 	
 	public var touchUpPanelOutsideHandler: ((ActionPanelController)->Void)?
 	public var touchUpCancelHandler: ((ActionPanelController)->Void)?
@@ -80,7 +81,7 @@ open class ActionPanelController: UIViewController {
 		cancelButton.addTarget(self, action: #selector(touchUp(cancel:)), for: .touchUpInside)
 		view.addSubview(cancelButton)
 		
-		let padding = style.panelPadding
+		let padding = ActionPanelStyleSet.shared.panelPadding
 		panel.spot.constraints(contentView, attributes: [.left, .right, .bottom])
 		[
 			panel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -103,7 +104,8 @@ open class ActionPanelController: UIViewController {
 		resetStyle()
 	}
 	
-	private func resetStyle() {
+	open func resetStyle() {
+		let style = ActionPanelStyleSet.shared
 		style.view.apply(to: view, with: traitCollection)
 		style.panelView.apply(to: panel, with: traitCollection)
 		style.titleView.apply(to: titleView, with: traitCollection)

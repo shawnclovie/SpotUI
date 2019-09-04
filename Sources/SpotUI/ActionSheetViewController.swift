@@ -9,39 +9,38 @@
 import UIKit
 import Spot
 
-open class ActionSheetViewController: UIViewController {
+public struct ActionSheetStyleSet {
+	public static var shared = ActionSheetStyleSet()
+	
+	public let view = Style()
+		.backgroundColor{_ in StyleShared.maskBackgroundColor}
+	
+	public var panelHeight: CGFloat = 300
+	public let panelView = Style()
+		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
+		.shadow{_ in .init(color: .black, offset: .init(width: 0, height: -2), opacity: 0.5, radius: 4)}
+	
+	public var contentViewPadding: CGFloat = 10
+	
+	public let titleView = Style()
+		.backgroundColor(StyleShared.clearColorProducer)
+		.font{_ in .systemFont(ofSize: 20)}
+		.textAlignment(.center)
+		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
+	
+	public var buttonHeight: CGFloat = 40
+	public let button = Style()
+		.font{_ in .systemFont(ofSize: 12)}
+		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
+	
+	public let statefulButtons: [UIAlertAction.Style: Style] = [
+		.cancel: Style().backgroundImage{_ in [.normal: .solidColor(DecimalColor(rgb: 0xc2c2c2).colorValue)]},
+		.default: Style().backgroundImage{[.normal: .solidColor(StyleShared.tintColorProducer($0))]},
+		.destructive: Style().backgroundImage{_ in [.normal: .solidColor(StyleShared.destructiveTintColor)]},
+	]
+}
 
-	public struct StyleSet {
-		
-		public let view = Style()
-			.backgroundColor{_ in StyleShared.maskBackgroundColor}
-		
-		public var panelHeight: CGFloat = 300
-		public let panelView = Style()
-			.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
-			.shadow{_ in .init(color: .black, offset: .init(width: 0, height: -2), opacity: 0.5, radius: 4)}
-		
-		public var contentViewPadding: CGFloat = 10
-		
-		public let titleView = Style()
-			.backgroundColor(StyleShared.clearColorProducer)
-			.font{_ in .systemFont(ofSize: 20)}
-			.textAlignment(.center)
-			.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
-		
-		public var buttonHeight: CGFloat = 40
-		public let button = Style()
-			.font{_ in .systemFont(ofSize: 12)}
-			.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
-		
-		public let statefulButtons: [UIAlertAction.Style: Style] = [
-			.cancel: Style().backgroundImage{_ in [.normal: .solidColor(DecimalColor(rgb: 0xc2c2c2).colorValue)]},
-			.default: Style().backgroundImage{[.normal: .solidColor(StyleShared.tintColorProducer($0))]},
-			.destructive: Style().backgroundImage{_ in [.normal: .solidColor(StyleShared.destructiveTintColor)]},
-			]
-		
-		public init() {}
-	}
+open class ActionSheetViewController: UIViewController {
 	
 	public let titleView = UITextView()
 	public let contentView = UIView()
@@ -55,12 +54,6 @@ open class ActionSheetViewController: UIViewController {
 	private var buttonWrapperHeightConstraint: NSLayoutConstraint?
 	private var buttonWrapperBottomConstraint: NSLayoutConstraint?
 
-	public var style = StyleSet() {
-		didSet {
-			resetStyle()
-		}
-	}
-	
 	public let touchUpOnEdgeEvent = EventObservable<ActionSheetViewController>()
 	
 	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -146,6 +139,7 @@ open class ActionSheetViewController: UIViewController {
 	}
 	
 	open func resetStyle() {
+		let style = ActionSheetStyleSet.shared
 		panelHeightConstraint?.constant = max(style.panelHeight, style.contentViewPadding * 2 + style.buttonHeight)
 		contentViewLeftConstraint?.constant = style.contentViewPadding
 		contentViewRightConstraint?.constant = -style.contentViewPadding
@@ -162,7 +156,7 @@ open class ActionSheetViewController: UIViewController {
 	}
 	
 	open func setStyle(_ style: UIAlertAction.Style, to: UIView) {
-		self.style.button.apply(to: to, with: traitCollection)
-		self.style.statefulButtons[style]?.apply(to: to, with: traitCollection)
+		ActionSheetStyleSet.shared.button.apply(to: to, with: traitCollection)
+		ActionSheetStyleSet.shared.statefulButtons[style]?.apply(to: to, with: traitCollection)
 	}
 }

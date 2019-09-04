@@ -10,53 +10,55 @@
 import UIKit
 import Spot
 
-open class AlertController: UIViewController {
-
-	public struct StyleSet {
-		public let view = Style()
-			.backgroundColor{_ in StyleShared.maskBackgroundColor}
-		
-		public let titleView = Style()
-			.backgroundColor(StyleShared.clearColorProducer)
-			.padding {_ in .init(top: 20, left: 10, bottom: 20, right: 10)}
-			.textAlignment(.center)
-		
-		public let panelView = Style()
-			.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
-			.cornerRadius {$0.userInterfaceIdiom == .pad ? 28 : 20}
-			.maskToBounds(true)
-		
-		public let contentView = Style()
-			.backgroundColor(StyleShared.clearColorProducer)
-		
-		public let titleText = Style()
-			.font {_ in .systemFont(ofSize: 20, weight: .bold)}
-			.textColor(StyleShared.foregroundTextColorProducer)
-		
-		public let messageText = Style()
-			.font {_ in .systemFont(ofSize: 14)}
-			.textColor(StyleShared.foregroundTextColorProducer)
-			.padding {_ in .init(top: 0, left: 8, bottom: 0, right: 8)}
-		
-		public var buttonHeight: CGFloat = 44
-		
-		public let button = Style()
-			.padding {_ in .init(top: 4, left: 10, bottom: 4, right: 10)}
-			.lineBreakMode(.byWordWrapping)
-		
-		public let buttonFontDefault = Style()
+public struct AlertStyleSet {
+	public static var shared = AlertStyleSet()
+	
+	public let view = Style()
+		.backgroundColor{_ in StyleShared.maskBackgroundColor}
+	
+	public let titleView = Style()
+		.backgroundColor(StyleShared.clearColorProducer)
+		.padding {_ in .init(top: 20, left: 10, bottom: 20, right: 10)}
+		.textAlignment(.center)
+	
+	public let panelView = Style()
+		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
+		.cornerRadius {$0.userInterfaceIdiom == .pad ? 28 : 20}
+		.maskToBounds(true)
+	
+	public let contentView = Style()
+		.backgroundColor(StyleShared.clearColorProducer)
+	
+	public let titleText = Style()
+		.font {_ in .systemFont(ofSize: 20, weight: .bold)}
+		.textColor(StyleShared.foregroundTextColorProducer)
+	
+	public let messageText = Style()
+		.font {_ in .systemFont(ofSize: 14)}
+		.textColor(StyleShared.foregroundTextColorProducer)
+		.padding {_ in .init(top: 0, left: 8, bottom: 0, right: 8)}
+	
+	public var buttonHeight: CGFloat = 44
+	
+	public let button = Style()
+		.padding {_ in .init(top: 4, left: 10, bottom: 4, right: 10)}
+		.lineBreakMode(.byWordWrapping)
+	
+	public let buttonFontDefault = Style()
+		.buttonTitleColor(StyleShared.statefulTintColorProducer)
+		.font {.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 24 : 18)}
+	
+	public var buttonForStyles: [UIAlertAction.Style: Style] = [
+		.cancel: Style()
 			.buttonTitleColor(StyleShared.statefulTintColorProducer)
-			.font {.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 24 : 18)}
-		
-		public var buttonForStyles: [UIAlertAction.Style: Style] = [
-			.cancel: Style()
-				.buttonTitleColor(StyleShared.statefulTintColorProducer)
-				.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
-			.destructive: Style()
-				.buttonTitleColor {_, _  in StyleShared.destructiveTintColor}
-				.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
-		]
-	}
+			.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
+		.destructive: Style()
+			.buttonTitleColor {_, _  in StyleShared.destructiveTintColor}
+			.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
+	]
+}
+
+open class AlertController: UIViewController {
 	
 	public struct Action {
 		public var title: String?
@@ -69,12 +71,6 @@ open class AlertController: UIViewController {
 			self.image = image
 			self.style = style
 			self.handler = handler
-		}
-	}
-	
-	public var style = StyleSet() {
-		didSet {
-			view.setNeedsLayout()
 		}
 	}
 	
@@ -128,7 +124,7 @@ open class AlertController: UIViewController {
 			buttonsView.rightAnchor.constraint(equalTo: panelView.rightAnchor),
 			buttonsView.bottomAnchor.constraint(equalTo: panelView.bottomAnchor),
 			].spot_set(active: true)
-		buttonsViewHeightConstraint = buttonsView.heightAnchor.constraint(equalToConstant: style.buttonHeight).spot.setActived()
+		buttonsViewHeightConstraint = buttonsView.heightAnchor.constraint(equalToConstant: AlertStyleSet.shared.buttonHeight).spot.setActived()
 		
 		panelView.spot.addHorizontalLine(with: buttonsView, .top)
 		
@@ -142,6 +138,7 @@ open class AlertController: UIViewController {
 	}
 	
 	open func resetStyle() {
+		let style = AlertStyleSet.shared
 		style.view.apply(to: view, with: traitCollection)
 		style.panelView.apply(to: panelView, with: traitCollection)
 		style.titleView.apply(to: titleView, with: traitCollection)
@@ -163,6 +160,7 @@ open class AlertController: UIViewController {
 	}
 	
 	private func setStyle(for action: Action, to: UIButton) {
+		let style = AlertStyleSet.shared
 		[
 			style.button,
 			style.buttonForStyles[action.style] ?? style.buttonFontDefault,
@@ -194,15 +192,16 @@ open class AlertController: UIViewController {
 			} else {
 				horizontal = false
 			}
+			let buttonHeight = AlertStyleSet.shared.buttonHeight
 			if horizontal {
-				var frame = CGRect(x: 0, y: 0, width: containerWidth / CGFloat(horizontalButtonCount), height: style.buttonHeight)
+				var frame = CGRect(x: 0, y: 0, width: containerWidth / CGFloat(horizontalButtonCount), height: buttonHeight)
 				for sub in subs {
 					sub.frame = frame
 					frame.origin.x += frame.width
 				}
-				buttonsViewHeightConstraint?.constant = style.buttonHeight
+				buttonsViewHeightConstraint?.constant = buttonHeight
 			} else {
-				var frame = CGRect(x: 0, y: 0, width: containerWidth, height: style.buttonHeight)
+				var frame = CGRect(x: 0, y: 0, width: containerWidth, height: buttonHeight)
 				for sub in subs {
 					sub.frame = frame
 					frame.origin.y += frame.height
