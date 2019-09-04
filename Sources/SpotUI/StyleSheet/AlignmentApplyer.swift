@@ -85,4 +85,28 @@ struct VerticalAlignmentApplyer: StyleApplyer {
 		}
 	}
 }
+
+struct StackAlignmentApplyer: StyleApplyer {
+	var value: UIStackView.Alignment
+	
+	init(_ v: UIStackView.Alignment) {
+		value = v
+	}
+	
+	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+		(to as? UIStackView)?.alignment = value
+	}
+}
+
+struct StackDistributionApplyer: StyleApplyer {
+	var value: UIStackView.Distribution
+	
+	init(_ v: UIStackView.Distribution) {
+		value = v
+	}
+	
+	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+		(to as? UIStackView)?.distribution = value
+	}
+}
 #endif

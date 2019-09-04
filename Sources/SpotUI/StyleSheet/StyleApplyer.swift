@@ -15,5 +15,8 @@ public protocol StyleApplyer {
 }
 
 extension StyleApplyer {
+	init?(with value: Any, predefined: StyleValueSet) {
+		return nil
+	}
 	public func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {}
 }

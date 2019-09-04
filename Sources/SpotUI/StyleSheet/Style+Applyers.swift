@@ -16,6 +16,8 @@ extension Style {
 		applyers["\(T.self)"] as? T
 	}
 	
+	// MARK: - Bool
+	
 	/// UIView.isHidden | CALayer.isHidden
 	@discardableResult
 	public func hidden(_ v: Bool) -> Self {
@@ -56,6 +58,8 @@ extension Style {
 		(applyer() as BoolApplyer<UserInteractionEnabledApplying>?)?.value ?? `default`
 	}
 	
+	// MARK: - ContentMode & Axis & LineBreakMode
+	
 	/// UIButton.imageView?.contentMode |
 	/// UIView.contentMode
 	@discardableResult
@@ -90,6 +94,8 @@ extension Style {
 		(applyer() as LineBreakModeApplyer?)?.value ?? `default`
 	}
 	
+	// MARK: - Alignment
+	
 	/// UILabel.textAlignment | UITextView.textAlignment |
 	/// UITextField.textAlignment | UIButton.titleLabel?.textAlignment
 	@discardableResult
@@ -111,6 +117,26 @@ extension Style {
 		(applyer() as VerticalAlignmentApplyer?)?.value ?? `default`
 	}
 	
+	@discardableResult
+	public func stackAlignment(_ v: UIStackView.Alignment) -> Self {
+		set(StackAlignmentApplyer(v))
+	}
+	
+	public func getStackAlignment(default: UIStackView.Alignment) -> UIStackView.Alignment {
+		(applyer() as StackAlignmentApplyer?)?.value ?? `default`
+	}
+	
+	@discardableResult
+	public func stackDistribution(_ v: UIStackView.Distribution) -> Self {
+		set(StackDistributionApplyer(v))
+	}
+	
+	public func getStackDistribution(default: UIStackView.Distribution) -> UIStackView.Distribution {
+		(applyer() as StackDistributionApplyer?)?.value ?? `default`
+	}
+	
+	// MARK: - Size
+	
 	/// UICollectionView.UICollectionViewFlowLayout.itemSize
 	@discardableResult
 	public func itemSize(_ fn: @escaping (UITraitCollection)->CGSize) -> Self {
@@ -121,6 +147,8 @@ extension Style {
 		(applyer() as ItemSizeApplyer?)?.producer(trait) ?? `default`
 	}
 	
+	// MARK: - Border
+	
 	/// UIView.layer.border | CALayer.border
 	@discardableResult
 	public func border(_ fn: @escaping (UITraitCollection)->StyleBorder) -> Self {
@@ -130,6 +158,8 @@ extension Style {
 	public func getBorder(with trait: UITraitCollection, default: StyleBorder = .clear) -> StyleBorder {
 		(applyer() as BorderApplyer?)?.producer(trait) ?? `default`
 	}
+	
+	// MARK: - Color
 	
 	/// UIView.backgroundColor | CALayer.backgroundColor
 	@discardableResult
@@ -205,6 +235,8 @@ extension Style {
 		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(trait) ?? `default`
 	}
 	
+	// MARK: - [Double]
+	
 	/// CAShapeLayer.lineDashPattern
 	@discardableResult
 	public func lineDashPattern(_ fn: @escaping (UITraitCollection)->[Double]) -> Self {
@@ -215,6 +247,8 @@ extension Style {
 		(applyer() as LineDashPatternApplyer?)?.producer(trait) ?? `default`
 	}
 	
+	// MARK: - Font
+	
 	/// UILabel.font | UIButton.titleLabel?.font | UITextView.font
 	@discardableResult
 	public func font(_ fn: @escaping (UITraitCollection)->UIFont) -> Self {
@@ -224,6 +258,8 @@ extension Style {
 	public func getFont(with trait: UITraitCollection, default: UIFont = .systemFont(ofSize: 17)) -> UIFont {
 		(applyer() as FontApplyer?)?.producer(trait) ?? `default`
 	}
+	
+	// MARK: - Image
 	
 	/// UIButton.setBackgroundImage | UISearchBar.backgroundImage
 	@discardableResult
@@ -264,6 +300,8 @@ extension Style {
 	public func slideTrackImage(min: [UIControl.State: StyleImageSource], max: [UIControl.State: StyleImageSource]) -> Self {
 		set(SlideTrackImageApplyer(min: min, max: max))
 	}
+	
+	// MARK: - Number
 	
 	/// UIView.alpha | CALayer.opacity
 	@discardableResult
@@ -329,6 +367,8 @@ extension Style {
 		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(trait) ?? `default`
 	}
 	
+	// MARK: - Shadow
+	
 	/// UIView.layer.shadow | CALayer.shadow
 	@discardableResult
 	public func shadow(_ fn: @escaping (UITraitCollection)->StyleShadow) -> Self {
@@ -338,6 +378,8 @@ extension Style {
 	public func getShadow(with trait: UITraitCollection, default: StyleShadow = .init()) -> StyleShadow {
 		(applyer() as ShadowApplyer?)?.producer(trait) ?? `default`
 	}
+	
+	// MARK: - EdgeInsets
 	
 	@discardableResult
 	public func paragraphSpacing(_ v: UIEdgeInsets) -> Self {
