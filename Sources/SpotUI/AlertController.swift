@@ -128,13 +128,16 @@ open class AlertController: UIViewController {
 		
 		panelView.spot.addHorizontalLine(with: buttonsView, .top)
 		
-		resetStyle()
-		
 		let center = NotificationCenter.default
 		center.addObserver(self, selector: #selector(notify(keyboardFrameChanged:)),
 						   name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 		center.addObserver(self, selector: #selector(notify(keyboardHide:)),
 						   name: UIResponder.keyboardWillHideNotification, object: nil)
+	}
+	
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		resetStyle()
 	}
 	
 	open func resetStyle() {

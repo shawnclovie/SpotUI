@@ -93,8 +93,6 @@ open class ActionSheetViewController: UIViewController {
 			buttonWrapper.leftAnchor.constraint(equalTo: panel.leftAnchor),
 			buttonWrapper.rightAnchor.constraint(equalTo: panel.rightAnchor),
 			].spot_set(active: true)
-		
-		resetStyle()
 	}
 	
 	override open func viewDidLayoutSubviews() {
@@ -111,6 +109,7 @@ open class ActionSheetViewController: UIViewController {
 	
 	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		resetStyle()
 		panel.transform = .init(translationX: 0, y: panel.bounds.height)
 		UIView.animate(withDuration: 0.3, animations: {
 			self.panel.transform = .identity

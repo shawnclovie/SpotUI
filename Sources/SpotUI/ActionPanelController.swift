@@ -95,7 +95,10 @@ open class ActionPanelController: UIViewController {
 			cancelButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -(padding.left + padding.right)),
 			cancelButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: -padding.bottom),
 		].spot_set(active: true)
-		
+	}
+	
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		resetStyle()
 	}
 	
