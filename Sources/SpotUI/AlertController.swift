@@ -64,12 +64,14 @@ open class AlertController: UIViewController {
 		public var title: String?
 		public var image: UIImage?
 		public var style: UIAlertAction.Style
+		public var mark: Any?
 		public var handler: ((Action)->Void)?
 		
-		public init(title: String?, image: UIImage? = nil, style: UIAlertAction.Style, handler: ((Action)->Void)?) {
+		public init(title: String?, image: UIImage? = nil, style: UIAlertAction.Style, mark: Any? = nil, handler: ((Action)->Void)?) {
 			self.title = title
 			self.image = image
 			self.style = style
+			self.mark = mark
 			self.handler = handler
 		}
 	}
