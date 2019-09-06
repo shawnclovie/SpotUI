@@ -78,6 +78,7 @@ open class AlertController: UIViewController {
 	public let panelView = UIView()
 	public let titleView = UITextView()
 	public var titleViewTexts: (title: String, message: String?) = ("", nil)
+	public var shouldDismissOnActionTouchUp = true
 	
 	private var titleViewHeightConstraint: NSLayoutConstraint?
 	private let buttonsView = UIView()
@@ -234,7 +235,7 @@ open class AlertController: UIViewController {
 	}
 	
 	open func shouldAutoDismiss(for action: Action) -> Bool {
-		true
+		shouldDismissOnActionTouchUp
 	}
 	
 	public func addAction(_ action: Action) {
