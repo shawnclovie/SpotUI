@@ -84,6 +84,12 @@ open class AlertController: UIViewController {
 	private var buttonsViewHeightConstraint: NSLayoutConstraint?
 	private var actions: [UIButton: Action] = [:]
 	
+	convenience public init(title: String, message: String?, actions: [Action] = []) {
+		self.init(nibName: nil, bundle: nil)
+		titleViewTexts = (title, message)
+		actions.forEach(addAction(_:))
+	}
+	
 	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 		modalPresentationStyle = .overCurrentContext
@@ -155,6 +161,9 @@ open class AlertController: UIViewController {
 				attrText.append(.init(string: "\n"))
 				attrText.append(.init(string: value, attributes: style.messageText.stringAttributes(with: traitCollection)))
 			}
+			let paraStyle = NSMutableParagraphStyle()
+			paraStyle.alignment = style.titleView.getTextAlignment(default: .center)
+			attrText.addAttributes([.paragraphStyle: paraStyle], range: .init(location: 0, length: attrText.length))
 			titleView.attributedText = attrText
 		}
 		for (button, action) in actions {

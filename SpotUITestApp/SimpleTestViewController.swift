@@ -154,19 +154,22 @@ class SimpleTestViewController: UIViewController {
 			vc.present(newVC, animated: true, completion: nil)
 		}),
 		("AlertVC", { vc in
-			let newVC = AlertController(nibName: nil, bundle: nil)
-			newVC.set(title: "Title", message: "Message")
-			newVC.addAction(.init(title: "OK", style: .default, handler: nil))
-			newVC.addAction(.init(title: "cancel", style: .cancel, handler: nil))
-			newVC.addAction(.init(title: "delete", style: .destructive, handler: nil))
-			newVC.addAction(.init(title: "Alert", style: .default, handler: { (_) in
-				vc.present(UIAlertController(title: nil, message: nil, preferredStyle: .alert, actions: [
+			let newVC = AlertController(title: "Title", message: "Message", actions: [
+				.init(title: "OK", style: .default, handler: nil),
+				.init(title: "cancel", style: .cancel, handler: nil),
+				.init(title: "delete", style: .destructive, handler: nil),
+				.init(title: "Alert", style: .default, handler: { (_) in
+					vc.present(UIAlertController(title: nil, message: nil, preferredStyle: .alert, actions: [
 					.init(title: "OK", style: .default, handler: nil)
-				], popover: (vc.actionTableView, vc.actionTableView.bounds)), animated: true, completion: nil)
-			}))
-			newVC.panelView.backgroundColor = .white
-			let label = UITextField()
-			label.text = "abc"
+					], popover: (vc.actionTableView, vc.actionTableView.bounds)), animated: true, completion: nil)
+					}),
+			])
+			let data = try! Data(contentsOf: Bundle.main.url(forResource: "images/some.html", withExtension: nil)!)
+			let label = UITextView()
+			label.backgroundColor = .clear
+			label.contentInset = .init(top: 8, left: 8, bottom: 8, right: 8)
+			label.spot.disableInteraction()
+			label.attributedText = try! .init(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
 			newVC.contentView.addSubview(label)
 			newVC.contentView.spot.constraints(label)
 			vc.present(newVC, animated: true, completion: nil)
