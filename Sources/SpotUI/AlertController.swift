@@ -226,9 +226,11 @@ open class AlertController: UIViewController {
 		}
 	}
 	
-	open override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		actions.removeAll()
+	open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+		if presentedViewController == nil {
+			actions.removeAll()
+		}
+		super.dismiss(animated: flag, completion: completion)
 	}
 	
 	public func set(title: String, message: String? = nil) {
