@@ -67,8 +67,13 @@ extension Style {
 		set(ContentModeApplyer(v))
 	}
 	
+	/// Default: scaleToFill
 	public func getContentMode(default: UIView.ContentMode = .scaleToFill) -> UIView.ContentMode {
-		(applyer() as ContentModeApplyer?)?.value ?? `default`
+		optContentMode ?? `default`
+	}
+	
+	public var optContentMode: UIView.ContentMode? {
+		(applyer() as ContentModeApplyer?)?.value
 	}
 	
 	/// UIStackView.axis |
@@ -78,8 +83,8 @@ extension Style {
 		set(LayoutConstraintAxisApplyer(v))
 	}
 	
-	public func getAxis(default: NSLayoutConstraint.Axis) -> NSLayoutConstraint.Axis {
-		(applyer() as LayoutConstraintAxisApplyer?)?.value ?? `default`
+	public var optAxis: NSLayoutConstraint.Axis? {
+		(applyer() as LayoutConstraintAxisApplyer?)?.value
 	}
 	
 	/// UILabel.lineBreakMode |
@@ -90,8 +95,8 @@ extension Style {
 		set(LineBreakModeApplyer(v))
 	}
 	
-	public func getLineBreakMode(default: NSLineBreakMode) -> NSLineBreakMode {
-		(applyer() as LineBreakModeApplyer?)?.value ?? `default`
+	public var optLineBreakMode: NSLineBreakMode? {
+		(applyer() as LineBreakModeApplyer?)?.value
 	}
 	
 	// MARK: - Alignment
@@ -103,8 +108,8 @@ extension Style {
 		set(TextAlignmentApplyer(v))
 	}
 	
-	public func getTextAlignment(default: NSTextAlignment) -> NSTextAlignment {
-		(applyer() as TextAlignmentApplyer?)?.value ?? `default`
+	public var optTextAlignment: NSTextAlignment? {
+		(applyer() as TextAlignmentApplyer?)?.value
 	}
 	
 	/// UIControl.contentVerticalAlignment
@@ -113,8 +118,8 @@ extension Style {
 		set(VerticalAlignmentApplyer(v))
 	}
 	
-	public func getVerticalAlignment(default: UIControl.ContentVerticalAlignment) -> UIControl.ContentVerticalAlignment {
-		(applyer() as VerticalAlignmentApplyer?)?.value ?? `default`
+	public var optVerticalAlignment: UIControl.ContentVerticalAlignment? {
+		(applyer() as VerticalAlignmentApplyer?)?.value
 	}
 	
 	@discardableResult
@@ -122,8 +127,8 @@ extension Style {
 		set(StackAlignmentApplyer(v))
 	}
 	
-	public func getStackAlignment(default: UIStackView.Alignment) -> UIStackView.Alignment {
-		(applyer() as StackAlignmentApplyer?)?.value ?? `default`
+	public var optStackAlignment: UIStackView.Alignment? {
+		(applyer() as StackAlignmentApplyer?)?.value
 	}
 	
 	@discardableResult
@@ -131,8 +136,8 @@ extension Style {
 		set(StackDistributionApplyer(v))
 	}
 	
-	public func getStackDistribution(default: UIStackView.Distribution) -> UIStackView.Distribution {
-		(applyer() as StackDistributionApplyer?)?.value ?? `default`
+	public var optStackDistribution: UIStackView.Distribution? {
+		(applyer() as StackDistributionApplyer?)?.value
 	}
 	
 	// MARK: - Size
@@ -143,8 +148,13 @@ extension Style {
 		set(ItemSizeApplyer(fn))
 	}
 	
+	/// Default: zero
 	public func getItemSize(with trait: UITraitCollection, default: CGSize = .zero) -> CGSize {
-		(applyer() as ItemSizeApplyer?)?.producer(trait) ?? `default`
+		optItemSize(with: trait) ?? `default`
+	}
+	
+	public func optItemSize(with trait: UITraitCollection) -> CGSize? {
+		(applyer() as ItemSizeApplyer?)?.producer(trait)
 	}
 	
 	// MARK: - Border
@@ -155,8 +165,13 @@ extension Style {
 		set(BorderApplyer(fn))
 	}
 	
+	/// Default: clear
 	public func getBorder(with trait: UITraitCollection, default: StyleBorder = .clear) -> StyleBorder {
-		(applyer() as BorderApplyer?)?.producer(trait) ?? `default`
+		optBorder(with: trait) ?? `default`
+	}
+	
+	public func optBorder(with trait: UITraitCollection) -> StyleBorder? {
+		(applyer() as BorderApplyer?)?.producer(trait)
 	}
 	
 	// MARK: - Color
@@ -167,8 +182,13 @@ extension Style {
 		set(ColorApplyer<BackgroundColorApplying>(fn))
 	}
 	
-	public func getBackgroundColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<BackgroundColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getBackgroundColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optBackgroundColor(with: trait) ?? `default`
+	}
+	
+	public func optBackgroundColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<BackgroundColorApplying>?)?.producer(trait)
 	}
 	
 	/// UILabel.textColor | UITextField.textColor | UITextView.textColor
@@ -177,8 +197,13 @@ extension Style {
 		set(ColorApplyer<TextColorApplying>(fn))
 	}
 	
-	public func getTextColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<TextColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getTextColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optTextColor(with: trait) ?? `default`
+	}
+	
+	public func optTextColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<TextColorApplying>?)?.producer(trait)
 	}
 	
 	/// UIButton.setTitleColor
@@ -188,8 +213,13 @@ extension Style {
 		set(StatefulTitleColorApplyer(for: states, fn))
 	}
 	
-	public func getButtonTitleColor(state: UIControl.State, with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as StatefulTitleColorApplyer?)?.producer(state, trait) ?? `default`
+	/// Default: clear
+	public func getButtonTitleColor(state: UIControl.State, with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optButtonTitleColor(state: state, with: trait) ?? `default`
+	}
+	
+	public func optButtonTitleColor(state: UIControl.State, with trait: UITraitCollection) -> UIColor? {
+		(applyer() as StatefulTitleColorApplyer?)?.producer(state, trait)
 	}
 	
 	/// UIView.tintColor | UIBarButtonItem.tintColor
@@ -198,8 +228,13 @@ extension Style {
 		set(ColorApplyer<TintColorApplying>(fn))
 	}
 	
-	public func getTintColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<TintColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getTintColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optTintColor(with: trait) ?? `default`
+	}
+	
+	public func optTintColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<TintColorApplying>?)?.producer(trait)
 	}
 	
 	/// UIToolbar.barTintColor |
@@ -211,8 +246,13 @@ extension Style {
 		set(ColorApplyer<BarTintColorApplying>(fn))
 	}
 	
-	public func getBarTintColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<BarTintColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getBarTintColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optBarTintColor(with: trait) ?? `default`
+	}
+	
+	public func optBarTintColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<BarTintColorApplying>?)?.producer(trait)
 	}
 	
 	/// CAShapeLayer.fillColor
@@ -221,8 +261,13 @@ extension Style {
 		set(ColorApplyer<FillColorApplying>(fn))
 	}
 	
-	public func getFillColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<FillColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getFillColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optFillColor(with: trait) ?? `default`
+	}
+	
+	public func optFillColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<FillColorApplying>?)?.producer(trait)
 	}
 	
 	/// CAShapeLayer.strokeColor
@@ -231,8 +276,13 @@ extension Style {
 		set(ColorApplyer<StrokeColorApplying>(fn))
 	}
 	
-	public func getStrokeColor(with trait: UITraitCollection, default: UIColor? = nil) -> UIColor? {
-		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(trait) ?? `default`
+	/// Default: clear
+	public func getStrokeColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+		optStrokeColor(with: trait) ?? `default`
+	}
+	
+	public func optStrokeColor(with trait: UITraitCollection) -> UIColor? {
+		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(trait)
 	}
 	
 	// MARK: - [Double]
@@ -243,8 +293,13 @@ extension Style {
 		set(LineDashPatternApplyer(fn))
 	}
 	
+	/// Default: []
 	public func getLineDashPattern(with trait: UITraitCollection, default: [Double] = []) -> [Double] {
-		(applyer() as LineDashPatternApplyer?)?.producer(trait) ?? `default`
+		optLineDashPattern(with: trait) ?? `default`
+	}
+	
+	public func optLineDashPattern(with trait: UITraitCollection) -> [Double]? {
+		(applyer() as LineDashPatternApplyer?)?.producer(trait)
 	}
 	
 	// MARK: - Font
@@ -255,8 +310,13 @@ extension Style {
 		set(FontApplyer(fn))
 	}
 	
+	/// Default: systemFont(ofSize: 17)
 	public func getFont(with trait: UITraitCollection, default: UIFont = .systemFont(ofSize: 17)) -> UIFont {
-		(applyer() as FontApplyer?)?.producer(trait) ?? `default`
+		optFont(with: trait) ?? `default`
+	}
+	
+	public func optFont(with trait: UITraitCollection) -> UIFont? {
+		(applyer() as FontApplyer?)?.producer(trait)
 	}
 	
 	// MARK: - Image
@@ -267,8 +327,13 @@ extension Style {
 		set(StatefulImageApplyer<BackgroundImageApplying>(fn))
 	}
 	
+	/// Default: [:]
 	public func getBackgroundImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
-		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(trait) ?? `default`
+		optBackgroundImage(with: trait) ?? `default`
+	}
+	
+	public func optBackgroundImage(with trait: UITraitCollection) -> [UIControl.State: StyleImageSource]? {
+		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(trait)
 	}
 	
 	@discardableResult
@@ -276,8 +341,13 @@ extension Style {
 		set(StillImageApplyer(fn))
 	}
 	
+	/// Default: empty
 	public func getImage(with trait: UITraitCollection, default: StyleImageSource = .empty) -> StyleImageSource {
-		(applyer() as StillImageApplyer?)?.producer(trait) ?? `default`
+		optImage(with: trait) ?? `default`
+	}
+	
+	public func optImage(with trait: UITraitCollection) -> StyleImageSource? {
+		(applyer() as StillImageApplyer?)?.producer(trait)
 	}
 	
 	/// CALayer.contents |
@@ -291,8 +361,13 @@ extension Style {
 		set(StatefulImageApplyer<ImageApplying>(fn))
 	}
 	
+	/// Default: [:]
 	public func getStatefulImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
-		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(trait) ?? `default`
+		optStatefulImage(with: trait) ?? `default`
+	}
+	
+	public func optStatefulImage(with trait: UITraitCollection) -> [UIControl.State: StyleImageSource]? {
+		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(trait)
 	}
 	
 	/// setMinimumTrackImage and setMaximumTrackImage of UISlider
@@ -309,8 +384,13 @@ extension Style {
 		set(NumberApplyer<AlphaApplying>(v))
 	}
 	
+	/// Default: 1
 	public func getAlpha(default: CGFloat = 1) -> CGFloat {
-		(applyer() as NumberApplyer<AlphaApplying>?)?.value ?? `default`
+		optAlpha ?? `default`
+	}
+	
+	public var optAlpha: CGFloat? {
+		(applyer() as NumberApplyer<AlphaApplying>?)?.value
 	}
 	
 	/// UIView.layer.cornerRadius | CALayer.cornerRadius
@@ -319,8 +399,13 @@ extension Style {
 		set(TraitNumberApplyer<CornerRadiusApplying>(fn))
 	}
 	
+	/// Default: 0
 	public func getCornerRadius(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
-		(applyer() as TraitNumberApplyer<CornerRadiusApplying>?)?.producer(trait) ?? `default`
+		optCornerRadius(with: trait) ?? `default`
+	}
+	
+	public func optCornerRadius(with trait: UITraitCollection) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<CornerRadiusApplying>?)?.producer(trait)
 	}
 	
 	/// UILabel.numberOfLines |
@@ -331,8 +416,13 @@ extension Style {
 		set(NumberApplyer<NumberOfLinesApplying>(CGFloat(v)))
 	}
 	
+	/// Default: 1
 	public func getNumberOfLines(default: Int = 1) -> Int {
-		((applyer() as NumberApplyer<NumberOfLinesApplying>?)?.value).map(Int.init) ?? `default`
+		optNumberOfLines ?? `default`
+	}
+	
+	public var optNumberOfLines: Int? {
+		((applyer() as NumberApplyer<NumberOfLinesApplying>?)?.value).map(Int.init)
 	}
 	
 	/// UITextView.textContainer.lineFragmentPadding |
@@ -342,8 +432,13 @@ extension Style {
 		set(TraitNumberApplyer<LineSpacingApplying>(fn))
 	}
 	
+	/// Default: 0
 	public func getLineSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
-		(applyer() as TraitNumberApplyer<LineSpacingApplying>?)?.producer(trait) ?? `default`
+		optLineSpacing(with: trait) ?? `default`
+	}
+	
+	public func optLineSpacing(with trait: UITraitCollection) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<LineSpacingApplying>?)?.producer(trait)
 	}
 	
 	/// CAShapeLayer.lineWIdth
@@ -352,8 +447,13 @@ extension Style {
 		set(TraitNumberApplyer<LineWidthApplying>(fn))
 	}
 	
+	/// Default: 0
 	public func getLineWidth(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
-		(applyer() as TraitNumberApplyer<LineWidthApplying>?)?.producer(trait) ?? `default`
+		optLineWidth(with: trait) ?? `default`
+	}
+	
+	public func optLineWidth(with trait: UITraitCollection) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<LineWidthApplying>?)?.producer(trait)
 	}
 	
 	/// UICollectionView.UICollectionViewFlowLayout.minimumInteritemSpacing |
@@ -363,8 +463,13 @@ extension Style {
 		set(TraitNumberApplyer<SpacingApplying>(fn))
 	}
 	
+	/// Default: 0
 	public func getSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
-		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(trait) ?? `default`
+		optSpacing(with: trait) ?? `default`
+	}
+	
+	public func optSpacing(with trait: UITraitCollection) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(trait)
 	}
 	
 	// MARK: - Shadow
@@ -375,8 +480,13 @@ extension Style {
 		set(ShadowApplyer(fn))
 	}
 	
+	/// Default: no border - .init()
 	public func getShadow(with trait: UITraitCollection, default: StyleShadow = .init()) -> StyleShadow {
-		(applyer() as ShadowApplyer?)?.producer(trait) ?? `default`
+		optShadow(with: trait) ?? `default`
+	}
+	
+	public func optShadow(with trait: UITraitCollection) -> StyleShadow? {
+		(applyer() as ShadowApplyer?)?.producer(trait)
 	}
 	
 	// MARK: - EdgeInsets
@@ -386,8 +496,13 @@ extension Style {
 		set(ParagraphSpacingApplyer(v))
 	}
 	
+	/// Default: zero
 	public func getParagraphSpacing(default: UIEdgeInsets = .zero) -> UIEdgeInsets {
-		(applyer() as ParagraphSpacingApplyer?)?.value ?? `default`
+		optParagraphSpacing ?? `default`
+	}
+	
+	public var optParagraphSpacing: UIEdgeInsets? {
+		(applyer() as ParagraphSpacingApplyer?)?.value
 	}
 	
 	/// UIButton.contentEdgeInsets |
@@ -398,8 +513,13 @@ extension Style {
 		set(PaddingApplyer(fn))
 	}
 	
+	/// Default: zero
 	public func getPadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
-		(applyer() as PaddingApplyer?)?.producer(trait) ?? `default`
+		optPadding(with: trait) ?? `default`
+	}
+	
+	public func optPadding(with trait: UITraitCollection) -> UIEdgeInsets? {
+		(applyer() as PaddingApplyer?)?.producer(trait)
 	}
 	
 	/// UIButton.titleEdgeInsets
@@ -408,8 +528,13 @@ extension Style {
 		set(TitlePaddingApplyer(fn))
 	}
 	
+	/// Default: zero
 	public func getTitlePadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
-		(applyer() as TitlePaddingApplyer?)?.producer(trait) ?? `default`
+		optTitlePadding(with: trait) ?? `default`
+	}
+	
+	public func optTitlePadding(with trait: UITraitCollection) -> UIEdgeInsets? {
+		(applyer() as TitlePaddingApplyer?)?.producer(trait)
 	}
 }
 
