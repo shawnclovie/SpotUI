@@ -16,21 +16,24 @@ public struct StyleImageSource {
 		case empty
 		case solidColor(UIColor, size: CGSize)
 		case name(String, size: CGSize, template: Bool)
-		case url(URL, placeholder: String?, template: Bool)
 	}
 	
+	/// Make empty source, it would produce nil.
 	public static let empty = StyleImageSource(.empty)
 	
+	/// Make source with solid color
+	/// - Parameter color: Fill color
+	/// - Parameter size: Image size, 1x1 by default
 	public static func solidColor(_ color: UIColor, size: CGSize = .init(width: 1, height: 1)) -> StyleImageSource {
 		.init(.solidColor(color, size: size))
 	}
 	
+	/// Make source with image name, support jpg/png/gif/pdf
+	/// - Parameter name: Image name, e.g. "bar.png" or "path/icon.pdf"
+	/// - Parameter size: Content size for PDF, or fitting size for bitmap
+	/// - Parameter template: Should make image as template with global tint color (call withRenderingMode(.alwaysTemplate) to loaded image).
 	public static func name(_ name: String, size: CGSize = .zero, template: Bool = false) -> StyleImageSource {
 		.init(.name(name, size: size, template: template))
-	}
-	
-	public static func url(_ url: URL, placeholder: String? = nil, template: Bool = false) -> StyleImageSource {
-		.init(.url(url, placeholder: placeholder, template: template))
 	}
 	
 	let source: Source
@@ -40,15 +43,9 @@ public struct StyleImageSource {
 	}
 	
 	init(with data: [AnyHashable: Any], predefined: StyleValueSet) {
-		if let value = predefined.value(for: data["url"]) as? String,
-			let url = URL(string: value) {
-			source = .url(url,
-						placeholder: predefined.value(for: data["placeholder"]) as? String,
-						template: data["template"] as? Bool ?? false)
-		} else if let name = predefined.value(for: data["name"]) as? String {
-			source = .name(name,
-						 size: CGSize.spot(predefined.value(for: data["size"])) ?? .zero,
-						 template: data["template"] as? Bool ?? false)
+		if let name = predefined.value(for: data["name"]) as? String {
+			let size = CGSize.spot(predefined.value(for: data["size"])) ?? .zero
+			source = .name(name, size: size, template: data["template"] as? Bool ?? false)
 		} else if let value = predefined.value(for: data["solid-color"]) as? String,
 			let color = DecimalColor(hexARGB: value) {
 			let size = CGSize.spot(predefined.value(for: data["size"])) ?? .init(width: 1, height: 1)
@@ -58,42 +55,28 @@ public struct StyleImageSource {
 		}
 	}
 	
-	func loadImage(completion: @escaping (UIImage?)->Void) {
+	public func makeImage() -> UIImage? {
 		switch source {
 		case .empty:
-			completion(nil)
+			return nil
 		case .name(let it):
-			completion(Self.loadImage(name: it.0, size: it.size, template: it.template))
+			let image = loadImage(name: it.0, fitSize: it.size)
+			return it.template ? image?.withRenderingMode(.alwaysTemplate) : image
 		case .solidColor(let it):
-			let image = it.0.cgColor
+			return it.0.cgColor
 				.spot.solidImage(width: Int(it.size.width), height: Int(it.size.height))
 				.map(UIImage.init(cgImage:))
-			completion(image)
-		case .url(let it):
-			completion(Self.loadImage(name: it.placeholder, size: .zero, template: it.template))
-			Cache<UIImage>.shared.fetch(it.0) { result in
-				guard case .success(var image) = result else {return}
-				if it.template {
-					image = image.withRenderingMode(.alwaysTemplate)
-				}
-				completion(image)
-			}
 		}
 	}
+}
 
-	private static func loadImage(name: String?, size: CGSize, template: Bool) -> UIImage? {
-		guard let name = name, !name.isEmpty else {return nil}
-		var image: UIImage?
-		if name.hasSuffix(".pdf") {
-			image = .spot_fromPDF(named: name, contentSize: size)
-		} else {
-			image = UIImage(named: name)
-			if size != .zero {
-				image = image?.spot.scaled(toFit: size, by: .scaleToFill)
-			}
-		}
-		return template ? image?.withRenderingMode(.alwaysTemplate) : image
+private func loadImage(name: String, fitSize: CGSize) -> UIImage? {
+	guard !name.isEmpty else {return nil}
+	if name.hasSuffix(".pdf") {
+		return .spot_fromPDF(named: name, contentSize: fitSize)
 	}
+	let image = UIImage(named: name)
+	return fitSize == .zero ? image : image?.spot.scaled(toFit: fitSize, by: .scaleToFill)
 }
 
 struct StillImageApplyer: StyleApplyer {
@@ -110,20 +93,18 @@ struct StillImageApplyer: StyleApplyer {
 	}
 	
 	func apply(to: StyleApplyable, with trait: UITraitCollection) {
-		producer(trait).loadImage { image in
-			switch to {
-			case let layer as CALayer:
-				layer.contents = image?.cgImage
-			case let view as UIImageView:
-				view.image = image
-			case let view as UIButton:
-				view.setImage(image, for: .normal)
-			case let view as UISlider:
-				view.setThumbImage(image, for: .normal)
-			case let item as UIBarItem:
-				item.image = image
-			default:break
-			}
+		switch to {
+		case let layer as CALayer:
+			layer.contents = producer(trait).makeImage()?.cgImage
+		case let view as UIImageView:
+			view.image = producer(trait).makeImage()
+		case let view as UIButton:
+			view.setImage(producer(trait).makeImage(), for: .normal)
+		case let view as UISlider:
+			view.setThumbImage(producer(trait).makeImage(), for: .normal)
+		case let item as UIBarItem:
+			item.image = producer(trait).makeImage()
+		default:break
 		}
 	}
 }
@@ -168,14 +149,12 @@ struct StatefulImageApplyer<Applying: StatefulImageApplying>: StyleApplyer {
 struct BackgroundImageApplying: StatefulImageApplying {
 	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
 		for (state, source) in producer(trait) {
-			source.loadImage { [weak to] (image) in
-				switch to {
-				case let view as UIButton:
-					view.setBackgroundImage(image, for: state)
-				case let view as UISearchBar:
-					view.backgroundImage = image
-				default:break
-				}
+			switch to {
+			case let view as UIButton:
+				view.setBackgroundImage(source.makeImage(), for: state)
+			case let view as UISearchBar:
+				view.backgroundImage = source.makeImage()
+			default:break
 			}
 		}
 	}
@@ -184,26 +163,24 @@ struct BackgroundImageApplying: StatefulImageApplying {
 struct ImageApplying: StatefulImageApplying {
 	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
 		for (state, source) in producer(trait) {
-			source.loadImage { [weak to] (image) in
-				switch to {
-				case let layer as CALayer:
-					layer.contents = image?.cgImage
-				case let view as UIImageView:
-					if state == .highlighted {
-						view.highlightedImage = image
-					} else {
-						view.image = image
-					}
-				case let view as UIButton:
-					view.setImage(image, for: state)
-				case let view as UISlider:
-					view.setThumbImage(image, for: state)
-				case let item as UITabBarItem where state == .highlighted:
-					item.selectedImage = image
-				case let item as UIBarItem:
-					item.image = image
-				default:break
+			switch to {
+			case let layer as CALayer:
+				layer.contents = source.makeImage()?.cgImage
+			case let view as UIImageView:
+				if state == .highlighted {
+					view.highlightedImage = source.makeImage()
+				} else {
+					view.image = source.makeImage()
 				}
+			case let view as UIButton:
+				view.setImage(source.makeImage(), for: state)
+			case let view as UISlider:
+				view.setThumbImage(source.makeImage(), for: state)
+			case let item as UITabBarItem where state == .highlighted:
+				item.selectedImage = source.makeImage()
+			case let item as UIBarItem:
+				item.image = source.makeImage()
+			default:break
 			}
 		}
 	}
@@ -227,14 +204,10 @@ struct SlideTrackImageApplyer: StyleApplyer {
 	func apply(to: StyleApplyable, with trait: UITraitCollection) {
 		guard let view = to as? UISlider else {return}
 		for (state, source) in sourcesMin {
-			source.loadImage {
-				view.setMinimumTrackImage($0, for: state)
-			}
+			view.setMinimumTrackImage(source.makeImage(), for: state)
 		}
 		for (state, source) in sourcesMax {
-			source.loadImage {
-				view.setMaximumTrackImage($0, for: state)
-			}
+			view.setMaximumTrackImage(source.makeImage(), for: state)
 		}
 	}
 }
