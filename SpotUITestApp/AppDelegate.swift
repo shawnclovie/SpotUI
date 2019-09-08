@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		StyleShared.tintColorLight = .systemTeal
 		StyleShared.tintColorDark = .systemOrange
-		window.addSubview(WindowTraitCollectionAdjuster(frame: window.bounds))
+		window.addSubview(WindowTraitCollectionAdjuster.shared)
 		return true
 	}
 }

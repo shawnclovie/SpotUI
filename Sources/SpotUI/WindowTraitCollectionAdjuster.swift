@@ -7,11 +7,24 @@
 //
 
 import UIKit
+import Spot
 
 /// The view can set attributes of the attached window, and reset them while traitCollectionDidChange be called.
 ///
 /// Attributes: tintColor by StyleShared.tintColorProducer
 public final class WindowTraitCollectionAdjuster: UIView {
+	
+	public static let traitCollectionDidChangeEvent = EventObservable<UITraitCollection>()
+	
+	public static let shared = WindowTraitCollectionAdjuster(frame: .zero)
+	
+	private override init(frame: CGRect) {
+		super.init(frame: frame)
+	}
+	
+	required convenience init?(coder: NSCoder) {
+		self.init(frame: .zero)
+	}
 	
 	override public func didMoveToWindow() {
 		super.didMoveToWindow()
@@ -27,5 +40,6 @@ public final class WindowTraitCollectionAdjuster: UIView {
 		if let window = window {
 			window.tintColor = StyleShared.tintColorProducer(window.traitCollection)
 		}
+		Self.traitCollectionDidChangeEvent.dispatch(traitCollection)
 	}
 }
