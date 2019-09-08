@@ -165,7 +165,7 @@ open class AlertController: UIViewController {
 				attrText.append(.init(string: value, attributes: style.messageText.stringAttributes(with: traitCollection)))
 			}
 			let paraStyle = NSMutableParagraphStyle()
-			paraStyle.alignment = style.titleView.getTextAlignment(default: .center)
+			paraStyle.alignment = style.titleView.optTextAlignment ?? .center
 			attrText.addAttributes([.paragraphStyle: paraStyle], range: .init(location: 0, length: attrText.length))
 			titleView.attributedText = attrText
 		}
