@@ -12,9 +12,9 @@ let package = Package(
     ],
     dependencies: [
 		.package(url: "https://github.com/shawnclovie/Spot",
-				 from: "1.1.0"),
+				 .upToNextMajor(from: "1.1.0")),
 		.package(url: "https://github.com/shawnclovie/SpotCache",
-				 from: "1.0.0"),
+				 .upToNextMajor(from: "1.0.0")),
     ],
     targets: [
         .target(name: "SpotUI", dependencies: ["Spot", "SpotCache"]),
