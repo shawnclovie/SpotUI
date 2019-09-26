@@ -12,28 +12,28 @@ import Spot
 public struct ActionSheetStyleSet {
 	public static var shared = ActionSheetStyleSet()
 	
-	public let view = Style()
+	public var view = Style()
 		.backgroundColor{_ in StyleShared.maskBackgroundColor}
 	
 	public var panelHeight: CGFloat = 300
-	public let panelView = Style()
+	public var panelView = Style()
 		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
 		.shadow{_ in .init(color: .black, offset: .init(width: 0, height: -2), opacity: 0.5, radius: 4)}
 	
 	public var contentViewPadding: CGFloat = 10
 	
-	public let titleView = Style()
+	public var titleView = Style()
 		.backgroundColor(StyleShared.clearColorProducer)
 		.font{_ in .systemFont(ofSize: 20)}
 		.textAlignment(.center)
 		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
 	
 	public var buttonHeight: CGFloat = 40
-	public let button = Style()
+	public var button = Style()
 		.font{_ in .systemFont(ofSize: 12)}
 		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
 	
-	public let statefulButtons: [UIAlertAction.Style: Style] = [
+	public var statefulButtons: [UIAlertAction.Style: Style] = [
 		.cancel: Style().backgroundImage{_ in [.normal: .solidColor(DecimalColor(rgb: 0xc2c2c2).colorValue)]},
 		.default: Style().backgroundImage{[.normal: .solidColor(StyleShared.tintColorProducer($0))]},
 		.destructive: Style().backgroundImage{_ in [.normal: .solidColor(StyleShared.destructiveTintColor)]},
@@ -44,6 +44,8 @@ open class ActionSheetViewController: UIViewController {
 	
 	public let titleView = UITextView()
 	public let contentView = UIView()
+	
+	public var actionSheetStyle = ActionSheetStyleSet.shared
 	
 	private var contentViewLeftConstraint: NSLayoutConstraint?
 	private var contentViewRightConstraint: NSLayoutConstraint?
@@ -138,17 +140,16 @@ open class ActionSheetViewController: UIViewController {
 	}
 	
 	open func resetStyle() {
-		let style = ActionSheetStyleSet.shared
-		panelHeightConstraint?.constant = max(style.panelHeight, style.contentViewPadding * 2 + style.buttonHeight)
-		contentViewLeftConstraint?.constant = style.contentViewPadding
-		contentViewRightConstraint?.constant = -style.contentViewPadding
-		contentViewBottomConstraint?.constant = style.contentViewPadding
-		buttonWrapperBottomConstraint?.constant = -style.contentViewPadding
-		buttonWrapperHeightConstraint?.constant = style.buttonHeight
+		panelHeightConstraint?.constant = max(actionSheetStyle.panelHeight, actionSheetStyle.contentViewPadding * 2 + actionSheetStyle.buttonHeight)
+		contentViewLeftConstraint?.constant = actionSheetStyle.contentViewPadding
+		contentViewRightConstraint?.constant = -actionSheetStyle.contentViewPadding
+		contentViewBottomConstraint?.constant = actionSheetStyle.contentViewPadding
+		buttonWrapperBottomConstraint?.constant = -actionSheetStyle.contentViewPadding
+		buttonWrapperHeightConstraint?.constant = actionSheetStyle.buttonHeight
 		
-		style.view.apply(to: view, with: traitCollection)
-		style.panelView.apply(to: panel, with: traitCollection)
-		style.titleView.apply(to: titleView, with: traitCollection)
+		actionSheetStyle.view.apply(to: view, with: traitCollection)
+		actionSheetStyle.panelView.apply(to: panel, with: traitCollection)
+		actionSheetStyle.titleView.apply(to: titleView, with: traitCollection)
 		for it in buttonWrapper.subviews {
 			setStyle(UIAlertAction.Style(rawValue: it.tag) ?? .default, to: it)
 		}

@@ -1,5 +1,5 @@
 //
-//  ImageView+ImageScaledSize.swift
+//  UIImageView+.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 7/5/16.

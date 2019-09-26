@@ -1,5 +1,5 @@
 //
-//  ActionPanelViewController.swift
+//  ActionPanelController.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 14/10/2017.
@@ -13,24 +13,24 @@ import Spot
 public struct ActionPanelStyleSet {
 	public static var shared = ActionPanelStyleSet()
 	
-	public let view = Style()
+	public var view = Style()
 		.backgroundColor{_ in StyleShared.maskBackgroundColor}
 	
-	public let panelPadding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+	public var panelPadding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 	
-	public let panelView = Style()
+	public var panelView = Style()
 		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
 		.cornerRadius{_ in 10}
 		.maskToBounds(true)
 		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
 	
-	public let titleView = Style()
+	public var titleView = Style()
 		.textAlignment(.center)
 		.font{_ in .systemFont(ofSize: 20, weight: .bold)}
 		.padding{_ in .init(top: 16, left: 16, bottom: 16, right: 16)}
 		.backgroundColor(StyleShared.clearColorProducer)
 	
-	public let cancelButton = Style()
+	public var cancelButton = Style()
 		.buttonTitleColor{_, _ in StyleShared.secondForegroundTextColor}
 		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
 		.cornerRadius{_ in 10}
@@ -50,6 +50,8 @@ open class ActionPanelController: UIViewController {
 	public let titleView = UITextView()
 	public let contentView = UIView()
 	public let cancelButton = UIButton(type: .system)
+	
+	public var actionPanelStyle = ActionPanelStyleSet.shared
 	
 	public var touchUpPanelOutsideHandler: ((ActionPanelController)->Void)?
 	public var touchUpCancelHandler: ((ActionPanelController)->Void)?
@@ -81,7 +83,7 @@ open class ActionPanelController: UIViewController {
 		cancelButton.addTarget(self, action: #selector(touchUp(cancel:)), for: .touchUpInside)
 		view.addSubview(cancelButton)
 		
-		let padding = ActionPanelStyleSet.shared.panelPadding
+		let padding = actionPanelStyle.panelPadding
 		panel.spot.constraints(contentView, attributes: [.left, .right, .bottom])
 		[
 			panel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -108,11 +110,10 @@ open class ActionPanelController: UIViewController {
 	}
 	
 	open func resetStyle() {
-		let style = ActionPanelStyleSet.shared
-		style.view.apply(to: view, with: traitCollection)
-		style.panelView.apply(to: panel, with: traitCollection)
-		style.titleView.apply(to: titleView, with: traitCollection)
-		style.cancelButton.apply(to: cancelButton, with: traitCollection)
+		actionPanelStyle.view.apply(to: view, with: traitCollection)
+		actionPanelStyle.panelView.apply(to: panel, with: traitCollection)
+		actionPanelStyle.titleView.apply(to: titleView, with: traitCollection)
+		actionPanelStyle.cancelButton.apply(to: cancelButton, with: traitCollection)
 	}
 	
 	override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

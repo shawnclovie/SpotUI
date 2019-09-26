@@ -13,38 +13,38 @@ import Spot
 public struct AlertStyleSet {
 	public static var shared = AlertStyleSet()
 	
-	public let view = Style()
+	public var view = Style()
 		.backgroundColor{_ in StyleShared.maskBackgroundColor}
 	
-	public let titleView = Style()
+	public var titleView = Style()
 		.backgroundColor(StyleShared.clearColorProducer)
 		.padding {_ in .init(top: 20, left: 10, bottom: 20, right: 10)}
 		.textAlignment(.center)
 	
-	public let panelView = Style()
+	public var panelView = Style()
 		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
 		.cornerRadius {$0.userInterfaceIdiom == .pad ? 28 : 20}
 		.maskToBounds(true)
 	
-	public let contentView = Style()
+	public var contentView = Style()
 		.backgroundColor(StyleShared.clearColorProducer)
 	
-	public let titleText = Style()
+	public var titleText = Style()
 		.font {_ in .systemFont(ofSize: 20, weight: .bold)}
 		.textColor(StyleShared.foregroundTextColorProducer)
 	
-	public let messageText = Style()
+	public var messageText = Style()
 		.font {_ in .systemFont(ofSize: 14)}
 		.textColor(StyleShared.foregroundTextColorProducer)
 		.padding {_ in .init(top: 0, left: 8, bottom: 0, right: 8)}
 	
 	public var buttonHeight: CGFloat = 44
 	
-	public let button = Style()
+	public var button = Style()
 		.padding {_ in .init(top: 4, left: 10, bottom: 4, right: 10)}
 		.lineBreakMode(.byWordWrapping)
 	
-	public let buttonFontDefault = Style()
+	public var buttonFontDefault = Style()
 		.buttonTitleColor(StyleShared.statefulTintColorProducer)
 		.font {.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 24 : 18)}
 	
@@ -80,6 +80,7 @@ open class AlertController: UIViewController {
 	public let panelView = UIView()
 	public let titleView = UITextView()
 	public var titleViewTexts: (title: String, message: String?) = ("", nil)
+	public var alertStyle = AlertStyleSet.shared
 	public var shouldDismissOnActionTouchUp = true
 	
 	private var titleViewHeightConstraint: NSLayoutConstraint?
@@ -133,7 +134,7 @@ open class AlertController: UIViewController {
 			buttonsView.rightAnchor.constraint(equalTo: panelView.rightAnchor),
 			buttonsView.bottomAnchor.constraint(equalTo: panelView.bottomAnchor),
 			].spot_set(active: true)
-		buttonsViewHeightConstraint = buttonsView.heightAnchor.constraint(equalToConstant: AlertStyleSet.shared.buttonHeight).spot.setActived()
+		buttonsViewHeightConstraint = buttonsView.heightAnchor.constraint(equalToConstant: alertStyle.buttonHeight).spot.setActived()
 		
 		panelView.spot.addHorizontalLine(with: buttonsView, .top)
 		
@@ -150,22 +151,21 @@ open class AlertController: UIViewController {
 	}
 	
 	open func resetStyle() {
-		let style = AlertStyleSet.shared
-		style.view.apply(to: view, with: traitCollection)
-		style.panelView.apply(to: panelView, with: traitCollection)
-		style.titleView.apply(to: titleView, with: traitCollection)
+		alertStyle.view.apply(to: view, with: traitCollection)
+		alertStyle.panelView.apply(to: panelView, with: traitCollection)
+		alertStyle.titleView.apply(to: titleView, with: traitCollection)
 		let empty = titleViewTexts.title.isEmpty && (titleViewTexts.message?.isEmpty ?? true)
 		titleViewHeightConstraint?.isActive = empty
 		if empty {
 			titleView.attributedText = nil
 		} else {
-			let attrText = NSMutableAttributedString(string: titleViewTexts.title, attributes: style.titleText.stringAttributes(with: traitCollection))
+			let attrText = NSMutableAttributedString(string: titleViewTexts.title, attributes: alertStyle.titleText.stringAttributes(with: traitCollection))
 			if let value = titleViewTexts.message {
 				attrText.append(.init(string: "\n"))
-				attrText.append(.init(string: value, attributes: style.messageText.stringAttributes(with: traitCollection)))
+				attrText.append(.init(string: value, attributes: alertStyle.messageText.stringAttributes(with: traitCollection)))
 			}
 			let paraStyle = NSMutableParagraphStyle()
-			paraStyle.alignment = style.titleView.optTextAlignment ?? .center
+			paraStyle.alignment = alertStyle.titleView.optTextAlignment ?? .center
 			attrText.addAttributes([.paragraphStyle: paraStyle], range: .init(location: 0, length: attrText.length))
 			titleView.attributedText = attrText
 		}
@@ -175,10 +175,9 @@ open class AlertController: UIViewController {
 	}
 	
 	private func setStyle(for action: Action, to: UIButton) {
-		let style = AlertStyleSet.shared
 		[
-			style.button,
-			style.buttonForStyles[action.style] ?? style.buttonFontDefault,
+			alertStyle.button,
+			alertStyle.buttonForStyles[action.style] ?? alertStyle.buttonFontDefault,
 			].forEach{$0.apply(to: to, with: traitCollection)}
 	}
 	
@@ -207,7 +206,7 @@ open class AlertController: UIViewController {
 			} else {
 				horizontal = false
 			}
-			let buttonHeight = AlertStyleSet.shared.buttonHeight
+			let buttonHeight = alertStyle.buttonHeight
 			if horizontal {
 				var frame = CGRect(x: 0, y: 0, width: containerWidth / CGFloat(horizontalButtonCount), height: buttonHeight)
 				for sub in subs {

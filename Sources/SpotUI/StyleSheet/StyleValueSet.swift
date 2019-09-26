@@ -38,7 +38,7 @@ public struct StyleValueSet {
 	}
 	
 	public func bool(ofKey key: String) -> Bool {
-		values[key].flatMap(pareseBool) ?? false
+		AnyToBool(value(for: values[key])) ?? false
 	}
 	
 	public func color(ofKey key: String) -> UIColor? {
@@ -46,29 +46,7 @@ public struct StyleValueSet {
 	}
 	
 	func parseDouble(_ value: Any?, defaultValue: Double = 0) -> Double {
-		guard let v = self.value(for: value) else {return defaultValue}
-		switch v {
-		case let v as Double:	return v
-		case let v as Int:		return Double(v)
-		case let v as String:	return Double(v) ?? defaultValue
-		default:				return defaultValue
-		}
-	}
-	
-	func pareseBool(_ value: Any?) -> Bool {
-		guard let value = self.value(for: value) else {
-			return false
-		}
-		switch value {
-		case let value as Bool:		return value
-		case let value as Int:		return value != 0
-		case let value as Double:	return value != 0
-		case let value as String:	return value.spot.boolValue
-		case is [Any], is [AnyHashable: Any]:
-			return true
-		default:
-			return false
-		}
+		AnyToDouble(self.value(for: value)) ?? defaultValue
 	}
 	
 	private func color(named name: String) -> UIColor? {

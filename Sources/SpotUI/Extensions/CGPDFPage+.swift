@@ -1,5 +1,5 @@
 //
-//  CGPDFPage+extension.swift
+//  CGPDFPage+.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 16/9/2017.

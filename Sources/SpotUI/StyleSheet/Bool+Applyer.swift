@@ -8,6 +8,7 @@
 
 #if canImport(UIKit)
 import UIKit
+import Spot
 
 protocol BoolApplying {
 	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection)
@@ -17,7 +18,7 @@ struct BoolApplyer<Applying: BoolApplying>: StyleApplyer {
 	var value: Bool
 	
 	init(with value: Any, predefined: StyleValueSet) {
-		self.value = predefined.pareseBool(value)
+		self.value = AnyToBool(predefined.value(for: value)) ?? false
 	}
 	
 	init(_ value: Bool) {

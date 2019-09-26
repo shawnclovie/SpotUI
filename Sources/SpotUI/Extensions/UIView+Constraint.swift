@@ -1,5 +1,5 @@
 //
-//  View+Constraint.swift
+//  UIView+Constraint.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 6/21/16.

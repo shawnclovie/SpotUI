@@ -69,7 +69,7 @@
 		9BF48F74204AC31200A06458 /* TableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F69204AC31200A06458 /* TableDelegate.swift */; };
 		9BF48F75204AC31200A06458 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6A204AC31200A06458 /* DataSource.swift */; };
 		9BF48F76204AC31200A06458 /* DataSourceTableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */; };
-		9BF48F77204AC31200A06458 /* UIImageView+ImageScaledSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */; };
+		9BF48F77204AC31200A06458 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6C204AC31200A06458 /* UIImageView+.swift */; };
 		9BF48F78204AC31200A06458 /* DocumentInteractionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */; };
 		9BF48F7B204AC31200A06458 /* AnimatableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F70204AC31200A06458 /* AnimatableImageView.swift */; };
 /* End PBXBuildFile section */
@@ -180,7 +180,7 @@
 		9BF48F69204AC31200A06458 /* TableDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableDelegate.swift; sourceTree = "<group>"; };
 		9BF48F6A204AC31200A06458 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceTableViews.swift; sourceTree = "<group>"; };
-		9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ImageScaledSize.swift"; sourceTree = "<group>"; };
+		9BF48F6C204AC31200A06458 /* UIImageView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
 		9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentInteractionPresenter.swift; sourceTree = "<group>"; };
 		9BF48F70204AC31200A06458 /* AnimatableImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -224,7 +224,7 @@
 				9BF48E94204AC0BE00A06458 /* UIEdgeInsets+.swift */,
 				9BF48EB2204AC0BE00A06458 /* UIFont+.swift */,
 				9BF48EAB204AC0BE00A06458 /* UIImage+.swift */,
-				9BF48F6C204AC31200A06458 /* UIImageView+ImageScaledSize.swift */,
+				9BF48F6C204AC31200A06458 /* UIImageView+.swift */,
 				9B549AFF231A3F3A009BDDC3 /* UITableView+.swift */,
 				9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */,
 				9BE29366230C146B004D6120 /* UITraitCollection+.swift */,
@@ -598,7 +598,7 @@
 				9BF48EC5204AC0BE00A06458 /* ContentModeApplyer.swift in Sources */,
 				9BE29367230C146B004D6120 /* UITraitCollection+.swift in Sources */,
 				9BC1BCC7215DF32500DA4A79 /* UIAlertController+.swift in Sources */,
-				9BF48F77204AC31200A06458 /* UIImageView+ImageScaledSize.swift in Sources */,
+				9BF48F77204AC31200A06458 /* UIImageView+.swift in Sources */,
 				9BE29369230CD1C7004D6120 /* Style+Applyers.swift in Sources */,
 				9BF48EC3204AC0BE00A06458 /* FontApplyer.swift in Sources */,
 				9BF48EC2204AC0BE00A06458 /* LineDashPatternApplyer.swift in Sources */,
@@ -938,7 +938,7 @@
 			repositoryURL = "https://github.com/shawnclovie/Spot";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.1.0;
 			};
 		};
 		9B3D9DF7230908F70091BA83 /* XCRemoteSwiftPackageReference "SpotCache" */ = {

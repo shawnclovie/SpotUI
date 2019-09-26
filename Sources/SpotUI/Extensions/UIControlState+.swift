@@ -1,5 +1,5 @@
 //
-//  ControlState+.swift
+//  UIControlState+.swift
 //  SpotUI
 //
 //  Created by Shawn Clovie on 25/1/2018.
