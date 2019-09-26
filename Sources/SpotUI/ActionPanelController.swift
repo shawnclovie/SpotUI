@@ -25,13 +25,14 @@ public struct ActionPanelStyleSet {
 		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
 	
 	public var titleView = Style()
+		.textColor(StyleShared.foregroundTextColorProducer)
 		.textAlignment(.center)
 		.font{_ in .systemFont(ofSize: 20, weight: .bold)}
 		.padding{_ in .init(top: 16, left: 16, bottom: 16, right: 16)}
 		.backgroundColor(StyleShared.clearColorProducer)
 	
 	public var cancelButton = Style()
-		.buttonTitleColor{_, _ in StyleShared.secondForegroundTextColor}
+		.textColor{_ in StyleShared.secondForegroundTextColor}
 		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
 		.cornerRadius{_ in 10}
 		.maskToBounds(true)

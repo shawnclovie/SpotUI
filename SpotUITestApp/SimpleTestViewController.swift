@@ -147,10 +147,12 @@ class SimpleTestViewController: UIViewController {
 			let newVC = ActionPanelController(nibName: nil, bundle: nil)
 			newVC.touchUpPanelOutsideHandler = {$0.dismiss(animated: true, completion: nil)}
 			newVC.touchUpCancelHandler = newVC.touchUpPanelOutsideHandler
+			newVC.titleView.text = "Title"
 			let label = UILabel()
 			label.text = "abc"
 			label.sizeToFit()
-			newVC.panel.addSubview(label)
+			newVC.contentView.addSubview(label)
+			newVC.contentView.spot.constraints(label)
 			vc.present(newVC, animated: true, completion: nil)
 		}),
 		("AlertVC", { vc in

@@ -24,6 +24,7 @@ public struct ActionSheetStyleSet {
 	
 	public var titleView = Style()
 		.backgroundColor(StyleShared.clearColorProducer)
+		.textColor(StyleShared.foregroundTextColorProducer)
 		.font{_ in .systemFont(ofSize: 20)}
 		.textAlignment(.center)
 		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
