@@ -122,25 +122,7 @@ class SimpleTestViewController: UIViewController {
 			}
 		}),
 		("DataSourceTable", { vc in
-			let newVC = DataSourceTableViewController(style: .grouped)
-			newVC.delegate.data.sections = [
-				DataSourceSection("Section A", items: [
-					DataSourceCell(
-						title: .init(string: "Cell A", attributes: [.font: UIFont.systemFont(ofSize: 40)]),
-						subtitle: .init(string: "Description A", attributes: [.font: UIFont.systemFont(ofSize: 10)]),
-						mark: "cell_a"),
-					DataSourceCell(title: "Cell B", mark: "cell_b")
-					], mark: "section_a"),
-				DataSourceSection("", items: [
-					DataSourceCell(title: "Cell 2A"),
-					]),
-			]
-			newVC.delegate.selectedCell = { [weak vc] dele, table, ip in
-				table.deselectRow(at: ip, animated: true)
-				if let mark = dele.data.cell(at: ip)?.mark as? String {
-					vc?.logger.log(.trace, mark)
-				}
-			}
+			let newVC = TestingDataSourceTableViewController(style: .grouped)
 			vc.navigationController?.pushViewController(newVC, animated: true)
 		}),
 		("ActionPanelVC", { vc in

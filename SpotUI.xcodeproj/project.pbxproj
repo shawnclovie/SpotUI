@@ -29,6 +29,7 @@
 		9B6FE86320A2BF15000D6148 /* PDFRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */; };
 		9BA3271E2314229500BCC851 /* AnimatableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA3271D2314229500BCC851 /* AnimatableImage.swift */; };
 		9BC1BCC7215DF32500DA4A79 /* UIAlertController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC1BCC6215DF32500DA4A79 /* UIAlertController+.swift */; };
+		9BC2895423446BB000391013 /* TestingDataSourceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC2895323446BB000391013 /* TestingDataSourceTableViewController.swift */; };
 		9BC7EFD9206CAFB7000D2305 /* UITextView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */; };
 		9BC821D02133F5AB001E1F28 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
 		9BC821D72133F5C4001E1F28 /* action_font_family.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 9BC821D62133F5C4001E1F28 /* action_font_family.pdf */; };
@@ -65,8 +66,6 @@
 		9BF48ED2204AC0BE00A06458 /* ProgressLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48EAF204AC0BE00A06458 /* ProgressLayer.swift */; };
 		9BF48ED3204AC0BE00A06458 /* RectangleProgressLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48EB0204AC0BE00A06458 /* RectangleProgressLayer.swift */; };
 		9BF48ED5204AC0BE00A06458 /* UIFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48EB2204AC0BE00A06458 /* UIFont+.swift */; };
-		9BF48F73204AC31200A06458 /* CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F68204AC31200A06458 /* CollectionDelegate.swift */; };
-		9BF48F74204AC31200A06458 /* TableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F69204AC31200A06458 /* TableDelegate.swift */; };
 		9BF48F75204AC31200A06458 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6A204AC31200A06458 /* DataSource.swift */; };
 		9BF48F76204AC31200A06458 /* DataSourceTableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */; };
 		9BF48F77204AC31200A06458 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6C204AC31200A06458 /* UIImageView+.swift */; };
@@ -137,6 +136,7 @@
 		9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFRenderer.swift; sourceTree = "<group>"; };
 		9BA3271D2314229500BCC851 /* AnimatableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableImage.swift; sourceTree = "<group>"; };
 		9BC1BCC6215DF32500DA4A79 /* UIAlertController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+.swift"; sourceTree = "<group>"; };
+		9BC2895323446BB000391013 /* TestingDataSourceTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingDataSourceTableViewController.swift; sourceTree = "<group>"; };
 		9BC7EFD8206CAFB7000D2305 /* UITextView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+.swift"; sourceTree = "<group>"; };
 		9BC821CB2133F5AB001E1F28 /* SpotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BC821CF2133F5AB001E1F28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -176,8 +176,6 @@
 		9BF48EAF204AC0BE00A06458 /* ProgressLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressLayer.swift; sourceTree = "<group>"; };
 		9BF48EB0204AC0BE00A06458 /* RectangleProgressLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RectangleProgressLayer.swift; sourceTree = "<group>"; };
 		9BF48EB2204AC0BE00A06458 /* UIFont+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+.swift"; sourceTree = "<group>"; };
-		9BF48F68204AC31200A06458 /* CollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionDelegate.swift; sourceTree = "<group>"; };
-		9BF48F69204AC31200A06458 /* TableDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableDelegate.swift; sourceTree = "<group>"; };
 		9BF48F6A204AC31200A06458 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceTableViews.swift; sourceTree = "<group>"; };
 		9BF48F6C204AC31200A06458 /* UIImageView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
@@ -254,6 +252,7 @@
 				9B1A1A4A230E714B00D82D4A /* spot_ui_styles.bundle */,
 				9B3E59C521858389002A3F33 /* style_defines.json */,
 				9B3E59C32185837D002A3F33 /* style.json */,
+				9BC2895323446BB000391013 /* TestingDataSourceTableViewController.swift */,
 			);
 			path = SpotUITestApp;
 			sourceTree = "<group>";
@@ -376,10 +375,8 @@
 		9BF48F67204AC31200A06458 /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
-				9BF48F68204AC31200A06458 /* CollectionDelegate.swift */,
 				9BF48F6A204AC31200A06458 /* DataSource.swift */,
 				9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */,
-				9BF48F69204AC31200A06458 /* TableDelegate.swift */,
 			);
 			path = DataSource;
 			sourceTree = "<group>";
@@ -547,6 +544,7 @@
 			files = (
 				9B3E59C8218583B1002A3F33 /* SimpleTestViewController.swift in Sources */,
 				9B3E59B42185820D002A3F33 /* AppDelegate.swift in Sources */,
+				9BC2895423446BB000391013 /* TestingDataSourceTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,13 +564,11 @@
 				9BF48F78204AC31200A06458 /* DocumentInteractionPresenter.swift in Sources */,
 				9B07ED90230D3BED00F376B9 /* StyleApplyable.swift in Sources */,
 				9BF48ED5204AC0BE00A06458 /* UIFont+.swift in Sources */,
-				9BF48F73204AC31200A06458 /* CollectionDelegate.swift in Sources */,
 				9B1A1A49230DA42800D82D4A /* ActionSheetViewController.swift in Sources */,
 				9BE29365230BED84004D6120 /* StyleShared.swift in Sources */,
 				9B07ED95230D5EE500F376B9 /* StyleApplyer.swift in Sources */,
 				9BF48ECF204AC0BE00A06458 /* UIImage+.swift in Sources */,
 				9BF48EB9204AC0BE00A06458 /* UIEdgeInsets+.swift in Sources */,
-				9BF48F74204AC31200A06458 /* TableDelegate.swift in Sources */,
 				9BF48F75204AC31200A06458 /* DataSource.swift in Sources */,
 				9BF48EC9204AC0BE00A06458 /* LineBreakModeApplyer.swift in Sources */,
 				9BF48ED1204AC0BE00A06458 /* CircleProgressLayer.swift in Sources */,

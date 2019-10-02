@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Spot
 
 public protocol DataSourceSectionType: CustomStringConvertible {
 	associatedtype Item: Any
@@ -30,9 +31,7 @@ public struct DataSourceSection<ItemType: Any>: DataSourceSectionType {
 		self.init(original.title, items: items, mark: original.mark)
 	}
 	
-	public var description: String {
-		title
-	}
+	public var description: String {title}
 	
 	public func item(at index: Int) -> Item? {
 		(0..<items.count).contains(index) ? items[index] : nil
@@ -40,7 +39,7 @@ public struct DataSourceSection<ItemType: Any>: DataSourceSectionType {
 	
 	@discardableResult
 	public mutating func setItem(_ item: Item, at index: Int) -> Bool {
-		if (0..<items.count).contains(index) {
+		if items.indices.contains(index) {
 			items[index] = item
 			return true
 		}
@@ -49,7 +48,6 @@ public struct DataSourceSection<ItemType: Any>: DataSourceSectionType {
 }
 
 public struct DataSource<SectionType: DataSourceSectionType> {
-	public var cellReuseID = "Cell"
 	public var sections: [SectionType]
 	
 	public init(sections: [SectionType] = []) {
@@ -65,20 +63,15 @@ public struct DataSource<SectionType: DataSourceSectionType> {
 	}
 	
 	public func cell(at row: Int, section: Int) -> SectionType.Item? {
-		guard sections.indices.contains(section) else {
-			return nil
-		}
-		return sections[section].items[row]
+		sections.spot_value(at: section)?.items[row]
 	}
 	
 	@discardableResult
 	public mutating func setCell(_ cell: SectionType.Item, section: Int, row: Int) -> Bool {
-		if section >= 0 && row >= 0
-			&& section < sections.count
-			&& row < sections[section].items.count {
-			sections[section].items[row] = cell
-			return true
+		guard sections.indices.contains(section) && sections[section].items.indices.contains(row) else {
+			return false
 		}
-		return false
+		sections[section].items[row] = cell
+		return true
 	}
 }

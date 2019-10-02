@@ -20,14 +20,22 @@ public struct DataSourceCell {
 		/// Create accessory on runtime
 		case handler(()->Accessory)
 	}
+	
 	public var title: NSAttributedString
 	public var subtitle: NSAttributedString?
 	public var image: UIImage?
 	public var mark: Any?
 	public var accessory: Accessory
 	public var selectedHandler: (()->Void)?
-	
 	public var selectionStyle: UITableViewCell.SelectionStyle = .default
+	
+	public var brimmingView: UIView?
+	
+	public init(brimming: UIView) {
+		title = .init()
+		accessory = .none
+		brimmingView = brimming
+	}
 	
 	public init(title: String,
 				subtitle: String? = nil,
@@ -53,6 +61,12 @@ public struct DataSourceCell {
 	}
 	
 	public func apply(on cell: UITableViewCell) {
+		if let it = brimmingView {
+			if !it.isDescendant(of: cell) {
+				cell.contentView.addSubview(it)
+				cell.contentView.spot.constraints(it)
+			}
+		}
 		cell.textLabel?.attributedText = title
 		cell.detailTextLabel?.attributedText = subtitle
 		cell.imageView?.image = image
@@ -80,9 +94,15 @@ public struct DataSourceCell {
 		default:break
 		}
 	}
+	
+	public func didEndDisplaying(on cell: UITableViewCell) {
+		brimmingView?.removeFromSuperview()
+	}
 }
 
 open class DataSourceTableViewCell: UITableViewCell {
+	public static var cellReuseID = "cell"
+	
 	public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 		selectionStyle = .none
@@ -93,10 +113,10 @@ open class DataSourceTableViewCell: UITableViewCell {
 	}
 }
 
-open class DataSourceTableViewController: UIViewController {
+open class DataSourceTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	public typealias Section = DataSourceSection<DataSourceCell>
 	
-	public let delegate = TableDelegate<Section>()
+	public var dataSource = DataSource<Section>()
 	public let tableView: UITableView
 	
 	public init(style: UITableView.Style = .plain) {
@@ -118,16 +138,28 @@ open class DataSourceTableViewController: UIViewController {
 			return
 		}
 		view.addSubview(tableView)
-		tableView.register(DataSourceTableViewCell.self,
-		                   forCellReuseIdentifier: delegate.data.cellReuseID)
-		delegate.delegate(tableView)
-		delegate.configureCell = { dele, table, ip, item in
-			let cell = table.dequeueReusableCell(withIdentifier: dele.data.cellReuseID, for: ip)
-			item?.apply(on: cell)
-			return cell
-		}
+		tableView.register(DataSourceTableViewCell.self, forCellReuseIdentifier: DataSourceTableViewCell.cellReuseID)
+		tableView.dataSource = self
 		tableView.reloadData()
 		view.spot.constraints(tableView)
+	}
+	
+	open func numberOfSections(in tableView: UITableView) -> Int {
+		dataSource.sections.count
+	}
+	
+	open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		dataSource.section(at: section)?.items.count ?? 0
+	}
+	
+	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: DataSourceTableViewCell.cellReuseID, for: indexPath)
+		dataSource.cell(at: indexPath)?.apply(on: cell)
+		return cell
+	}
+	
+	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		dataSource.cell(at: indexPath)?.didEndDisplaying(on: cell)
 	}
 }
 #endif
