@@ -54,16 +54,19 @@ public struct DataSource<SectionType: DataSourceSectionType> {
 		self.sections = sections
 	}
 	
+	@inlinable
 	public func section(at: Int) -> SectionType? {
 		sections.indices.contains(at) ? sections[at] : nil
 	}
 	
+	@inlinable
 	public func cell(at indexPath: IndexPath) -> SectionType.Item? {
 		cell(at: indexPath.row, section: indexPath.section)
 	}
 	
+	@inlinable
 	public func cell(at row: Int, section: Int) -> SectionType.Item? {
-		sections.spot_value(at: section)?.items[row]
+		self.section(at: section)?.items.spot_value(at: row)
 	}
 	
 	@discardableResult
