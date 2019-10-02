@@ -21,17 +21,19 @@ public struct DataSourceCell {
 		case handler(()->Accessory)
 	}
 	
+	public typealias SelectHandler = (UITableView, IndexPath)->Void
+	
 	public var title: NSAttributedString
 	public var subtitle: NSAttributedString?
 	public var image: UIImage?
 	public var mark: Any?
 	public var accessory: Accessory
-	public var selectedHandler: (()->Void)?
+	public var selectedHandler: SelectHandler?
 	public var selectionStyle: UITableViewCell.SelectionStyle = .default
 	
 	public var brimmingView: UIView?
 	
-	public init(brimming: UIView, mark: Any? = nil, selectedHandler: (()->Void)? = nil) {
+	public init(brimming: UIView, mark: Any? = nil, selectedHandler: SelectHandler? = nil) {
 		title = .init()
 		accessory = .none
 		brimmingView = brimming
@@ -44,7 +46,7 @@ public struct DataSourceCell {
 				image: UIImage? = nil,
 				accessory: Accessory = .system(.none),
 				mark: Any? = nil,
-				selectedHandler: (()->Void)? = nil) {
+				selectedHandler: SelectHandler? = nil) {
 		self.init(title: .init(string: title), subtitle: subtitle.map(NSAttributedString.init), image: image, accessory: accessory, mark: mark, selectedHandler: selectedHandler)
 	}
 	
@@ -53,7 +55,7 @@ public struct DataSourceCell {
 	            image: UIImage? = nil,
 	            accessory: Accessory = .system(.none),
 	            mark: Any? = nil,
-	            selectedHandler: (()->Void)? = nil) {
+	            selectedHandler: SelectHandler? = nil) {
 		self.title = title
 		self.subtitle = subtitle
 		self.image = image
@@ -142,6 +144,7 @@ open class DataSourceTableViewController: UIViewController, UITableViewDataSourc
 		view.addSubview(tableView)
 		tableView.register(DataSourceTableViewCell.self, forCellReuseIdentifier: DataSourceTableViewCell.cellReuseID)
 		tableView.dataSource = self
+		tableView.delegate = self
 		tableView.reloadData()
 		view.spot.constraints(tableView)
 	}
@@ -162,6 +165,10 @@ open class DataSourceTableViewController: UIViewController, UITableViewDataSourc
 	
 	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		dataSource.cell(at: indexPath)?.didEndDisplaying(on: cell)
+	}
+	
+	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		dataSource.cell(at: indexPath)?.selectedHandler?(tableView, indexPath)
 	}
 }
 #endif
