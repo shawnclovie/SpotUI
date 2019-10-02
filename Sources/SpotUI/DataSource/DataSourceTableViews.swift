@@ -31,10 +31,12 @@ public struct DataSourceCell {
 	
 	public var brimmingView: UIView?
 	
-	public init(brimming: UIView) {
+	public init(brimming: UIView, mark: Any? = nil, selectedHandler: (()->Void)? = nil) {
 		title = .init()
 		accessory = .none
 		brimmingView = brimming
+		self.mark = mark
+		self.selectedHandler = selectedHandler
 	}
 	
 	public init(title: String,
