@@ -14,7 +14,7 @@ import Spot
 public enum MediaPickType {
 	case image, movie
 	
-	var utType: CFString {
+	public var utType: CFString {
 		switch self {
 		case .image:	return kUTTypeImage
 		case .movie:	return kUTTypeMovie
@@ -56,10 +56,7 @@ extension Dictionary where Key == UIImagePickerController.InfoKey {
 }
 
 extension UIImagePickerController {
-	public static func spot(source: UIImagePickerController.SourceType, mediaTypes: [MediaPickType]) -> UIImagePickerController? {
-		guard UIImagePickerController.isSourceTypeAvailable(source) else {
-			return nil
-		}
+	public static func spot(source: UIImagePickerController.SourceType, mediaTypes: [MediaPickType]) -> UIImagePickerController {
 		let it = UIImagePickerController()
 		it.sourceType = source
 		it.mediaTypes = mediaTypes.map{$0.utType as String}
