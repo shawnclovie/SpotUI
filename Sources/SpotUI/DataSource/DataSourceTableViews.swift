@@ -163,11 +163,11 @@ open class DataSourceTableViewController: UIViewController, UITableViewDataSourc
 		return cell
 	}
 	
-	public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+	open func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		dataSource.cell(at: indexPath)?.didEndDisplaying(on: cell)
 	}
 	
-	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		dataSource.cell(at: indexPath)?.selectedHandler?(tableView, indexPath)
 	}
 }

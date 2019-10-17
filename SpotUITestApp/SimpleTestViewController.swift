@@ -43,6 +43,7 @@ class SimpleTestViewController: UIViewController {
 	private var rotateIndex = -1
 	private var progressLayer: ProgressLayer?
 	private var progressTimer: WeakTimer?
+	private var mediaPicker: MediaPicker?
 	
 	private let actions: [(title: String, action: (SimpleTestViewController)->Void)] = [
 		("image: rotate", {vc in
@@ -165,7 +166,33 @@ class SimpleTestViewController: UIViewController {
 				newVC.dismiss(animated: true, completion: nil)
 			}
 			vc.present(newVC, animated: true, completion: nil)
-		})
+		}),
+		("EmptyResultView", { vc in
+			let view = EmptyResultView(frame: vc.view.bounds)
+			view.set(title: "Title", image: nil, description: "79C2C73A-5860-470D-BAE1-DF5160B0815F", buttonTitle: "Close")
+			view.onButtonTapped = {
+				$0.removeFromSuperview()
+			}
+			vc.view.addSubview(view)
+			view.alpha = 0
+			UIView.animate(withDuration: 0.2) {
+				view.alpha = 1
+			}
+		}),
+		("MediaPicker", { vc in
+			guard let picker = MediaPicker(sourceType: .photoLibrary, mediaTypes: [.image, .movie]) else {return}
+			vc.mediaPicker = picker
+			picker.onPicked = { [weak vc] in
+				print($1 as Any, $2)
+				$0.controller.dismiss(animated: true, completion: nil)
+				vc?.mediaPicker = nil
+			}
+			picker.onCancelled = { [weak vc] in
+				$0.controller.dismiss(animated: true, completion: nil)
+				vc?.mediaPicker = nil
+			}
+			vc.present(picker.controller, animated: true, completion: nil)
+		}),
 	]
 
 	override func viewDidLoad() {

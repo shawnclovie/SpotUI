@@ -28,7 +28,8 @@ final class TestingDataSourceTableViewController: DataSourceTableViewController 
 		]
 	}
 	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		super.tableView(tableView, didSelectRowAt: indexPath)
 		tableView.deselectRow(at: indexPath, animated: true)
 		if let mark = dataSource.cell(at: indexPath)?.mark as? String {
 			print(mark)
