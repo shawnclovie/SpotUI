@@ -43,7 +43,6 @@ class SimpleTestViewController: UIViewController {
 	private var rotateIndex = -1
 	private var progressLayer: ProgressLayer?
 	private var progressTimer: WeakTimer?
-	private var mediaPicker: MediaPicker?
 	
 	private let actions: [(title: String, action: (SimpleTestViewController)->Void)] = [
 		("image: rotate", {vc in
@@ -179,19 +178,10 @@ class SimpleTestViewController: UIViewController {
 				view.alpha = 1
 			}
 		}),
-		("MediaPicker", { vc in
-			guard let picker = MediaPicker(sourceType: .photoLibrary, mediaTypes: [.image, .movie]) else {return}
-			vc.mediaPicker = picker
-			picker.onPicked = { [weak vc] in
-				print($1 as Any, $2)
-				$0.controller.dismiss(animated: true, completion: nil)
-				vc?.mediaPicker = nil
-			}
-			picker.onCancelled = { [weak vc] in
-				$0.controller.dismiss(animated: true, completion: nil)
-				vc?.mediaPicker = nil
-			}
-			vc.present(picker.controller, animated: true, completion: nil)
+		("UIImagePicker", { vc in
+			guard let picker = UIImagePickerController.spot(source: .photoLibrary, mediaTypes: [.image, .movie]) else {return}
+			picker.delegate = vc
+			vc.present(picker, animated: true, completion: nil)
 		}),
 	]
 
@@ -336,5 +326,17 @@ extension SimpleTestViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 		actions[indexPath.row].action(self)
 		return nil
+	}
+}
+
+extension SimpleTestViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+		picker.dismiss(animated: true, completion: nil)
+		let result = info.spot_parseResult()
+		print(result, info)
+	}
+	
+	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+		picker.dismiss(animated: true, completion: nil)
 	}
 }
