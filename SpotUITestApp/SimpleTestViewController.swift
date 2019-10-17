@@ -179,7 +179,8 @@ class SimpleTestViewController: UIViewController {
 			}
 		}),
 		("UIImagePicker", { vc in
-			guard let picker = UIImagePickerController.spot(source: .photoLibrary, mediaTypes: [.image, .movie]) else {return}
+			guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {return}
+			let picker = UIImagePickerController.spot(source: .photoLibrary, mediaTypes: [.image, .movie])
 			picker.delegate = vc
 			vc.present(picker, animated: true, completion: nil)
 		}),
