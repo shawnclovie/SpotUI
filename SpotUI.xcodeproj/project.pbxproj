@@ -71,7 +71,6 @@
 		9BF48F75204AC31200A06458 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6A204AC31200A06458 /* DataSource.swift */; };
 		9BF48F76204AC31200A06458 /* DataSourceTableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */; };
 		9BF48F77204AC31200A06458 /* UIImageView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6C204AC31200A06458 /* UIImageView+.swift */; };
-		9BF48F78204AC31200A06458 /* DocumentInteractionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */; };
 		9BF48F7B204AC31200A06458 /* AnimatableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48F70204AC31200A06458 /* AnimatableImageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -183,7 +182,6 @@
 		9BF48F6A204AC31200A06458 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		9BF48F6B204AC31200A06458 /* DataSourceTableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceTableViews.swift; sourceTree = "<group>"; };
 		9BF48F6C204AC31200A06458 /* UIImageView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+.swift"; sourceTree = "<group>"; };
-		9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentInteractionPresenter.swift; sourceTree = "<group>"; };
 		9BF48F70204AC31200A06458 /* AnimatableImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -286,7 +284,6 @@
 				9BA3271D2314229500BCC851 /* AnimatableImage.swift */,
 				9BF48F70204AC31200A06458 /* AnimatableImageView.swift */,
 				9BF48F67204AC31200A06458 /* DataSource */,
-				9BF48F6D204AC31200A06458 /* DocumentInteractionPresenter.swift */,
 				9B9BD59223580F8000A8705B /* EmptyResultView.swift */,
 				9B07ED93230D5E4A00F376B9 /* Extensions */,
 				9B9BD59123580F7F00A8705B /* MediaPicker.swift */,
@@ -567,7 +564,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BF48ED2204AC0BE00A06458 /* ProgressLayer.swift in Sources */,
-				9BF48F78204AC31200A06458 /* DocumentInteractionPresenter.swift in Sources */,
 				9B07ED90230D3BED00F376B9 /* StyleApplyable.swift in Sources */,
 				9BF48ED5204AC0BE00A06458 /* UIFont+.swift in Sources */,
 				9B1A1A49230DA42800D82D4A /* ActionSheetViewController.swift in Sources */,
