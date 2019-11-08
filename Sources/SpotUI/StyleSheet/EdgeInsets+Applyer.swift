@@ -14,7 +14,7 @@ struct ParagraphSpacingApplyer: StyleApplyer {
 	var value: UIEdgeInsets
 	
 	init?(with value: Any, predefined: StyleValueSet) {
-		self.value = UIEdgeInsets.spot(predefined.value(for: value)) ?? .zero
+		self.value = AnyToUIEdgeInsets(predefined.value(for: value)) ?? .zero
 	}
 	
 	init(_ v: UIEdgeInsets) {
@@ -37,7 +37,7 @@ struct PaddingApplyer: StyleApplyer {
 	var producer: (UITraitCollection)->UIEdgeInsets
 	
 	init(with value: Any, predefined: StyleValueSet) {
-		let insets = UIEdgeInsets.spot(predefined.value(for: value)) ?? .zero
+		let insets = AnyToUIEdgeInsets(predefined.value(for: value)) ?? .zero
 		producer = {_ in insets}
 	}
 	
@@ -63,7 +63,7 @@ struct TitlePaddingApplyer: StyleApplyer {
 	var producer: (UITraitCollection)->UIEdgeInsets
 	
 	init(with value: Any, predefined: StyleValueSet) {
-		let insets = UIEdgeInsets.spot(predefined.value(for: value)) ?? .zero
+		let insets = AnyToUIEdgeInsets(predefined.value(for: value)) ?? .zero
 		producer = {_ in insets}
 	}
 	

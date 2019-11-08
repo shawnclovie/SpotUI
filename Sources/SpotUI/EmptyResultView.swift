@@ -24,6 +24,7 @@ public struct EmptyResultViewStyleSet {
 		.textAlignment(.center)
 		.padding{_ in .init(top: 8, left: 20, bottom: 0, right: 20)}
 	public var descriptionView = Style()
+		.backgroundColor(StyleShared.clearColorProducer)
 		.textColor{_ in .systemGray}
 		.font{_ in .systemFont(ofSize: 14)}
 		.textAlignment(.center)

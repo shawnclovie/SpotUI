@@ -35,7 +35,7 @@ struct ShadowApplyer: StyleApplyer {
 		}
 		let shadow = StyleShadow(
 			color: color.colorValue,
-			offset: CGSize.spot(predefined.value(for: data["offset"])) ?? .zero,
+			offset: AnyToCGSize(predefined.value(for: data["offset"])) ?? .zero,
 			opacity: Float(predefined.parseDouble(data["opacity"], defaultValue: 1)),
 			radius: CGFloat(predefined.parseDouble(data["radius"])))
 		producer = {_ in shadow}

@@ -14,7 +14,7 @@ struct ItemSizeApplyer: StyleApplyer {
 	
 	
 	init?(with value: Any, predefined: StyleValueSet) {
-		guard let parsed = CGSize.spot(predefined.value(for: value)) else {
+		guard let parsed = AnyToCGSize(predefined.value(for: value)) else {
 			return nil
 		}
 		producer = {_ in parsed}

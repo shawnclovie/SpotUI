@@ -44,11 +44,11 @@ public struct StyleImageSource {
 	
 	init(with data: [AnyHashable: Any], predefined: StyleValueSet) {
 		if let name = predefined.value(for: data["name"]) as? String {
-			let size = CGSize.spot(predefined.value(for: data["size"])) ?? .zero
+			let size = AnyToCGSize(predefined.value(for: data["size"])) ?? .zero
 			source = .name(name, size: size, template: data["template"] as? Bool ?? false)
 		} else if let value = predefined.value(for: data["solid-color"]) as? String,
 			let color = DecimalColor(hexARGB: value) {
-			let size = CGSize.spot(predefined.value(for: data["size"])) ?? .init(width: 1, height: 1)
+			let size = AnyToCGSize(predefined.value(for: data["size"])) ?? .init(width: 1, height: 1)
 			source = .solidColor(color.colorValue, size: size)
 		} else {
 			source = .empty
