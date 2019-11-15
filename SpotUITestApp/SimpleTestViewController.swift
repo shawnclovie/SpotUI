@@ -189,13 +189,38 @@ class SimpleTestViewController: UIViewController {
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
 			root.setBar(alignment: .center)
-			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] in
+			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] _ in
 				root?.dismiss(animated: true, completion: nil)
 				})
-			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] in
+			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _ in
 				guard let root = root else {return}
 				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
 			})
+			let vertical = UIViewController()
+			let bar = ScrollableTabBarView(frame: .zero)
+			bar.axis = .vertical
+			bar.style.selectIndicatorPosition = .leading
+			bar.style.buttonStack
+				.stackDistribution(.fillProportionally)
+				.stackAlignment(.fill)
+			let style = Style()
+				.buttonTitleColor(for: [.normal, .highlighted], {(state, trait) in
+					switch state {
+					case .highlighted:return StyleShared.tintColorProducer(trait)
+					default:return StyleShared.foregroundTextColorProducer(trait)
+					}
+				})
+				.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
+			let fn: (Int)->Void = { [weak bar] (i) in
+				bar?.selectedIndex = i
+			}
+			for i in 1...10 {
+				bar.add(button: .init(title: "\(i)", style: style, handler: fn))
+			}
+			vertical.view.addSubview(bar)
+			vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
+			bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
+			root.add(contentViewController: vertical, tab: .init(title: "V"))
 			for (title, color) in [
 				"SQ": .red,
 				"实现实现实现🂨😦实现实": .yellow,
@@ -204,7 +229,6 @@ class SimpleTestViewController: UIViewController {
 					vc.view.backgroundColor = color
 					root.add(contentViewController: vc, tab: .init(title: title))
 			}
-			root.set(selectedIndex: 2, animated: false)
 			vc.present(root, animated: true, completion: nil)
 		}),
 	]
@@ -270,7 +294,7 @@ class SimpleTestViewController: UIViewController {
 			deviceInfoText.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
 			deviceInfoText.leftAnchor.constraint(equalTo: view.leftAnchor),
 			deviceInfoText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7),
-			deviceInfoText.heightAnchor.constraint(equalToConstant: 200),
+			deviceInfoText.heightAnchor.constraint(equalToConstant: 120),
 			testButton.topAnchor.constraint(equalTo: deviceInfoText.topAnchor),
 			testButton.leftAnchor.constraint(equalTo: deviceInfoText.rightAnchor),
 			testButton.rightAnchor.constraint(equalTo: view.rightAnchor),

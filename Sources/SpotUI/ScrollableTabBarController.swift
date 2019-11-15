@@ -51,7 +51,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	private var tabBarHiddenConstraint: NSLayoutConstraint?
 	private let vStack = UIStackView()
-	private let tabBar = ScrollableTabBarView()
+	private let tabBar = ScrollableTabBarView(frame: .zero)
 	private let contentView = UIScrollView()
 	
 	open override func viewDidLoad() {
@@ -65,6 +65,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		vStack.alignment = .fill
 		vStack.distribution = .fill
 		view.addSubview(vStack)
+		tabBar.axis = .horizontal
 		tabBar.delegate = self
 		
 		contentView.delegate = self
@@ -108,11 +109,12 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	}
 	
 	public func setBarSideButton(of side: ScrollableTabBarButton.Side, _ info: ScrollableTabBarButton) {
-		tabBar.setSideButton(of: side, info)
+		tabBar.set(sideButton: info, at: side)
 	}
 	
-	public func setBar(alignment: ScrollableTabBarButton.Alignment) {
-		tabBar.alignment = alignment
+	public func setBar(alignment: UIStackView.Alignment) {
+		tabBar.style.buttonStack.stackAlignment(alignment)
+		tabBar.resetStyle()
 	}
 	
 	public func setBar(hidden: Bool) {
@@ -126,7 +128,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 			addChild(vc)
 		}
 		contentViewControllers.append(vc)
-		tabBar.addButton(info)
+		tabBar.add(button: info)
 		updateContentView()
 	}
 	
@@ -196,6 +198,6 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	open func scrollableTabBar(view: ScrollableTabBarView, didSelect index: Int, info: ScrollableTabBarButton) {
 		let animated = delegate?.scrollableTabBar(controller: self, shouldAnimatingScrollToTab: index)
 		let offset = CGPoint(x: CGFloat(index) * contentView.bounds.width, y: 0)
-		contentView.setContentOffset(offset, animated: animated ?? false)
+		contentView.setContentOffset(offset, animated: animated ?? true)
 	}
 }
