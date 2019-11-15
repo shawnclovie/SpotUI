@@ -220,15 +220,16 @@ class SimpleTestViewController: UIViewController {
 			vertical.view.addSubview(bar)
 			vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
 			bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
-			root.add(contentViewController: vertical, tab: .init(title: "V"))
-			for (title, color) in [
+			root.add(viewController: vertical, tab: .init(title: "V"))
+			root.add(viewControllers: ([
 				"SQ": .red,
 				"实现实现实现🂨😦实现实": .yellow,
-				"🙀🎉": .blue] as [String: UIColor] {
+				"🙀🎉": .blue,
+				] as [String: UIColor]).map{
 					let vc = UIViewController()
-					vc.view.backgroundColor = color
-					root.add(contentViewController: vc, tab: .init(title: title))
-			}
+					vc.view.backgroundColor = $0.value
+					return (vc, .init(title: $0.key))
+				})
 			vc.present(root, animated: true, completion: nil)
 		}),
 	]

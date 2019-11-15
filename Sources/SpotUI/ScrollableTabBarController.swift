@@ -122,13 +122,20 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		tabBarHiddenConstraint?.isActive = hidden
 	}
 	
-	public func add(contentViewController vc: UIViewController, tab info: ScrollableTabBarButton = .init()) {
+	public func add(viewController vc: UIViewController, tab info: ScrollableTabBarButton = .init()) {
+		add(viewControllers: [(vc, info)])
+	}
+	
+	public func add(viewControllers infos: [(UIViewController, ScrollableTabBarButton)]) {
+		guard let first = infos.first else {return}
 		if contentViewControllers.isEmpty {
-			contentView.addSubview(vc.view)
-			addChild(vc)
+			contentView.addSubview(first.0.view)
+			addChild(first.0)
 		}
-		contentViewControllers.append(vc)
-		tabBar.add(button: info)
+		for it in infos {
+			contentViewControllers.append(it.0)
+			tabBar.add(button: it.1)
+		}
 		updateContentView()
 	}
 	
