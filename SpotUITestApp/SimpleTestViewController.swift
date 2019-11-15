@@ -188,7 +188,7 @@ class SimpleTestViewController: UIViewController {
 			let root = ScrollableTabBarController()
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
-			root.setBar(alignment: .center)
+			root.setBarStack(style: Style().stackDistribution(.fillEqually))
 			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] _ in
 				root?.dismiss(animated: true, completion: nil)
 				})
@@ -200,8 +200,8 @@ class SimpleTestViewController: UIViewController {
 			let bar = ScrollableTabBarView(frame: .zero)
 			bar.axis = .vertical
 			bar.style.selectIndicatorPosition = .leading
-			bar.style.buttonStack
-				.stackDistribution(.fillProportionally)
+			bar.style.buttonStack = Style()
+				.stackDistribution(.fillEqually)
 				.stackAlignment(.fill)
 			let style = Style()
 				.buttonTitleColor(for: [.normal, .highlighted], {(state, trait) in

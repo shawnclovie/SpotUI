@@ -112,8 +112,8 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		tabBar.set(sideButton: info, at: side)
 	}
 	
-	public func setBar(alignment: UIStackView.Alignment) {
-		tabBar.style.buttonStack.stackAlignment(alignment)
+	public func setBarStack(style: Style) {
+		tabBar.style.buttonStack = style
 		tabBar.resetStyle()
 	}
 	

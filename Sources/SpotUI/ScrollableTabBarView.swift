@@ -43,6 +43,12 @@ public struct ScrollableTabBarButton {
 		self.mark = mark
 		self.handler = handler
 	}
+	
+	func apply(_ button: UIButton) {
+		button.setTitle(title, for: .normal)
+		button.setImage(image, for: .normal)
+		style?.apply(to: button, with: button.traitCollection)
+	}
 }
 
 public struct ScrollableTabBarStyleSet {
@@ -165,7 +171,7 @@ public final class ScrollableTabBarView: UIStackView {
 		} else {
 			button = UIButton(type: .custom)
 			button.tag = side.rawValue
-			self.style.sideButton.apply(to: button, with: traitCollection)
+			style.sideButton.apply(to: button, with: traitCollection)
 			button.addTarget(self, action: #selector(touchUp(side:)), for: .touchUpInside)
 			sideButtons[side] = .init(button: button, originalSize: .zero, info: info)
 			switch side {
@@ -175,9 +181,7 @@ public final class ScrollableTabBarView: UIStackView {
 				addArrangedSubview(button)
 			}
 		}
-		button.setTitle(info.title, for: .normal)
-		button.setImage(info.image, for: .normal)
-		info.style?.apply(to: button, with: traitCollection)
+		info.apply(button)
 		button.sizeToFit()
 	}
 	
@@ -187,12 +191,9 @@ public final class ScrollableTabBarView: UIStackView {
 	
 	public func add(button info: ScrollableTabBarButton) {
 		let button = UIButton(type: .custom)
-		info.title.map{button.setTitle($0, for: .normal)}
-		info.image.map{button.setImage($0, for: .normal)}
-		self.style.button.apply(to: button, with: traitCollection)
-		info.style?.apply(to: button, with: traitCollection)
+		info.apply(button)
+		style.button.apply(to: button, with: traitCollection)
 		button.addTarget(self, action: #selector(touchUp(item:)), for: .touchUpInside)
-		button.center = .zero
 		button.tag = models.count
 		models.append(Model(button: button, originalSize: button.bounds.size, info: info))
 		buttonStack.addArrangedSubview(button)
