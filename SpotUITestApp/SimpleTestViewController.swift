@@ -188,8 +188,8 @@ class SimpleTestViewController: UIViewController {
 			let root = ScrollableTabBarController()
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
-			root.setBarStack(style: Style().stackDistribution(.fillEqually))
-			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] _ in
+			root.setBarStack(style: Style().stackDistribution(.fill))
+			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().font{_ in .systemFont(ofSize: 12)}.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] _ in
 				root?.dismiss(animated: true, completion: nil)
 				})
 			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _ in
@@ -197,30 +197,34 @@ class SimpleTestViewController: UIViewController {
 				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
 			})
 			let vertical = UIViewController()
-			let bar = ScrollableTabBarView(frame: .zero)
-			bar.axis = .vertical
-			bar.style.selectIndicatorPosition = .leading
-			bar.style.buttonStack = Style()
-				.stackDistribution(.fillEqually)
-				.stackAlignment(.fill)
+			do {
+				let bar = ScrollableTabBarView(frame: .zero)
+				bar.axis = .vertical
+				bar.style.selectIndicatorPosition = .leading
+				bar.style.buttonStack = Style()
+					.stackAlignment(.fill)
+					.stackDistribution(.equalSpacing)
+				let style = Style()
+					.buttonTitleColor(for: [.normal, .highlighted], {
+						switch $0 {
+						case .highlighted:return StyleShared.tintColorProducer($1)
+						default:return StyleShared.foregroundTextColorProducer($1)
+						}
+					})
+					.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
+				let fn: (Int)->Void = { [weak bar] (i) in
+					bar?.selectedIndex = i
+				}
+				for i in 1...10 {
+					bar.add(button: .init(title: "\(i)", style: style, handler: fn))
+				}
+				vertical.view.addSubview(bar)
+				vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
+				bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
+			}
 			let style = Style()
-				.buttonTitleColor(for: [.normal, .highlighted], {(state, trait) in
-					switch state {
-					case .highlighted:return StyleShared.tintColorProducer(trait)
-					default:return StyleShared.foregroundTextColorProducer(trait)
-					}
-				})
-				.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
-			let fn: (Int)->Void = { [weak bar] (i) in
-				bar?.selectedIndex = i
-			}
-			for i in 1...10 {
-				bar.add(button: .init(title: "\(i)", style: style, handler: fn))
-			}
-			vertical.view.addSubview(bar)
-			vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
-			bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
-			root.add(viewController: vertical, tab: .init(title: "V"))
+				.font{_ in .systemFont(ofSize: 30)}
+			root.add(viewController: vertical, tab: .init(title: "V", style: style))
 			root.add(viewControllers: ([
 				"SQ": .red,
 				"实现实现实现🂨😦实现实": .yellow,
@@ -228,7 +232,7 @@ class SimpleTestViewController: UIViewController {
 				] as [String: UIColor]).map{
 					let vc = UIViewController()
 					vc.view.backgroundColor = $0.value
-					return (vc, .init(title: $0.key))
+					return (vc, .init(title: $0.key, style: style))
 				})
 			vc.present(root, animated: true, completion: nil)
 		}),

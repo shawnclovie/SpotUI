@@ -65,6 +65,8 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		vStack.alignment = .fill
 		vStack.distribution = .fill
 		view.addSubview(vStack)
+		tabBar.setContentHuggingPriority(.required, for: .vertical)
+		tabBar.setContentCompressionResistancePriority(.required, for: .vertical)
 		tabBar.axis = .horizontal
 		tabBar.delegate = self
 		
