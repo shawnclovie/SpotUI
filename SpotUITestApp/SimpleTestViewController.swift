@@ -184,6 +184,29 @@ class SimpleTestViewController: UIViewController {
 			picker.delegate = vc
 			vc.present(picker, animated: true, completion: nil)
 		}),
+		("ScrollableTabBar", { vc in
+			let root = ScrollableTabBarController()
+			root.modalPresentationStyle = .fullScreen
+			root.tabBarPosition = .bottom
+			root.setBar(alignment: .center)
+			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] in
+				root?.dismiss(animated: true, completion: nil)
+				})
+			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] in
+				guard let root = root else {return}
+				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
+			})
+			for (title, color) in [
+				"SQ": .red,
+				"实现实现实现🂨😦实现实": .yellow,
+				"🙀🎉": .blue] as [String: UIColor] {
+					let vc = UIViewController()
+					vc.view.backgroundColor = color
+					root.add(contentViewController: vc, tab: .init(title: title))
+			}
+			root.set(selectedIndex: 2, animated: false)
+			vc.present(root, animated: true, completion: nil)
+		}),
 	]
 
 	override func viewDidLoad() {
@@ -247,7 +270,7 @@ class SimpleTestViewController: UIViewController {
 			deviceInfoText.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
 			deviceInfoText.leftAnchor.constraint(equalTo: view.leftAnchor),
 			deviceInfoText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7),
-			deviceInfoText.heightAnchor.constraint(equalToConstant: 300),
+			deviceInfoText.heightAnchor.constraint(equalToConstant: 200),
 			testButton.topAnchor.constraint(equalTo: deviceInfoText.topAnchor),
 			testButton.leftAnchor.constraint(equalTo: deviceInfoText.rightAnchor),
 			testButton.rightAnchor.constraint(equalTo: view.rightAnchor),

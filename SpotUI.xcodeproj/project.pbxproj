@@ -13,6 +13,10 @@
 		9B07ED95230D5EE500F376B9 /* StyleApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B07ED94230D5EE500F376B9 /* StyleApplyer.swift */; };
 		9B1A1A49230DA42800D82D4A /* ActionSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1A1A48230DA42800D82D4A /* ActionSheetViewController.swift */; };
 		9B1A1A4B230E714B00D82D4A /* spot_ui_styles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9B1A1A4A230E714B00D82D4A /* spot_ui_styles.bundle */; };
+		9B228316237E521B00A8DF27 /* ScrollableTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B228314237E521B00A8DF27 /* ScrollableTabBarView.swift */; };
+		9B228317237E521B00A8DF27 /* ScrollableTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B228315237E521B00A8DF27 /* ScrollableTabBarController.swift */; };
+		9B228318237E561500A8DF27 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
+		9B228319237E561500A8DF27 /* SpotUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9B3D9DF6230908650091BA83 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = 9B3D9DF5230908650091BA83 /* Spot */; };
 		9B3D9DF9230908F70091BA83 /* SpotCache in Frameworks */ = {isa = PBXBuildFile; productRef = 9B3D9DF8230908F70091BA83 /* SpotCache */; };
 		9B3E59B42185820D002A3F33 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E59B32185820D002A3F33 /* AppDelegate.swift */; };
@@ -21,7 +25,6 @@
 		9B3E59C42185837D002A3F33 /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59C32185837D002A3F33 /* style.json */; };
 		9B3E59C621858389002A3F33 /* style_defines.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59C521858389002A3F33 /* style_defines.json */; };
 		9B3E59C8218583B1002A3F33 /* SimpleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3E59C7218583B1002A3F33 /* SimpleTestViewController.swift */; };
-		9B3E59C9218587DD002A3F33 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
 		9B3E59CB21858900002A3F33 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59CA218588FF002A3F33 /* images */; };
 		9B549B00231A3F3A009BDDC3 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B549AFF231A3F3A009BDDC3 /* UITableView+.swift */; };
 		9B54C5F42273F70E006B79BC /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B54C5F32273F70D006B79BC /* AlertController.swift */; };
@@ -98,6 +101,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9B228319237E561500A8DF27 /* SpotUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,6 +125,8 @@
 		9B07ED94230D5EE500F376B9 /* StyleApplyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleApplyer.swift; sourceTree = "<group>"; };
 		9B1A1A48230DA42800D82D4A /* ActionSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSheetViewController.swift; sourceTree = "<group>"; };
 		9B1A1A4A230E714B00D82D4A /* spot_ui_styles.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = spot_ui_styles.bundle; sourceTree = "<group>"; };
+		9B228314237E521B00A8DF27 /* ScrollableTabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableTabBarView.swift; sourceTree = "<group>"; };
+		9B228315237E521B00A8DF27 /* ScrollableTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableTabBarController.swift; sourceTree = "<group>"; };
 		9B3D9E1723095D250091BA83 /* SpotUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotUITests.swift; sourceTree = "<group>"; };
 		9B3E59B12185820D002A3F33 /* SpotUITestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotUITestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B3E59B32185820D002A3F33 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -190,7 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B3E59C9218587DD002A3F33 /* SpotUI.framework in Frameworks */,
+				9B228318237E561500A8DF27 /* SpotUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +295,8 @@
 				9B07ED93230D5E4A00F376B9 /* Extensions */,
 				9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */,
 				9BF48EAD204AC0BE00A06458 /* ProgressLayer */,
+				9B228315237E521B00A8DF27 /* ScrollableTabBarController.swift */,
+				9B228314237E521B00A8DF27 /* ScrollableTabBarView.swift */,
 				9BE29364230BED84004D6120 /* StyleShared.swift */,
 				9BF48E96204AC0BE00A06458 /* StyleSheet */,
 				9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */,
@@ -570,6 +578,8 @@
 				9BE29365230BED84004D6120 /* StyleShared.swift in Sources */,
 				9B07ED95230D5EE500F376B9 /* StyleApplyer.swift in Sources */,
 				9BF48ECF204AC0BE00A06458 /* UIImage+.swift in Sources */,
+				9B228316237E521B00A8DF27 /* ScrollableTabBarView.swift in Sources */,
+				9B228317237E521B00A8DF27 /* ScrollableTabBarController.swift in Sources */,
 				9BF48EB9204AC0BE00A06458 /* UIEdgeInsets+.swift in Sources */,
 				9B9BD59423580F8000A8705B /* EmptyResultView.swift in Sources */,
 				9BF48F75204AC31200A06458 /* DataSource.swift in Sources */,
