@@ -12,21 +12,26 @@ import Spot
 
 public final class Style {
 	
-	public private(set) var applyers: [String: StyleApplyer] = [:]
+	public private(set) var applyers: [String: StyleApplyer]
 	
 	public var loadedData: [String: Any]
 	
-	public init() {
-		loadedData = [:]
+	public init(applyers: [String: StyleApplyer] = [:], loadedData: [String: Any] = [:]) {
+		self.applyers = applyers
+		self.loadedData = loadedData
 	}
 	
-	init(with data: [String: Any], predefined: StyleValueSet) {
-		loadedData = data
+	convenience init(with data: [String: Any], predefined: StyleValueSet) {
+		self.init(applyers: [:], loadedData: data)
 		for (key, value) in data {
 			guard let cls = Self.applyerTypes[key],
 				let applyer = cls.init(with: value, predefined: predefined) else {continue}
 			set(applyer)
 		}
+	}
+	
+	public var duplicate: Style {
+		.init(applyers: applyers, loadedData: loadedData)
 	}
 	
 	@discardableResult

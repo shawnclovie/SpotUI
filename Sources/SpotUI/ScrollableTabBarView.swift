@@ -25,7 +25,10 @@ public struct ScrollableTabBarButton {
 	
 	public var title: String?
 	public var image: UIImage?
-	public var style: Style?
+	public var style = Style()
+		.textColor(StyleShared.foregroundTextColorProducer)
+	public var selectedStyle = Style()
+		.textColor(StyleShared.foregroundTextColorProducer)
 	public var mark: Any?
 	public var handler: ((Int)->Void)?
 	
@@ -33,13 +36,12 @@ public struct ScrollableTabBarButton {
 	/// - Parameters:
 	///   - title: Title if needed
 	///   - image: Image if needed
-	///   - style: Style to style the button if needed
 	///   - mark: Any value to mark the button if needed
 	///   - handler: Handler on touchUpInside with index of the button. The index would be -1 or .max for leading or trailing of Side.
-	public init(title: String? = nil, image: UIImage? = nil, style: Style? = nil, mark: Any? = nil, handler: ((Int)->Void)? = nil) {
+	public init(title: String? = nil, image: UIImage? = nil,
+				mark: Any? = nil, handler: ((Int)->Void)? = nil) {
 		self.title = title
 		self.image = image
-		self.style = style
 		self.mark = mark
 		self.handler = handler
 	}
@@ -47,7 +49,7 @@ public struct ScrollableTabBarButton {
 	func apply(_ button: UIButton) {
 		button.setTitle(title, for: .normal)
 		button.setImage(image, for: .normal)
-		style?.apply(to: button, with: button.traitCollection)
+		style.apply(to: button, with: button.traitCollection)
 	}
 }
 
@@ -66,32 +68,30 @@ public struct ScrollableTabBarStyleSet {
 	public var selectIndicator = Style()
 		.backgroundColor(StyleShared.tintColorProducer)
 	
-	public var button = Style()
-		.textColor(StyleShared.foregroundTextColorProducer)
-		.padding{_ in .init(top: 6, left: 10, bottom: 6, right: 10)}
 	public var buttonStack = Style()
 		.stackDistribution(.equalSpacing)
-	
-	public var sideButton = Style()
-		.textColor(StyleShared.foregroundTextColorProducer)
-		.padding{_ in .init(top: 8, left: 8, bottom: 8, right: 8)}
 }
 
 public final class ScrollableTabBarView: UIView {
 	
-	private struct Model {
+	private struct Model: Hashable {
+		static func == (lhs: ScrollableTabBarView.Model, rhs: ScrollableTabBarView.Model) -> Bool {
+			lhs.button === rhs.button
+		}
+		
 		let button: UIButton
 		let originalSize: CGSize
 		var info: ScrollableTabBarButton
+		
+		func hash(into hasher: inout Hasher) {
+			hasher.combine(button)
+		}
 	}
 	
 	public weak var delegate: ScrollableTabBarViewDelegate?
 	
-	public var selectedIndex = -1 {
-		didSet {
-			updateSelectIndicator(from: oldValue, animated: oldValue >= 0)
-		}
-	}
+	public private(set) var selectedIndex = -1
+	public private(set) var indicatorIndexPosition: CGFloat = -1
 	
 	public var style: ScrollableTabBarStyleSet = .shared
 	
@@ -155,15 +155,19 @@ public final class ScrollableTabBarView: UIView {
 				case .leading:
 					if isHorizontal {
 						inset.left = model.button.bounds.width
+						model.button.bounds.size.height = size.height
 					} else {
 						inset.top = model.button.bounds.height
+						model.button.bounds.size.width = size.width
 					}
 					model.button.center = .zero
 				case .trailing:
 					if isHorizontal {
 						inset.right = model.button.bounds.width
+						model.button.bounds.size.height = size.height
 					} else {
 						inset.bottom = model.button.bounds.height
+						model.button.bounds.size.width = size.width
 					}
 					model.button.center = .init(x: size.width, y: size.height)
 				}
@@ -178,7 +182,7 @@ public final class ScrollableTabBarView: UIView {
 		} else {
 			selectIndicator.center.x = style.selectIndicatorPosition == .leading ? indicatorH_2 : size.width - indicatorH_2
 		}
-		updateSelectIndicator(from: selectedIndex, animated: false)
+		updateSelectIndicator(from: indicatorIndexPosition, highlightButton: true, animated: false)
 	}
 	
 	public func set(sideButton info: ScrollableTabBarButton,
@@ -192,7 +196,6 @@ public final class ScrollableTabBarView: UIView {
 			button = UIButton(type: .custom)
 			button.layer.anchorPoint = side == .leading ? .zero : .init(x: 1, y: 1)
 			button.tag = side.rawValue
-			style.sideButton.apply(to: button, with: traitCollection)
 			button.addTarget(self, action: #selector(touchUp(side:)), for: .touchUpInside)
 			sideButtons[side] = .init(button: button, originalSize: .zero, info: info)
 			addSubview(button)
@@ -207,13 +210,19 @@ public final class ScrollableTabBarView: UIView {
 	
 	public func add(button info: ScrollableTabBarButton) {
 		let button = UIButton(type: .custom)
-		style.button.apply(to: button, with: traitCollection)
 		info.apply(button)
 		button.addTarget(self, action: #selector(touchUp(item:)), for: .touchUpInside)
 		button.tag = models.count
 		models.append(Model(button: button, originalSize: button.bounds.size, info: info))
 		buttonStack.addArrangedSubview(button)
 		selectIndicator.isHidden = models.count <= 1
+	}
+	
+	public func set(selectedIndex: CGFloat, highlightButton: Bool, animated: Bool) {
+		guard models.indices.contains(Int(ceil(selectedIndex))) else {return}
+		let oldValue = self.indicatorIndexPosition
+		self.indicatorIndexPosition = selectedIndex
+		updateSelectIndicator(from: oldValue, highlightButton: highlightButton, animated: animated && oldValue >= 0)
 	}
 	
 	func resetStyle() {
@@ -224,11 +233,13 @@ public final class ScrollableTabBarView: UIView {
 		} else {
 			selectIndicator.bounds.size.width = style.selectIndicatorSize
 		}
-		sideButtons.forEach{
-			style.sideButton.apply(to: $0.value.button, with: traitCollection)}
+		sideButtons.values.forEach{
+			$0.info.style.apply(to: $0.button, with: traitCollection)}
 		style.buttonStack.apply(to: buttonStack, with: traitCollection)
-		models.forEach{
-			style.button.apply(to: $0.button, with: traitCollection)}
+		let range = Int(indicatorIndexPosition)...Int(ceil(indicatorIndexPosition))
+		models.enumerated().forEach{ (i, model) in
+			(range.contains(i) ? model.info.selectedStyle : model.info.style)
+				.apply(to: model.button, with: traitCollection)}
 	}
 	
 	private func updateAxis() {
@@ -246,46 +257,63 @@ public final class ScrollableTabBarView: UIView {
 		axisContraints.spot_set(active: true)
 	}
 	
-	private func updateSelectIndicator(from oldIndex: Int, animated: Bool) {
-		guard models.indices.contains(selectedIndex) else {
+	private func updateSelectIndicator(from oldIndex: CGFloat, highlightButton: Bool, animated: Bool) {
+		guard models.indices.contains(Int(indicatorIndexPosition)) else {
 			return
 		}
 		layoutIfNeeded()
 		selectIndicator.layer.removeAllAnimations()
-		let button = models[selectedIndex].button
 		let indicator = selectIndicator
 		let container = contentView
-		let btnSize = button.bounds.size
-		let btnCenter = button.center
+		
+		let indexRange = Int(indicatorIndexPosition)...Int(ceil(indicatorIndexPosition))
+		let progress = indicatorIndexPosition - CGFloat(indexRange.lowerBound)
+		let indicatorSize = style.selectIndicatorSize
+		
+		let model1 = models[indexRange.lowerBound]
+		let model2 = models[indexRange.upperBound]
+		let btnFrame1 = model1.button.frame
+		let btnFrame2 = model2.button.frame
 		let containerSize = container.bounds.size
 		let fn = {
+			if highlightButton {
+				if let oldModel = self.models.spot_value(at: self.selectedIndex) {
+					oldModel.info.style.apply(to: oldModel.button, with: self.traitCollection)
+				}
+				model1.info.selectedStyle.apply(to: model1.button, with: self.traitCollection)
+				self.selectedIndex = indexRange.lowerBound
+			}
 			if self.axis == .horizontal {
-				indicator.center.x = btnCenter.x
-				indicator.bounds.size.width = btnSize.width
+				let x = btnFrame1.minX + (btnFrame2.minX - btnFrame1.minX) * progress
+				let width = btnFrame1.width + (btnFrame2.width - btnFrame1.width) * progress
+				let indicatorFrame = CGRect(x: x, y: btnFrame1.maxY - indicatorSize, width: width, height: indicatorSize)
+				indicator.frame = indicatorFrame
 				if containerSize.width > 0 {
 					var offset = container.contentOffset
-					if btnCenter.x < offset.x {
-						offset.x = max(btnCenter.x - (containerSize.width - btnSize.width) / 2, 0)
-					} else if btnCenter.x + btnSize.width > offset.x + containerSize.width {
-						offset.x = min(btnCenter.x - (containerSize.width - btnSize.width) / 2, container.contentSize.width - containerSize.width)
+					if indicatorFrame.minX < offset.x {
+						offset.x = max(indicatorFrame.minX, 0)
+					} else if indicatorFrame.maxX > offset.x + containerSize.width {
+						offset.x = min(indicatorFrame.minX, container.contentSize.width - containerSize.width)
 					}
 					container.setContentOffset(offset, animated: false)
 				}
 			} else {
-				indicator.center.y = btnCenter.y
-				indicator.bounds.size.height = btnSize.height
+				let y = btnFrame1.minY + (btnFrame2.minY - btnFrame1.minY) * progress
+				let height = btnFrame1.height + (btnFrame2.height - btnFrame1.height) * progress
+				let indicatorFrame = CGRect(x: btnFrame1.maxX - indicatorSize, y: y, width: indicatorSize, height: height)
+				indicator.frame = indicatorFrame
 				if containerSize.height > 0 {
 					var offset = container.contentOffset
-					if btnCenter.y < offset.y {
-						offset.y = max(btnCenter.y - (containerSize.height - btnSize.height) / 2, 0)
-					} else if btnCenter.y + btnSize.height > offset.y + containerSize.height {
-						offset.y = min(btnCenter.y - (containerSize.height - btnSize.height) / 2, container.contentSize.height - containerSize.height)
+					if indicatorFrame.minY < offset.y {
+						offset.y = max(indicatorFrame.minY, 0)
+					} else if indicatorFrame.maxY > offset.y + containerSize.height {
+						offset.y = min(indicatorFrame.minY, container.contentSize.height - containerSize.height)
 					}
 					container.setContentOffset(offset, animated: false)
 				}
 			}
 		}
-		if animated && selectedIndex != oldIndex {
+		if animated {
 			UIView.animate(withDuration: 0.2, animations: fn)
 		} else {
 			fn()

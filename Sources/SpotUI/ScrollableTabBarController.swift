@@ -91,7 +91,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		super.viewDidLayoutSubviews()
 		updateContentView()
 		if tabBar.selectedIndex < 0 {
-			tabBar.selectedIndex = 0
+			tabBar.set(selectedIndex: 0, highlightButton: true, animated: false)
 		}
 	}
 	
@@ -112,6 +112,11 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	public func setBarSideButton(of side: ScrollableTabBarButton.Side, _ info: ScrollableTabBarButton) {
 		tabBar.set(sideButton: info, at: side)
+	}
+	
+	public func setBar(styleSet: ScrollableTabBarStyleSet) {
+		tabBar.style = styleSet
+		tabBar.resetStyle()
 	}
 	
 	public func setBarStack(style: Style) {
@@ -141,10 +146,6 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		updateContentView()
 	}
 	
-	public var selectedIndex: Int {
-		tabBar.selectedIndex
-	}
-	
 	public func set(selected vc: UIViewController, animated: Bool) {
 		guard let index = contentViewControllers.firstIndex(of: vc) else {return}
 		set(selectedIndex: index, animated: animated)
@@ -152,7 +153,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	public func set(selectedIndex: Int, animated: Bool) {
 		guard contentViewControllers.indices.contains(selectedIndex) else {return}
-		tabBar.selectedIndex = selectedIndex
+		tabBar.set(selectedIndex: CGFloat(selectedIndex), highlightButton: true, animated: animated)
 		view.layoutIfNeeded()
 		contentView.setContentOffset(CGPoint(x: CGFloat(selectedIndex) * view.bounds.width, y: 0), animated: animated)
 	}
@@ -181,9 +182,8 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	open func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		let pagePosition = scrollView.contentOffset.x / view.bounds.width
-		let page = Int(pagePosition)
-		let nextPage = Int(ceil(pagePosition))
-		for index in [page, nextPage] {
+		let pageRange = floor(pagePosition)...ceil(pagePosition)
+		for index in [Int(pageRange.lowerBound), Int(pageRange.upperBound)] {
 			guard contentViewControllers.indices.contains(index) else {
 				continue
 			}
@@ -194,10 +194,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 				updateContentView()
 			}
 		}
-		if tabBar.selectedIndex != page {
-			tabBar.selectedIndex = page
-			_ = delegate?.scrollableTabBar(controller: self, shouldAnimatingScrollToTab: page)
-		}
+		tabBar.set(selectedIndex: pagePosition, highlightButton: pageRange.lowerBound == pageRange.upperBound, animated: false)
 	}
 	
 	open func scrollableTabBar(view: ScrollableTabBarView, didTouch side: ScrollableTabBarButton.Side) {

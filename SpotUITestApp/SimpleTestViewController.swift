@@ -189,9 +189,18 @@ class SimpleTestViewController: UIViewController {
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
 			root.setBarStack(style: Style().stackDistribution(.fill))
-			root.setBarSideButton(of: .leading, .init(title: "close", style: Style().font{_ in .systemFont(ofSize: 12)}.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}) { [weak root] _ in
+			root.setBar(styleSet: {
+				var style = ScrollableTabBarStyleSet.shared
+				style.selectIndicator = style.selectIndicator.duplicate
+					.cornerRadius{_ in 2}
+				return style
+			}())
+			let leftButton = ScrollableTabBarButton(title: "close") { [weak root] _ in
 				root?.dismiss(animated: true, completion: nil)
-				})
+			}
+			leftButton.style.font{_ in .systemFont(ofSize: 12)}
+				.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}
+			root.setBarSideButton(of: .leading, leftButton)
 			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _ in
 				guard let root = root else {return}
 				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
@@ -204,7 +213,11 @@ class SimpleTestViewController: UIViewController {
 				bar.style.buttonStack = Style()
 					.stackAlignment(.fill)
 					.stackDistribution(.equalSpacing)
-				let style = Style()
+				var info = ScrollableTabBarButton() { [weak bar] (i) in
+					bar?.set(selectedIndex: CGFloat(i), highlightButton: true, animated: true)
+				}
+				info.style
+					.textColor(StyleShared.foregroundTextColorProducer)
 					.buttonTitleColor(for: [.normal, .highlighted], {
 						switch $0 {
 						case .highlighted:return StyleShared.tintColorProducer($1)
@@ -212,19 +225,21 @@ class SimpleTestViewController: UIViewController {
 						}
 					})
 					.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
-				let fn: (Int)->Void = { [weak bar] (i) in
-					bar?.selectedIndex = i
-				}
+				info.selectedStyle
+					.textColor(StyleShared.tintColorProducer)
+					.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
 				for i in 1...10 {
-					bar.add(button: .init(title: "\(i)", style: style, handler: fn))
+					info.title = "\(i)"
+					bar.add(button: info)
 				}
 				vertical.view.addSubview(bar)
 				vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
 				bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
 			}
-			let style = Style()
-				.font{_ in .systemFont(ofSize: 30)}
-			root.add(viewController: vertical, tab: .init(title: "V", style: style))
+			var info = ScrollableTabBarButton(title: "V")
+			info.style.font{_ in .systemFont(ofSize: 30)}
+			info.selectedStyle.textColor(StyleShared.tintColorProducer)
+			root.add(viewController: vertical, tab: info)
 			root.add(viewControllers: ([
 				"SQ": .red,
 				"实现实现实现🂨😦实现实": .yellow,
@@ -232,7 +247,8 @@ class SimpleTestViewController: UIViewController {
 				] as [String: UIColor]).map{
 					let vc = UIViewController()
 					vc.view.backgroundColor = $0.value
-					return (vc, .init(title: $0.key, style: style))
+					info.title = $0.key
+					return (vc, info)
 				})
 			vc.present(root, animated: true, completion: nil)
 		}),
