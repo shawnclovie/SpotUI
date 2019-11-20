@@ -195,13 +195,13 @@ class SimpleTestViewController: UIViewController {
 					.cornerRadius{_ in 2}
 				return style
 			}())
-			let leftButton = ScrollableTabBarButton(title: "close") { [weak root] _ in
+			let leftButton = ScrollableTabBarButton(title: "close") { [weak root] _, _ in
 				root?.dismiss(animated: true, completion: nil)
 			}
 			leftButton.style.font{_ in .systemFont(ofSize: 12)}
 				.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}
 			root.setBarSideButton(of: .leading, leftButton)
-			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _ in
+			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _, _ in
 				guard let root = root else {return}
 				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
 			})
@@ -213,7 +213,7 @@ class SimpleTestViewController: UIViewController {
 				bar.style.buttonStack = Style()
 					.stackAlignment(.fill)
 					.stackDistribution(.equalSpacing)
-				var info = ScrollableTabBarButton() { [weak bar] (i) in
+				var info = ScrollableTabBarButton() { [weak bar] (_, i) in
 					bar?.set(selectedIndex: CGFloat(i), highlightButton: true, animated: true)
 				}
 				info.style

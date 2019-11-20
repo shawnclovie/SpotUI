@@ -28,7 +28,7 @@ public struct ScrollableTabBarButton {
 	public var style: Style
 	public var selectedStyle: Style
 	public var mark: Any?
-	public var handler: ((Int)->Void)?
+	public var handler: ((ScrollableTabBarButton, Int)->Void)?
 	
 	/// Make button info
 	/// - Parameters:
@@ -41,7 +41,8 @@ public struct ScrollableTabBarButton {
 	public init(title: String? = nil, image: UIImage? = nil,
 				style: Style = Style().textColor(StyleShared.foregroundTextColorProducer),
 				selectedStyle: Style = Style().textColor(StyleShared.foregroundTextColorProducer),
-				mark: Any? = nil, handler: ((Int)->Void)? = nil) {
+				mark: Any? = nil,
+				handler: ((ScrollableTabBarButton, Int)->Void)? = nil) {
 		self.title = title
 		self.image = image
 		self.style = style
@@ -328,8 +329,8 @@ public final class ScrollableTabBarView: UIView {
 		guard let side = ScrollableTabBarButton.Side(rawValue: button.tag) else {
 			return
 		}
-		if let fn = sideButtons[side]?.info.handler {
-			fn(side == .leading ? -1 : .max)
+		if let button = sideButtons[side], let fn = button.info.handler {
+			fn(button.info, side == .leading ? .min : .max)
 		}
 		delegate?.scrollableTabBar(view: self, didTouch: side)
 	}
@@ -338,7 +339,7 @@ public final class ScrollableTabBarView: UIView {
 		guard let model = models.spot_value(at: item.tag) else {
 			return
 		}
-		model.info.handler?(item.tag)
+		model.info.handler?(model.info, item.tag)
 		delegate?.scrollableTabBar(view: self, didSelect: item.tag, info: model.info)
 	}
 }
