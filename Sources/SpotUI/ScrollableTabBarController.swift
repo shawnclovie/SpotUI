@@ -14,6 +14,7 @@ public enum ScrollableTabBarPosition {
 }
 
 public protocol ScrollableTabBarControllerDelegate: class {
+	/// On selected tab, should scroll to the view controller animated? true by default.
 	func scrollableTabBar(controller: ScrollableTabBarController,
 	                      shouldAnimatingScrollToTab index: Int) -> Bool
 	func scrollableTabBar(controller: ScrollableTabBarController,
@@ -22,7 +23,7 @@ public protocol ScrollableTabBarControllerDelegate: class {
 
 extension ScrollableTabBarControllerDelegate {
 	public func scrollableTabBar(controller: ScrollableTabBarController, shouldAnimatingScrollToTab index: Int) -> Bool {
-		false
+		true
 	}
 	
 	public func scrollableTabBar(controller: ScrollableTabBarController, didTouchSideButton side: ScrollableTabBarButton.Side) {
