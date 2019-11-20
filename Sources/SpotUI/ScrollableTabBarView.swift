@@ -25,10 +25,8 @@ public struct ScrollableTabBarButton {
 	
 	public var title: String?
 	public var image: UIImage?
-	public var style = Style()
-		.textColor(StyleShared.foregroundTextColorProducer)
-	public var selectedStyle = Style()
-		.textColor(StyleShared.foregroundTextColorProducer)
+	public var style: Style
+	public var selectedStyle: Style
 	public var mark: Any?
 	public var handler: ((Int)->Void)?
 	
@@ -36,12 +34,18 @@ public struct ScrollableTabBarButton {
 	/// - Parameters:
 	///   - title: Title if needed
 	///   - image: Image if needed
+	///   - style: Style on normal state
+	///   - selectedStyle: Style on selected (highlighted) state
 	///   - mark: Any value to mark the button if needed
 	///   - handler: Handler on touchUpInside with index of the button. The index would be -1 or .max for leading or trailing of Side.
 	public init(title: String? = nil, image: UIImage? = nil,
+				style: Style = Style().textColor(StyleShared.foregroundTextColorProducer),
+				selectedStyle: Style = Style().textColor(StyleShared.foregroundTextColorProducer),
 				mark: Any? = nil, handler: ((Int)->Void)? = nil) {
 		self.title = title
 		self.image = image
+		self.style = style
+		self.selectedStyle = selectedStyle
 		self.mark = mark
 		self.handler = handler
 	}
