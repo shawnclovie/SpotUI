@@ -119,6 +119,11 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		tabBar.set(sideButton: info, at: side)
 	}
 	
+	public func setBar(styleSet: ScrollableTabBarStyleSet) {
+		tabBar.style = styleSet
+		tabBar.resetStyle()
+	}
+	
 	public func setBar(styles: [WritableKeyPath<ScrollableTabBarStyleSet, Style>: Style]) {
 		for it in styles {
 			tabBar.style[keyPath: it.key] = it.value
