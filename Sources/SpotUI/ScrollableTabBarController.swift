@@ -111,24 +111,30 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		style.view.apply(to: view, with: traitCollection)
 	}
 	
-	public func setBarSideButton(of side: ScrollableTabBarButton.Side, _ info: ScrollableTabBarButton) {
+	// MARK: - Access TabBar
+	
+	public var barSelectedIndex: Int {tabBar.selectedIndex}
+	
+	public func setBar(sideButton side: ScrollableTabBarButton.Side, _ info: ScrollableTabBarButton) {
 		tabBar.set(sideButton: info, at: side)
 	}
 	
-	public func setBar(styleSet: ScrollableTabBarStyleSet) {
-		tabBar.style = styleSet
+	public func setBar(styles: [WritableKeyPath<ScrollableTabBarStyleSet, Style>: Style]) {
+		for it in styles {
+			tabBar.style[keyPath: it.key] = it.value
+		}
 		tabBar.resetStyle()
 	}
 	
-	public func setBarStack(style: Style) {
-		tabBar.style.buttonStack = style
-		tabBar.resetStyle()
+	public var isBarHidden: Bool {
+		get {tabBar.isHidden}
+		set {
+			tabBar.isHidden = newValue
+			tabBarHiddenConstraint?.isActive = newValue
+		}
 	}
 	
-	public func setBar(hidden: Bool) {
-		tabBar.isHidden = hidden
-		tabBarHiddenConstraint?.isActive = hidden
-	}
+	// MARK: - Content View Controller
 	
 	public func add(viewController vc: UIViewController, tab info: ScrollableTabBarButton = .init()) {
 		add(viewControllers: [(vc, info)])

@@ -188,20 +188,17 @@ class SimpleTestViewController: UIViewController {
 			let root = ScrollableTabBarController()
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
-			root.setBarStack(style: Style().stackDistribution(.fill))
-			root.setBar(styleSet: {
-				var style = ScrollableTabBarStyleSet.shared
-				style.selectIndicator = style.selectIndicator.duplicate
-					.cornerRadius{_ in 2}
-				return style
-			}())
+			root.setBar(styles: [
+				\.buttonStack: Style().stackDistribution(.fill),
+				\.selectIndicator: ScrollableTabBarStyleSet.shared.selectIndicator.duplicate.cornerRadius{_ in 2},
+			])
 			let leftButton = ScrollableTabBarButton(title: "close") { [weak root] _, _ in
 				root?.dismiss(animated: true, completion: nil)
 			}
 			leftButton.style.font{_ in .systemFont(ofSize: 12)}
 				.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}
-			root.setBarSideButton(of: .leading, leftButton)
-			root.setBarSideButton(of: .trailing, .init(title: "switch tab pos") { [weak root] _, _ in
+			root.setBar(sideButton: .leading, leftButton)
+			root.setBar(sideButton: .trailing, .init(title: "switch tab pos") { [weak root] _, _ in
 				guard let root = root else {return}
 				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
 			})
