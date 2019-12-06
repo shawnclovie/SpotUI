@@ -78,7 +78,7 @@ public struct StyleSheet {
 		boundApplyables[style] = applyable
 	}
 	
-	public func applyBounds(with trait: UITraitCollection) {
+	public func applyBounds(with trait: UITraitCollection?) {
 		for it in boundApplyables {
 			it.key.apply(to: it.value, with: trait)
 		}
@@ -88,7 +88,7 @@ public struct StyleSheet {
 	/// - Parameter styles: Style names
 	/// - Parameter view: Applyable (UIView/CALayer/UIBarItem)
 	/// - Parameter trait: TraitCollection from UIView or UIViewController
-	public func apply(styles names: [String], to view: StyleApplyable, with trait: UITraitCollection) {
+	public func apply(styles names: [String], to view: StyleApplyable, with trait: UITraitCollection?) {
 		for name in names {
 			namedStyles[name]?.apply(to: view, with: trait)
 		}
@@ -102,7 +102,7 @@ public struct StyleSheet {
 	/// Make string attributes with style names
 	/// - Parameter styles: Style names
 	/// - Parameter trait: TraitCollection from UIView or UIViewController
-	public func stringAttributes(styles names: [String], with trait: UITraitCollection) -> [NSAttributedString.Key : Any] {
+	public func stringAttributes(styles names: [String], with trait: UITraitCollection?) -> [NSAttributedString.Key : Any] {
 		var attrs: [NSAttributedString.Key : Any] = [:]
 		for name in names {
 			if let style = namedStyles[name] {

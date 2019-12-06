@@ -26,7 +26,7 @@ struct TextAlignmentApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UILabel:
 			view.textAlignment = value
@@ -54,7 +54,7 @@ struct TextAlignmentApplyer: StyleApplyer {
 		}
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		let style = to[.paragraphStyle] as? NSMutableParagraphStyle ?? .init()
 		style.alignment = value
 		to[.paragraphStyle] = style
@@ -77,7 +77,7 @@ struct VerticalAlignmentApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIControl:
 			view.contentVerticalAlignment = value
@@ -93,7 +93,7 @@ struct StackAlignmentApplyer: StyleApplyer {
 		value = v
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		(to as? UIStackView)?.alignment = value
 	}
 }
@@ -105,7 +105,7 @@ struct StackDistributionApplyer: StyleApplyer {
 		value = v
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		(to as? UIStackView)?.distribution = value
 	}
 }

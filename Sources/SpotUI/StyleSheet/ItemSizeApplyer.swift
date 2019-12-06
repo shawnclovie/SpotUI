@@ -10,7 +10,7 @@
 import UIKit
 
 struct ItemSizeApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->CGSize
+	var producer: (UITraitCollection?)->CGSize
 	
 	
 	init?(with value: Any, predefined: StyleValueSet) {
@@ -20,11 +20,11 @@ struct ItemSizeApplyer: StyleApplyer {
 		producer = {_ in parsed}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->CGSize) {
+	init(_ fn: @escaping (UITraitCollection?)->CGSize) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		if let view = to as? UICollectionView,
 			let layout = view.collectionViewLayout as? UICollectionViewFlowLayout {
 			layout.itemSize = producer(trait)

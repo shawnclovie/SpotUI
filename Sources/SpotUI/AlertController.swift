@@ -23,7 +23,7 @@ public struct AlertStyleSet {
 	
 	public var panelView = Style()
 		.backgroundColor(StyleShared.popupPanelBackgroundColorProducer)
-		.cornerRadius {$0.userInterfaceIdiom == .pad ? 28 : 20}
+		.cornerRadius {$0?.userInterfaceIdiom == .pad ? 28 : 20}
 		.maskToBounds(true)
 	
 	public var contentView = Style()
@@ -46,15 +46,15 @@ public struct AlertStyleSet {
 	
 	public var buttonFontDefault = Style()
 		.buttonTitleColor(StyleShared.statefulTintColorProducer)
-		.font {.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 24 : 18)}
+		.font {.systemFont(ofSize: $0?.userInterfaceIdiom == .pad ? 24 : 18)}
 	
 	public var buttonForStyles: [UIAlertAction.Style: Style] = [
 		.cancel: Style()
 			.buttonTitleColor(StyleShared.statefulTintColorProducer)
-			.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
+			.font{.systemFont(ofSize: $0?.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
 		.destructive: Style()
 			.buttonTitleColor {_, _  in StyleShared.destructiveTintColor}
-			.font{.systemFont(ofSize: $0.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
+			.font{.systemFont(ofSize: $0?.userInterfaceIdiom == .pad ? 22 : 18, weight: .medium)},
 	]
 }
 

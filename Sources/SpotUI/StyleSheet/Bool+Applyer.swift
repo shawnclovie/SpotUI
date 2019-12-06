@@ -11,7 +11,7 @@ import UIKit
 import Spot
 
 protocol BoolApplying {
-	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection)
+	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection?)
 }
 
 struct BoolApplyer<Applying: BoolApplying>: StyleApplyer {
@@ -25,13 +25,13 @@ struct BoolApplyer<Applying: BoolApplying>: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		Applying.apply(to: to, value: value, with: trait)
 	}
 }
 
 struct HiddenApplying: BoolApplying {
-	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIView:	view.isHidden = value
 		case let layer as CALayer:	layer.isHidden = value
@@ -41,7 +41,7 @@ struct HiddenApplying: BoolApplying {
 }
 
 struct MaskToBoundsApplying: BoolApplying {
-	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIView:
 			view.layer.masksToBounds = value
@@ -53,13 +53,13 @@ struct MaskToBoundsApplying: BoolApplying {
 }
 
 struct MomentaryApplying: BoolApplying {
-	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection?) {
 		(to as? UISegmentedControl)?.isMomentary = value
 	}
 }
 
 struct UserInteractionEnabledApplying: BoolApplying {
-	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: Bool, with trait: UITraitCollection?) {
 		(to as? UIView)?.isUserInteractionEnabled = value
 	}
 }

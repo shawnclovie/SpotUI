@@ -10,7 +10,7 @@
 import UIKit
 
 protocol NumberApplying {
-	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection)
+	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection?)
 	static var defaultValue: Double {get}
 }
 
@@ -29,13 +29,13 @@ struct NumberApplyer<Applying: NumberApplying>: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		Applying.apply(to: to, value: value, with: trait)
 	}
 }
 
 struct AlphaApplying: NumberApplying {
-	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIView:
 			view.alpha = value
@@ -50,7 +50,7 @@ struct NumberOfLinesApplying: NumberApplying {
 	
 	static var defaultValue: Double {1}
 	
-	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, value: CGFloat, with trait: UITraitCollection?) {
 		let value = Int(value)
 		switch to {
 		case let view as UILabel:
@@ -67,38 +67,38 @@ struct NumberOfLinesApplying: NumberApplying {
 // MARK: - Trait
 
 protocol TraitNumberApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection)->CGFloat, with trait: UITraitCollection)
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?)->CGFloat, with trait: UITraitCollection?)
 	
-	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection)->CGFloat, with trait: UITraitCollection)
+	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection?)->CGFloat, with trait: UITraitCollection?)
 }
 
 extension TraitNumberApplying {
-	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection)->CGFloat, with trait: UITraitCollection) {}
+	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection?)->CGFloat, with trait: UITraitCollection?) {}
 }
 
 struct TraitNumberApplyer<Applying: TraitNumberApplying>: StyleApplyer {
-	var producer: (UITraitCollection)->CGFloat
+	var producer: (UITraitCollection?)->CGFloat
 	
 	init(with value: Any, predefined: StyleValueSet) {
 		let number = predefined.parseDouble(value)
 		producer = {_ in CGFloat(number)}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->CGFloat) {
+	init(_ fn: @escaping (UITraitCollection?)->CGFloat) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		Applying.apply(to: to, producer: producer, with: trait)
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		Applying.merge(to: &to, producer: producer, with: trait)
 	}
 }
 
 struct CornerRadiusApplying: TraitNumberApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> CGFloat, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIView:
 			view.layer.cornerRadius = producer(trait)
@@ -110,7 +110,7 @@ struct CornerRadiusApplying: TraitNumberApplying {
 }
 
 struct LineSpacingApplying: TraitNumberApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> CGFloat, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UITextView:
 			view.textContainer.lineFragmentPadding = producer(trait)
@@ -121,7 +121,7 @@ struct LineSpacingApplying: TraitNumberApplying {
 		}
 	}
 	
-	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection) -> CGFloat, with trait: UITraitCollection) {
+	static func merge(to: inout [NSAttributedString.Key : Any], producer: (UITraitCollection?) -> CGFloat, with trait: UITraitCollection?) {
 		let style = to[.paragraphStyle] as? NSMutableParagraphStyle ?? .init()
 		style.lineSpacing = producer(trait)
 		to[.paragraphStyle] = style
@@ -129,7 +129,7 @@ struct LineSpacingApplying: TraitNumberApplying {
 }
 
 struct LineWidthApplying: TraitNumberApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> CGFloat, with trait: UITraitCollection?) {
 		if let layer = to as? CAShapeLayer {
 			layer.lineWidth = producer(trait)
 		}
@@ -137,7 +137,7 @@ struct LineWidthApplying: TraitNumberApplying {
 }
 
 struct SpacingApplying: TraitNumberApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> CGFloat, with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> CGFloat, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UICollectionView:
 			if let layout = view.collectionViewLayout as? UICollectionViewFlowLayout {

@@ -27,7 +27,7 @@ struct LineBreakModeApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UILabel:
 			view.lineBreakMode = value
@@ -39,7 +39,7 @@ struct LineBreakModeApplyer: StyleApplyer {
 		}
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		let style = to[.paragraphStyle] as? NSMutableParagraphStyle ?? .init()
 		style.lineBreakMode = value
 		to[.paragraphStyle] = style

@@ -11,19 +11,19 @@ import Spot
 
 public enum StyleShared {
 	
-	public static var clearColorProducer: (UITraitCollection)->UIColor = {_ in .clear}
-	public static var clearBorderProducer: (UITraitCollection)->StyleBorder = {_ in .clear}
+	public static var clearColorProducer: (UITraitCollection?)->UIColor = {_ in .clear}
+	public static var clearBorderProducer: (UITraitCollection?)->StyleBorder = {_ in .clear}
 	
 	public static var tintColorLight: UIColor = .systemBlue
 	public static var tintColorDark: UIColor = .systemBlue
 	
-	public static var tintColorProducer: (UITraitCollection)->UIColor = {
-		$0.spot.userInterfaceStyle == .dark
+	public static var tintColorProducer: (UITraitCollection?)->UIColor = {
+		$0?.spot.userInterfaceStyle == .dark
 			? tintColorDark
 			: tintColorLight
 	}
 	
-	public static var statefulTintColorProducer: (UIControl.State, UITraitCollection)->UIColor = {
+	public static var statefulTintColorProducer: (UIControl.State, UITraitCollection?)->UIColor = {
 		tintColorProducer($1)
 	}
 	
@@ -33,8 +33,8 @@ public enum StyleShared {
 	public static var foregroundTextColorLight: UIColor = .black
 	public static var foregroundTextColorDark: UIColor = .init(white: 0.96, alpha: 1)
 
-	public static var foregroundTextColorProducer: (UITraitCollection)->UIColor = {
-		$0.spot.userInterfaceStyle == .dark
+	public static var foregroundTextColorProducer: (UITraitCollection?)->UIColor = {
+		$0?.spot.userInterfaceStyle == .dark
 			? foregroundTextColorDark
 			: foregroundTextColorLight
 	}
@@ -44,8 +44,8 @@ public enum StyleShared {
 	public static var backgroundColorLight: UIColor = .white
 	public static var backgroundColorDark: UIColor = .init(white: 0.04, alpha: 1)
 	
-	public static var backgroundColorProducer: (UITraitCollection)->UIColor = {
-		$0.spot.userInterfaceStyle == .dark
+	public static var backgroundColorProducer: (UITraitCollection?)->UIColor = {
+		$0?.spot.userInterfaceStyle == .dark
 			? backgroundColorDark
 			: backgroundColorLight
 	}
@@ -53,8 +53,8 @@ public enum StyleShared {
 	public static var popupPanelBackgroundColorLight: UIColor = .white
 	public static var popupPanelBackgroundColorDark: UIColor = .init(white: 0.2, alpha: 1)
 
-	public static var popupPanelBackgroundColorProducer: (UITraitCollection)->UIColor = {
-		$0.spot.userInterfaceStyle == .dark
+	public static var popupPanelBackgroundColorProducer: (UITraitCollection?)->UIColor = {
+		$0?.spot.userInterfaceStyle == .dark
 			? popupPanelBackgroundColorDark
 			: popupPanelBackgroundColorLight}
 	

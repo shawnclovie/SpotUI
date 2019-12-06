@@ -48,13 +48,13 @@ public final class Style {
 		applyers.removeAll()
 	}
 	
-	public func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	public func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		for it in applyers.values {
 			it.apply(to: to, with: trait)
 		}
 	}
 	
-	public func stringAttributes(with trait: UITraitCollection) -> [NSAttributedString.Key : Any] {
+	public func stringAttributes(with trait: UITraitCollection?) -> [NSAttributedString.Key : Any] {
 		var result: [NSAttributedString.Key : Any] = [:]
 		for it in applyers.values {
 			it.merge(to: &result, with: trait)

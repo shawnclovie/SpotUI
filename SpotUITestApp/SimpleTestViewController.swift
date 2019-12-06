@@ -271,7 +271,7 @@ class SimpleTestViewController: UIViewController {
 		style[Style()
 			.textColor(StyleShared.foregroundTextColorProducer)] = deviceInfoText
 		style["image"] = Style()
-			.border{.init($0.spot.userInterfaceStyle == .dark ? .white : .black, width: 2)}
+			.border{.init($0?.spot.userInterfaceStyle == .dark ? .white : .black, width: 2)}
 			.image{_ in .solidColor(.yellow, size: .init(width: 30, height: 30))}
 
 		let device = UIDevice.current

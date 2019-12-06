@@ -10,6 +10,10 @@
 import UIKit
 import SpotCache
 
+private func tryTraitAvailable(_ trait: UITraitCollection?) -> UITraitCollection? {
+	trait == nil ? UIApplication.shared.keyWindow?.traitCollection : trait
+}
+
 extension Style {
 	
 	func applyer<T>() -> T? where T: StyleApplyer {
@@ -144,97 +148,97 @@ extension Style {
 	
 	/// UICollectionView.UICollectionViewFlowLayout.itemSize
 	@discardableResult
-	public func itemSize(_ fn: @escaping (UITraitCollection)->CGSize) -> Self {
+	public func itemSize(_ fn: @escaping (UITraitCollection?)->CGSize) -> Self {
 		set(ItemSizeApplyer(fn))
 	}
 	
 	/// Default: zero
-	public func getItemSize(with trait: UITraitCollection, default: CGSize = .zero) -> CGSize {
+	public func getItemSize(with trait: UITraitCollection?, default: CGSize = .zero) -> CGSize {
 		optItemSize(with: trait) ?? `default`
 	}
 	
-	public func optItemSize(with trait: UITraitCollection) -> CGSize? {
-		(applyer() as ItemSizeApplyer?)?.producer(trait)
+	public func optItemSize(with trait: UITraitCollection?) -> CGSize? {
+		(applyer() as ItemSizeApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - Border
 	
 	/// UIView.layer.border | CALayer.border
 	@discardableResult
-	public func border(_ fn: @escaping (UITraitCollection)->StyleBorder) -> Self {
+	public func border(_ fn: @escaping (UITraitCollection?)->StyleBorder) -> Self {
 		set(BorderApplyer(fn))
 	}
 	
 	/// Default: clear
-	public func getBorder(with trait: UITraitCollection, default: StyleBorder = .clear) -> StyleBorder {
+	public func getBorder(with trait: UITraitCollection?, default: StyleBorder = .clear) -> StyleBorder {
 		optBorder(with: trait) ?? `default`
 	}
 	
-	public func optBorder(with trait: UITraitCollection) -> StyleBorder? {
-		(applyer() as BorderApplyer?)?.producer(trait)
+	public func optBorder(with trait: UITraitCollection?) -> StyleBorder? {
+		(applyer() as BorderApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - Color
 	
 	/// UIView.backgroundColor | CALayer.backgroundColor
 	@discardableResult
-	public func backgroundColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func backgroundColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<BackgroundColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getBackgroundColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getBackgroundColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optBackgroundColor(with: trait) ?? `default`
 	}
 	
-	public func optBackgroundColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<BackgroundColorApplying>?)?.producer(trait)
+	public func optBackgroundColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<BackgroundColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UILabel.textColor | UITextField.textColor | UITextView.textColor
 	@discardableResult
-	public func textColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func textColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<TextColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getTextColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getTextColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optTextColor(with: trait) ?? `default`
 	}
 	
-	public func optTextColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<TextColorApplying>?)?.producer(trait)
+	public func optTextColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<TextColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UIButton.setTitleColor
 	@discardableResult
 	public func buttonTitleColor(for states: Set<UIControl.State> = [.normal],
-								 _ fn: @escaping (UIControl.State, UITraitCollection)->UIColor?) -> Self {
+								 _ fn: @escaping (UIControl.State, UITraitCollection?)->UIColor?) -> Self {
 		set(StatefulTitleColorApplyer(for: states, fn))
 	}
 	
 	/// Default: clear
-	public func getButtonTitleColor(state: UIControl.State, with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getButtonTitleColor(state: UIControl.State, with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optButtonTitleColor(state: state, with: trait) ?? `default`
 	}
 	
-	public func optButtonTitleColor(state: UIControl.State, with trait: UITraitCollection) -> UIColor? {
-		(applyer() as StatefulTitleColorApplyer?)?.producer(state, trait)
+	public func optButtonTitleColor(state: UIControl.State, with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as StatefulTitleColorApplyer?)?.producer(state, tryTraitAvailable(trait))
 	}
 	
 	/// UIView.tintColor | UIBarButtonItem.tintColor
 	@discardableResult
-	public func tintColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func tintColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<TintColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getTintColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getTintColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optTintColor(with: trait) ?? `default`
 	}
 	
-	public func optTintColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<TintColorApplying>?)?.producer(trait)
+	public func optTintColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<TintColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UIToolbar.barTintColor |
@@ -242,112 +246,112 @@ extension Style {
 	/// UISearchBar.barTintColor |
 	/// UINavigationBar.barTintColor
 	@discardableResult
-	public func barTintColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func barTintColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<BarTintColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getBarTintColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getBarTintColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optBarTintColor(with: trait) ?? `default`
 	}
 	
-	public func optBarTintColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<BarTintColorApplying>?)?.producer(trait)
+	public func optBarTintColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<BarTintColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// CAShapeLayer.fillColor
 	@discardableResult
-	public func fillColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func fillColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<FillColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getFillColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getFillColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optFillColor(with: trait) ?? `default`
 	}
 	
-	public func optFillColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<FillColorApplying>?)?.producer(trait)
+	public func optFillColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<FillColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// CAShapeLayer.strokeColor
 	@discardableResult
-	public func strokeColor(_ fn: @escaping (UITraitCollection)->UIColor?) -> Self {
+	public func strokeColor(_ fn: @escaping (UITraitCollection?)->UIColor?) -> Self {
 		set(ColorApplyer<StrokeColorApplying>(fn))
 	}
 	
 	/// Default: clear
-	public func getStrokeColor(with trait: UITraitCollection, default: UIColor = .clear) -> UIColor {
+	public func getStrokeColor(with trait: UITraitCollection?, default: UIColor = .clear) -> UIColor {
 		optStrokeColor(with: trait) ?? `default`
 	}
 	
-	public func optStrokeColor(with trait: UITraitCollection) -> UIColor? {
-		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(trait)
+	public func optStrokeColor(with trait: UITraitCollection?) -> UIColor? {
+		(applyer() as ColorApplyer<StrokeColorApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - [Double]
 	
 	/// CAShapeLayer.lineDashPattern
 	@discardableResult
-	public func lineDashPattern(_ fn: @escaping (UITraitCollection)->[Double]) -> Self {
+	public func lineDashPattern(_ fn: @escaping (UITraitCollection?)->[Double]) -> Self {
 		set(LineDashPatternApplyer(fn))
 	}
 	
 	/// Default: []
-	public func getLineDashPattern(with trait: UITraitCollection, default: [Double] = []) -> [Double] {
+	public func getLineDashPattern(with trait: UITraitCollection?, default: [Double] = []) -> [Double] {
 		optLineDashPattern(with: trait) ?? `default`
 	}
 	
-	public func optLineDashPattern(with trait: UITraitCollection) -> [Double]? {
-		(applyer() as LineDashPatternApplyer?)?.producer(trait)
+	public func optLineDashPattern(with trait: UITraitCollection?) -> [Double]? {
+		(applyer() as LineDashPatternApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - Font
 	
 	/// UILabel.font | UIButton.titleLabel?.font | UITextView.font
 	@discardableResult
-	public func font(_ fn: @escaping (UITraitCollection)->UIFont) -> Self {
+	public func font(_ fn: @escaping (UITraitCollection?)->UIFont) -> Self {
 		set(FontApplyer(fn))
 	}
 	
 	/// Default: systemFont(ofSize: 17)
-	public func getFont(with trait: UITraitCollection, default: UIFont = .systemFont(ofSize: 17)) -> UIFont {
+	public func getFont(with trait: UITraitCollection?, default: UIFont = .systemFont(ofSize: 17)) -> UIFont {
 		optFont(with: trait) ?? `default`
 	}
 	
-	public func optFont(with trait: UITraitCollection) -> UIFont? {
-		(applyer() as FontApplyer?)?.producer(trait)
+	public func optFont(with trait: UITraitCollection?) -> UIFont? {
+		(applyer() as FontApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - Image
 	
 	/// UIButton.setBackgroundImage | UISearchBar.backgroundImage
 	@discardableResult
-	public func backgroundImage(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
+	public func backgroundImage(_ fn: @escaping (UITraitCollection?)->[UIControl.State: StyleImageSource]) -> Self {
 		set(StatefulImageApplyer<BackgroundImageApplying>(fn))
 	}
 	
 	/// Default: [:]
-	public func getBackgroundImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
+	public func getBackgroundImage(with trait: UITraitCollection?, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
 		optBackgroundImage(with: trait) ?? `default`
 	}
 	
-	public func optBackgroundImage(with trait: UITraitCollection) -> [UIControl.State: StyleImageSource]? {
-		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(trait)
+	public func optBackgroundImage(with trait: UITraitCollection?) -> [UIControl.State: StyleImageSource]? {
+		(applyer() as StatefulImageApplyer<BackgroundImageApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	@discardableResult
-	public func image(_ fn: @escaping (UITraitCollection)->StyleImageSource) -> Self {
+	public func image(_ fn: @escaping (UITraitCollection?)->StyleImageSource) -> Self {
 		set(StillImageApplyer(fn))
 	}
 	
 	/// Default: empty
-	public func getImage(with trait: UITraitCollection, default: StyleImageSource = .empty) -> StyleImageSource {
+	public func getImage(with trait: UITraitCollection?, default: StyleImageSource = .empty) -> StyleImageSource {
 		optImage(with: trait) ?? `default`
 	}
 	
-	public func optImage(with trait: UITraitCollection) -> StyleImageSource? {
-		(applyer() as StillImageApplyer?)?.producer(trait)
+	public func optImage(with trait: UITraitCollection?) -> StyleImageSource? {
+		(applyer() as StillImageApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// CALayer.contents |
@@ -357,17 +361,17 @@ extension Style {
 	/// UITabBarItem.selectedImage for highlighed |
 	/// UIBarItem.image
 	@discardableResult
-	public func statefulImage(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) -> Self {
+	public func statefulImage(_ fn: @escaping (UITraitCollection?)->[UIControl.State: StyleImageSource]) -> Self {
 		set(StatefulImageApplyer<ImageApplying>(fn))
 	}
 	
 	/// Default: [:]
-	public func getStatefulImage(with trait: UITraitCollection, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
+	public func getStatefulImage(with trait: UITraitCollection?, default: [UIControl.State: StyleImageSource] = [:]) -> [UIControl.State: StyleImageSource] {
 		optStatefulImage(with: trait) ?? `default`
 	}
 	
-	public func optStatefulImage(with trait: UITraitCollection) -> [UIControl.State: StyleImageSource]? {
-		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(trait)
+	public func optStatefulImage(with trait: UITraitCollection?) -> [UIControl.State: StyleImageSource]? {
+		(applyer() as StatefulImageApplyer<ImageApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// setMinimumTrackImage and setMaximumTrackImage of UISlider
@@ -395,17 +399,17 @@ extension Style {
 	
 	/// UIView.layer.cornerRadius | CALayer.cornerRadius
 	@discardableResult
-	public func cornerRadius(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
+	public func cornerRadius(_ fn: @escaping (UITraitCollection?)->CGFloat) -> Self {
 		set(TraitNumberApplyer<CornerRadiusApplying>(fn))
 	}
 	
 	/// Default: 0
-	public func getCornerRadius(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+	public func getCornerRadius(with trait: UITraitCollection?, default: CGFloat = 0) -> CGFloat {
 		optCornerRadius(with: trait) ?? `default`
 	}
 	
-	public func optCornerRadius(with trait: UITraitCollection) -> CGFloat? {
-		(applyer() as TraitNumberApplyer<CornerRadiusApplying>?)?.producer(trait)
+	public func optCornerRadius(with trait: UITraitCollection?) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<CornerRadiusApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UILabel.numberOfLines |
@@ -428,65 +432,65 @@ extension Style {
 	/// UITextView.textContainer.lineFragmentPadding |
 	/// UICollectionView.UICollectionViewFlowLayout.minimumLineSpacing
 	@discardableResult
-	public func lineSpacing(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
+	public func lineSpacing(_ fn: @escaping (UITraitCollection?)->CGFloat) -> Self {
 		set(TraitNumberApplyer<LineSpacingApplying>(fn))
 	}
 	
 	/// Default: 0
-	public func getLineSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+	public func getLineSpacing(with trait: UITraitCollection?, default: CGFloat = 0) -> CGFloat {
 		optLineSpacing(with: trait) ?? `default`
 	}
 	
-	public func optLineSpacing(with trait: UITraitCollection) -> CGFloat? {
-		(applyer() as TraitNumberApplyer<LineSpacingApplying>?)?.producer(trait)
+	public func optLineSpacing(with trait: UITraitCollection?) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<LineSpacingApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// CAShapeLayer.lineWIdth
 	@discardableResult
-	public func lineWidth(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
+	public func lineWidth(_ fn: @escaping (UITraitCollection?)->CGFloat) -> Self {
 		set(TraitNumberApplyer<LineWidthApplying>(fn))
 	}
 	
 	/// Default: 0
-	public func getLineWidth(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+	public func getLineWidth(with trait: UITraitCollection?, default: CGFloat = 0) -> CGFloat {
 		optLineWidth(with: trait) ?? `default`
 	}
 	
-	public func optLineWidth(with trait: UITraitCollection) -> CGFloat? {
-		(applyer() as TraitNumberApplyer<LineWidthApplying>?)?.producer(trait)
+	public func optLineWidth(with trait: UITraitCollection?) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<LineWidthApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UICollectionView.UICollectionViewFlowLayout.minimumInteritemSpacing |
 	/// UIStackView.spacing
 	@discardableResult
-	public func spacing(_ fn: @escaping (UITraitCollection)->CGFloat) -> Self {
+	public func spacing(_ fn: @escaping (UITraitCollection?)->CGFloat) -> Self {
 		set(TraitNumberApplyer<SpacingApplying>(fn))
 	}
 	
 	/// Default: 0
-	public func getSpacing(with trait: UITraitCollection, default: CGFloat = 0) -> CGFloat {
+	public func getSpacing(with trait: UITraitCollection?, default: CGFloat = 0) -> CGFloat {
 		optSpacing(with: trait) ?? `default`
 	}
 	
-	public func optSpacing(with trait: UITraitCollection) -> CGFloat? {
-		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(trait)
+	public func optSpacing(with trait: UITraitCollection?) -> CGFloat? {
+		(applyer() as TraitNumberApplyer<SpacingApplying>?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - Shadow
 	
 	/// UIView.layer.shadow | CALayer.shadow
 	@discardableResult
-	public func shadow(_ fn: @escaping (UITraitCollection)->StyleShadow) -> Self {
+	public func shadow(_ fn: @escaping (UITraitCollection?)->StyleShadow) -> Self {
 		set(ShadowApplyer(fn))
 	}
 	
 	/// Default: no border - .init()
-	public func getShadow(with trait: UITraitCollection, default: StyleShadow = .init()) -> StyleShadow {
+	public func getShadow(with trait: UITraitCollection?, default: StyleShadow = .init()) -> StyleShadow {
 		optShadow(with: trait) ?? `default`
 	}
 	
-	public func optShadow(with trait: UITraitCollection) -> StyleShadow? {
-		(applyer() as ShadowApplyer?)?.producer(trait)
+	public func optShadow(with trait: UITraitCollection?) -> StyleShadow? {
+		(applyer() as ShadowApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	// MARK: - EdgeInsets
@@ -509,32 +513,32 @@ extension Style {
 	/// UITextView.textContainerInset |
 	/// UICollectionView.UICollectionViewFlowLayout.sectionInset
 	@discardableResult
-	public func padding(_ fn: @escaping (UITraitCollection)->UIEdgeInsets) -> Self {
+	public func padding(_ fn: @escaping (UITraitCollection?)->UIEdgeInsets) -> Self {
 		set(PaddingApplyer(fn))
 	}
 	
 	/// Default: zero
-	public func getPadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
+	public func getPadding(with trait: UITraitCollection?, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
 		optPadding(with: trait) ?? `default`
 	}
 	
-	public func optPadding(with trait: UITraitCollection) -> UIEdgeInsets? {
-		(applyer() as PaddingApplyer?)?.producer(trait)
+	public func optPadding(with trait: UITraitCollection?) -> UIEdgeInsets? {
+		(applyer() as PaddingApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 	
 	/// UIButton.titleEdgeInsets
 	@discardableResult
-	public func titlePadding(_ fn: @escaping (UITraitCollection)->UIEdgeInsets) -> Self {
+	public func titlePadding(_ fn: @escaping (UITraitCollection?)->UIEdgeInsets) -> Self {
 		set(TitlePaddingApplyer(fn))
 	}
 	
 	/// Default: zero
-	public func getTitlePadding(with trait: UITraitCollection, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
+	public func getTitlePadding(with trait: UITraitCollection?, default: UIEdgeInsets = .zero) -> UIEdgeInsets {
 		optTitlePadding(with: trait) ?? `default`
 	}
 	
-	public func optTitlePadding(with trait: UITraitCollection) -> UIEdgeInsets? {
-		(applyer() as TitlePaddingApplyer?)?.producer(trait)
+	public func optTitlePadding(with trait: UITraitCollection?) -> UIEdgeInsets? {
+		(applyer() as TitlePaddingApplyer?)?.producer(tryTraitAvailable(trait))
 	}
 }
 

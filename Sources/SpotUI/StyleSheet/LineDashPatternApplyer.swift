@@ -9,7 +9,7 @@
 import UIKit
 
 struct LineDashPatternApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->[Double]
+	var producer: (UITraitCollection?)->[Double]
 	
 	init?(with value: Any, predefined: StyleValueSet) {
 		guard let values = predefined.value(for: value) as? [Double] else {
@@ -18,11 +18,11 @@ struct LineDashPatternApplyer: StyleApplyer {
 		producer = {_ in values}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->[Double]) {
+	init(_ fn: @escaping (UITraitCollection?)->[Double]) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let layer as CAShapeLayer:
 			layer.lineDashPattern = producer(trait) as [NSNumber]

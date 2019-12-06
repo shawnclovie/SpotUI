@@ -25,7 +25,7 @@ public struct StyleShadow {
 }
 
 struct ShadowApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->StyleShadow
+	var producer: (UITraitCollection?)->StyleShadow
 	
 	init?(with value: Any, predefined: StyleValueSet) {
 		guard let data = predefined.value(for: value) as? [AnyHashable: Any],
@@ -41,11 +41,11 @@ struct ShadowApplyer: StyleApplyer {
 		producer = {_ in shadow}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->StyleShadow) {
+	init(_ fn: @escaping (UITraitCollection?)->StyleShadow) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIView:
 			apply(to: view.layer, with: trait)
@@ -55,7 +55,7 @@ struct ShadowApplyer: StyleApplyer {
 		}
 	}
 	
-	private func apply(to layer: CALayer, with trait: UITraitCollection) {
+	private func apply(to layer: CALayer, with trait: UITraitCollection?) {
 		let shadow = producer(trait)
 		layer.shadowColor = shadow.color.cgColor
 		layer.shadowOffset = shadow.offset
@@ -63,7 +63,7 @@ struct ShadowApplyer: StyleApplyer {
 		layer.shadowRadius = shadow.radius
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		let value = producer(trait)
 		let shadow = NSShadow()
 		var color = value.color

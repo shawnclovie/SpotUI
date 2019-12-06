@@ -46,7 +46,7 @@ public struct ContentModeApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	public func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	public func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIButton:
 			view.imageView?.contentMode = value

@@ -80,7 +80,7 @@ private func loadImage(name: String, fitSize: CGSize) -> UIImage? {
 }
 
 struct StillImageApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->StyleImageSource
+	var producer: (UITraitCollection?)->StyleImageSource
 	
 	init?(with value: Any, predefined: StyleValueSet) {
 		guard let data = predefined.value(for: value) as? [AnyHashable: Any] else {return nil}
@@ -88,11 +88,11 @@ struct StillImageApplyer: StyleApplyer {
 		producer = {_ in image}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->StyleImageSource) {
+	init(_ fn: @escaping (UITraitCollection?)->StyleImageSource) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let layer as CALayer:
 			layer.contents = producer(trait).makeImage()?.cgImage
@@ -126,28 +126,28 @@ private func parseStatefulImages(with value: Any, predefined: StyleValueSet) -> 
 }
 
 protocol StatefulImageApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection)->[UIControl.State: StyleImageSource], with trait: UITraitCollection)
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?)->[UIControl.State: StyleImageSource], with trait: UITraitCollection?)
 }
 
 struct StatefulImageApplyer<Applying: StatefulImageApplying>: StyleApplyer {
-	var producer: (UITraitCollection)->[UIControl.State: StyleImageSource]
+	var producer: (UITraitCollection?)->[UIControl.State: StyleImageSource]
 	
 	init(with value: Any, predefined: StyleValueSet) {
 		let images = parseStatefulImages(with: value, predefined: predefined)
 		producer = {_ in images}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->[UIControl.State: StyleImageSource]) {
+	init(_ fn: @escaping (UITraitCollection?)->[UIControl.State: StyleImageSource]) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		Applying.apply(to: to, producer: producer, with: trait)
 	}
 }
 
 struct BackgroundImageApplying: StatefulImageApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection?) {
 		for (state, source) in producer(trait) {
 			switch to {
 			case let view as UIButton:
@@ -161,7 +161,7 @@ struct BackgroundImageApplying: StatefulImageApplying {
 }
 
 struct ImageApplying: StatefulImageApplying {
-	static func apply(to: StyleApplyable, producer: (UITraitCollection) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection) {
+	static func apply(to: StyleApplyable, producer: (UITraitCollection?) -> [UIControl.State : StyleImageSource], with trait: UITraitCollection?) {
 		for (state, source) in producer(trait) {
 			switch to {
 			case let layer as CALayer:
@@ -201,7 +201,7 @@ struct SlideTrackImageApplyer: StyleApplyer {
 		sourcesMax = max
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		guard let view = to as? UISlider else {return}
 		for (state, source) in sourcesMin {
 			view.setMinimumTrackImage(source.makeImage(), for: state)

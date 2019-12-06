@@ -34,7 +34,7 @@ struct FontApplyer: StyleApplyer {
 		return .regular
 	}
 	
-	var producer: (UITraitCollection)->UIFont
+	var producer: (UITraitCollection?)->UIFont
 	
 	init?(with value: Any, predefined: StyleValueSet) {
 		guard let data = predefined.value(for: value) as? [AnyHashable: Any] else {
@@ -58,11 +58,11 @@ struct FontApplyer: StyleApplyer {
 		producer = {_ in font}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->UIFont) {
+	init(_ fn: @escaping (UITraitCollection?)->UIFont) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UILabel:
 			view.font = producer(trait)
@@ -74,7 +74,7 @@ struct FontApplyer: StyleApplyer {
 		}
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		to[.font] = producer(trait)
 	}
 }

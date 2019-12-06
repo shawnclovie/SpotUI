@@ -62,7 +62,7 @@ public struct ScrollableTabBarStyleSet {
 	public static var shared = ScrollableTabBarStyleSet()
 	
 	public var view = Style()
-		.backgroundColor{DecimalColor(rgb: $0.spot.userInterfaceStyle == .dark ? 0x101010 : 0xfdfdfd).colorValue}
+		.backgroundColor{DecimalColor(rgb: $0?.spot.userInterfaceStyle == .dark ? 0x101010 : 0xfdfdfd).colorValue}
 	
 	/// Set leading to layout top for horizontal, left for vertical
 	///

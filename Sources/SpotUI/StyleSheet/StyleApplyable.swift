@@ -13,7 +13,7 @@ import Spot
 public protocol StyleApplyable: class {}
 
 extension Suffix where Base: StyleApplyable {
-	public func apply(styles: [String], with trait: UITraitCollection, in sheet: StyleSheet = .shared) {
+	public func apply(styles: [String], with trait: UITraitCollection?, in sheet: StyleSheet = .shared) {
 		sheet.apply(styles: styles, to: base, with: trait)
 	}
 }

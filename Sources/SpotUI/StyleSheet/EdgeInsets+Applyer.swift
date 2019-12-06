@@ -21,10 +21,10 @@ struct ParagraphSpacingApplyer: StyleApplyer {
 		value = v
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 	}
 	
-	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection) {
+	func merge(to: inout [NSAttributedString.Key : Any], with trait: UITraitCollection?) {
 		let style = to[.paragraphStyle] as? NSMutableParagraphStyle
 			?? NSMutableParagraphStyle()
 		style.paragraphSpacing = value.bottom
@@ -34,18 +34,18 @@ struct ParagraphSpacingApplyer: StyleApplyer {
 }
 
 struct PaddingApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->UIEdgeInsets
+	var producer: (UITraitCollection?)->UIEdgeInsets
 	
 	init(with value: Any, predefined: StyleValueSet) {
 		let insets = AnyToUIEdgeInsets(predefined.value(for: value)) ?? .zero
 		producer = {_ in insets}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->UIEdgeInsets) {
+	init(_ fn: @escaping (UITraitCollection?)->UIEdgeInsets) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIButton:
 			view.contentEdgeInsets = producer(trait)
@@ -60,18 +60,18 @@ struct PaddingApplyer: StyleApplyer {
 }
 
 struct TitlePaddingApplyer: StyleApplyer {
-	var producer: (UITraitCollection)->UIEdgeInsets
+	var producer: (UITraitCollection?)->UIEdgeInsets
 	
 	init(with value: Any, predefined: StyleValueSet) {
 		let insets = AnyToUIEdgeInsets(predefined.value(for: value)) ?? .zero
 		producer = {_ in insets}
 	}
 	
-	init(_ fn: @escaping (UITraitCollection)->UIEdgeInsets) {
+	init(_ fn: @escaping (UITraitCollection?)->UIEdgeInsets) {
 		producer = fn
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		if let view = to as? UIButton {
 			view.titleEdgeInsets = producer(trait)
 		}

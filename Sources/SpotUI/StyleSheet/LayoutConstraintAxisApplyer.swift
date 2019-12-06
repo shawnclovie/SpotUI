@@ -24,7 +24,7 @@ struct LayoutConstraintAxisApplyer: StyleApplyer {
 		self.value = value
 	}
 	
-	func apply(to: StyleApplyable, with trait: UITraitCollection) {
+	func apply(to: StyleApplyable, with trait: UITraitCollection?) {
 		switch to {
 		case let view as UIStackView:
 			view.axis = value
