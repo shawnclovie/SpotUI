@@ -18,7 +18,7 @@ public protocol ScrollableTabBarControllerDelegate: class {
 	func scrollableTabBar(controller: ScrollableTabBarController,
 	                      shouldAnimatingScrollToTab index: Int) -> Bool
 	func scrollableTabBar(controller: ScrollableTabBarController,
-						  didTouchSideButton side: ScrollableTabBarButton.Side)
+						  didTouchSideButton side: ScrollableTabBarView.Side)
 }
 
 extension ScrollableTabBarControllerDelegate {
@@ -26,7 +26,7 @@ extension ScrollableTabBarControllerDelegate {
 		true
 	}
 	
-	public func scrollableTabBar(controller: ScrollableTabBarController, didTouchSideButton side: ScrollableTabBarButton.Side) {
+	public func scrollableTabBar(controller: ScrollableTabBarController, didTouchSideButton side: ScrollableTabBarView.Side) {
 	}
 }
 
@@ -52,8 +52,17 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	private var tabBarHiddenConstraint: NSLayoutConstraint?
 	private let vStack = UIStackView()
-	private let tabBar = ScrollableTabBarView(frame: .zero)
+	private let tabBar: ScrollableTabBarView
 	private let contentView = UIScrollView()
+	
+	public init(barAlignment: ScrollableTabBarView.Alignment) {
+		tabBar = .init(frame: .zero, axis: .horizontal, alignment: barAlignment)
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required public init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 	
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -68,7 +77,6 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		view.addSubview(vStack)
 		tabBar.setContentHuggingPriority(.required, for: .vertical)
 		tabBar.setContentCompressionResistancePriority(.required, for: .vertical)
-		tabBar.axis = .horizontal
 		tabBar.delegate = self
 		
 		contentView.delegate = self
@@ -115,8 +123,12 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	public var barSelectedIndex: Int {tabBar.selectedIndex}
 	
-	public func setBar(sideButton side: ScrollableTabBarButton.Side, _ info: ScrollableTabBarButton) {
-		tabBar.set(sideButton: info, at: side)
+	public func setBar(alignment: ScrollableTabBarView.Alignment) {
+		tabBar.set(axis: .horizontal, alignment: alignment)
+	}
+	
+	public func setBar(sideButtons: [ScrollableTabBarView.Side: ScrollableTabBarButton]) {
+		tabBar.set(sideButtons: sideButtons)
 	}
 	
 	public func setBar(styleSet: ScrollableTabBarStyleSet) {
@@ -209,7 +221,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		tabBar.set(selectedIndex: pagePosition, highlightButton: pageRange.lowerBound == pageRange.upperBound, animated: false)
 	}
 	
-	open func scrollableTabBar(view: ScrollableTabBarView, didTouch side: ScrollableTabBarButton.Side) {
+	open func scrollableTabBar(view: ScrollableTabBarView, didTouch side: ScrollableTabBarView.Side) {
 		delegate?.scrollableTabBar(controller: self, didTouchSideButton: side)
 	}
 	

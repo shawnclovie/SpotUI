@@ -185,7 +185,7 @@ class SimpleTestViewController: UIViewController {
 			vc.present(picker, animated: true, completion: nil)
 		}),
 		("ScrollableTabBar", { vc in
-			let root = ScrollableTabBarController()
+			let root = ScrollableTabBarController(barAlignment: .leading)
 			root.modalPresentationStyle = .fullScreen
 			root.tabBarPosition = .bottom
 			root.setBar(styles: [
@@ -197,46 +197,106 @@ class SimpleTestViewController: UIViewController {
 			}
 			leftButton.style.font{_ in .systemFont(ofSize: 12)}
 				.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}
-			root.setBar(sideButton: .leading, leftButton)
-			root.setBar(sideButton: .trailing, .init(title: "switch tab pos") { [weak root] _, _ in
-				guard let root = root else {return}
-				root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
-			})
-			let vertical = UIViewController()
-			do {
-				let bar = ScrollableTabBarView(frame: .zero)
-				bar.axis = .vertical
-				bar.style.selectIndicatorPosition = .leading
-				bar.style.buttonStack = Style()
-					.stackAlignment(.fill)
-					.stackDistribution(.equalSpacing)
-				var info = ScrollableTabBarButton() { [weak bar] (_, i) in
-					bar?.set(selectedIndex: CGFloat(i), highlightButton: true, animated: true)
-				}
+			root.setBar(sideButtons: [
+				.leading: leftButton,
+				.trailing: .init(title: "switch tab pos") { [weak root] _, _ in
+					guard let root = root else {return}
+					root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
+				},
+			])
+			struct BarTest {
+				static let size: CGFloat = 44
+				let attr: NSLayoutConstraint.Attribute
+				let count: Int
+				let align: ScrollableTabBarView.Alignment
+			}
+			var info = ScrollableTabBarButton(title: "HV")
+			info.style.font{_ in .systemFont(ofSize: 30)}
+			info.selectedStyle.textColor(StyleShared.tintColorProducer)
+			root.add(viewController: {
+				let vc = UIViewController()
+				let viewV = UIView()
+				var info = ScrollableTabBarButton()
 				info.style
 					.textColor(StyleShared.foregroundTextColorProducer)
 					.buttonTitleColor(for: [.normal, .highlighted], {
-						switch $0 {
-						case .highlighted:return StyleShared.tintColorProducer($1)
-						default:return StyleShared.foregroundTextColorProducer($1)
-						}
+						$0 == .highlighted ? StyleShared.tintColorProducer($1) : StyleShared.foregroundTextColorProducer($1)
 					})
 					.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
 				info.selectedStyle
 					.textColor(StyleShared.tintColorProducer)
 					.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
-				for i in 1...10 {
-					info.title = "\(i)"
-					bar.add(button: info)
+				for (i, it) in ([
+					.init(attr: .left, count: 5, align: .leading),
+					.init(attr: .left, count: 5, align: .center),
+					.init(attr: .left, count: 5, align: .trailing),
+					.init(attr: .left, count: 5, align: .justified),
+					.init(attr: .left, count: 30, align: .leading),
+					] as [BarTest]).enumerated()
+				{
+					let bar = ScrollableTabBarView(frame: .zero, axis: .vertical, alignment: it.align)
+					bar.style.selectIndicatorPosition = .leading
+					bar.style.buttonStack = Style()
+						.stackAlignment(.fill)
+						.stackDistribution(.fillProportionally)
+					info.handler = { [weak bar] (_, i) in
+						bar?.set(selectedIndex: CGFloat(i), highlightButton: true, animated: true)
+					}
+					for i in 1...it.count {
+						info.title = "\(i)"
+						bar.add(button: info)
+					}
+					viewV.addSubview(bar)
+					viewV.spot.constraints(bar, attributes: [.top, .bottom])
+					viewV.spot.constraints(bar, attributes: [it.attr], constant: BarTest.size * CGFloat(i))
+					bar.widthAnchor.constraint(equalToConstant: BarTest.size).spot.setActived()
 				}
-				vertical.view.addSubview(bar)
-				vertical.view.spot.constraints(bar, attributes: [.top, .left, .bottom])
-				bar.widthAnchor.constraint(equalToConstant: 100).spot.setActived()
-			}
-			var info = ScrollableTabBarButton(title: "V")
-			info.style.font{_ in .systemFont(ofSize: 30)}
-			info.selectedStyle.textColor(StyleShared.tintColorProducer)
-			root.add(viewController: vertical, tab: info)
+				let viewH = UIView()
+				for (i, it) in ([
+					.init(attr: .top, count: 5, align: .leading),
+					.init(attr: .top, count: 5, align: .center),
+					.init(attr: .top, count: 5, align: .trailing),
+					.init(attr: .top, count: 5, align: .justified),
+					.init(attr: .top, count: 30, align: .leading),
+					] as [BarTest]).enumerated()
+				{
+					let bar = ScrollableTabBarView(frame: .zero, axis: .horizontal, alignment: it.align)
+					bar.style.selectIndicatorPosition = .leading
+					bar.style.buttonStack = Style()
+						.stackAlignment(.fill)
+						.stackDistribution(.fillProportionally)
+					info.handler = { [weak bar] (_, i) in
+						bar?.set(selectedIndex: CGFloat(i), highlightButton: true, animated: true)
+					}
+					for i in 1...it.count {
+						info.title = "\(i)"
+						bar.add(button: info)
+					}
+					viewH.addSubview(bar)
+					viewH.spot.constraints(bar, attributes: [.left, .right])
+					viewH.spot.constraints(bar, attributes: [it.attr], constant: BarTest.size * CGFloat(i))
+					bar.heightAnchor.constraint(equalToConstant: BarTest.size).spot.setActived()
+				}
+				let stack = UIStackView(arrangedSubviews: [viewV, viewH])
+				stack.axis = .vertical
+				stack.distribution = .fillEqually
+				stack.alignment = .fill
+				vc.view.addSubview(stack)
+				vc.view.spot.constraints(stack)
+				return vc
+			}(), tab: info)
+			root.add(viewController: {
+				let vc = ScrollableTabBarController(barAlignment: .justified)
+				vc.setBar(styles: [\.buttonStack : Style()
+					.stackDistribution(.fillProportionally).spacing{_ in 10}])
+				let style = Style()
+					.textColor(StyleShared.foregroundTextColorProducer)
+					.padding{_ in .init(top: 10, left: 20, bottom: 10, right: 20)}
+				for i in 9...11 {
+					vc.add(viewController: UIViewController(), tab: .init(title: "\(i)", style: style))
+				}
+				return vc
+			}(), tab: .init(title: "equal"))
 			root.add(viewControllers: ([
 				"SQ": .red,
 				"实现实现实现🂨😦实现实": .yellow,
