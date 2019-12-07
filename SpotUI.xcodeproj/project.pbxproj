@@ -44,6 +44,15 @@
 		9BE29365230BED84004D6120 /* StyleShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE29364230BED84004D6120 /* StyleShared.swift */; };
 		9BE29367230C146B004D6120 /* UITraitCollection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE29366230C146B004D6120 /* UITraitCollection+.swift */; };
 		9BE29369230CD1C7004D6120 /* Style+Applyers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE29368230CD1C7004D6120 /* Style+Applyers.swift */; };
+		9BED5CDA239A405300936D68 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BED5CD9239A405300936D68 /* AppDelegate.swift */; };
+		9BED5CDC239A405300936D68 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BED5CDB239A405300936D68 /* SceneDelegate.swift */; };
+		9BED5CDE239A405300936D68 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BED5CDD239A405300936D68 /* ContentView.swift */; };
+		9BED5CE0239A405700936D68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BED5CDF239A405700936D68 /* Assets.xcassets */; };
+		9BED5CE3239A405700936D68 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BED5CE2239A405700936D68 /* Preview Assets.xcassets */; };
+		9BED5CE6239A405700936D68 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BED5CE4239A405700936D68 /* LaunchScreen.storyboard */; };
+		9BED5CEE239A417B00936D68 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
+		9BED5CEF239A417B00936D68 /* SpotUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9BED5CF3239A52AE00936D68 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59CA218588FF002A3F33 /* images */; };
 		9BF48E87204AC09800A06458 /* SpotUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BF48E85204AC09800A06458 /* SpotUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BF48EB3204AC0BE00A06458 /* UIView+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E8E204AC0BE00A06458 /* UIView+Constraint.swift */; };
 		9BF48EB7204AC0BE00A06458 /* CG+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E92204AC0BE00A06458 /* CG+.swift */; };
@@ -93,6 +102,20 @@
 			remoteGlobalIDString = 9BF48E81204AC09800A06458;
 			remoteInfo = "SpotUI iOS";
 		};
+		9BED5CEB239A415500936D68 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9BF48E79204AC09800A06458 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9BF48E81204AC09800A06458;
+			remoteInfo = "SpotUI iOS";
+		};
+		9BED5CF0239A417B00936D68 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9BF48E79204AC09800A06458 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9BF48E81204AC09800A06458;
+			remoteInfo = "SpotUI iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -113,6 +136,17 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9BED5CF2239A417B00936D68 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9BED5CEF239A417B00936D68 /* SpotUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,6 +191,14 @@
 		9BE29366230C146B004D6120 /* UITraitCollection+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+.swift"; sourceTree = "<group>"; };
 		9BE29368230CD1C7004D6120 /* Style+Applyers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Style+Applyers.swift"; sourceTree = "<group>"; };
 		9BE454ED23002FFE00B93CFB /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		9BED5CD7239A405300936D68 /* SpotUITestAppForSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotUITestAppForSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BED5CD9239A405300936D68 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9BED5CDB239A405300936D68 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		9BED5CDD239A405300936D68 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9BED5CDF239A405700936D68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9BED5CE2239A405700936D68 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9BED5CE5239A405700936D68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9BED5CE7239A405700936D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BF48E82204AC09800A06458 /* SpotUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BF48E85204AC09800A06458 /* SpotUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotUI.h; sourceTree = "<group>"; };
 		9BF48E86204AC09800A06458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -207,6 +249,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BC821D02133F5AB001E1F28 /* SpotUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9BED5CD4239A405300936D68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BED5CEE239A417B00936D68 /* SpotUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +358,28 @@
 			path = SpotUI;
 			sourceTree = "<group>";
 		};
+		9BED5CD8239A405300936D68 /* SpotUITestAppForSwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				9BED5CD9239A405300936D68 /* AppDelegate.swift */,
+				9BED5CDB239A405300936D68 /* SceneDelegate.swift */,
+				9BED5CDD239A405300936D68 /* ContentView.swift */,
+				9BED5CDF239A405700936D68 /* Assets.xcassets */,
+				9BED5CE4239A405700936D68 /* LaunchScreen.storyboard */,
+				9BED5CE7239A405700936D68 /* Info.plist */,
+				9BED5CE1239A405700936D68 /* Preview Content */,
+			);
+			path = SpotUITestAppForSwiftUI;
+			sourceTree = "<group>";
+		};
+		9BED5CE1239A405700936D68 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9BED5CE2239A405700936D68 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		9BF48E78204AC09800A06458 = {
 			isa = PBXGroup;
 			children = (
@@ -317,6 +389,7 @@
 				9BF48E8D204AC0BE00A06458 /* Sources */,
 				9BF48E84204AC09800A06458 /* SpotUI */,
 				9B3E59B22185820D002A3F33 /* SpotUITestApp */,
+				9BED5CD8239A405300936D68 /* SpotUITestAppForSwiftUI */,
 				9BC821CC2133F5AB001E1F28 /* SpotUITests */,
 			);
 			sourceTree = "<group>";
@@ -327,6 +400,7 @@
 				9BF48E82204AC09800A06458 /* SpotUI.framework */,
 				9BC821CB2133F5AB001E1F28 /* SpotUITests.xctest */,
 				9B3E59B12185820D002A3F33 /* SpotUITestApp.app */,
+				9BED5CD7239A405300936D68 /* SpotUITestAppForSwiftUI.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -447,6 +521,26 @@
 			productReference = 9BC821CB2133F5AB001E1F28 /* SpotUITests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		9BED5CD6239A405300936D68 /* SpotUITestAppForSwiftUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9BED5CEA239A405700936D68 /* Build configuration list for PBXNativeTarget "SpotUITestAppForSwiftUI" */;
+			buildPhases = (
+				9BED5CD3239A405300936D68 /* Sources */,
+				9BED5CD4239A405300936D68 /* Frameworks */,
+				9BED5CD5239A405300936D68 /* Resources */,
+				9BED5CF2239A417B00936D68 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9BED5CEC239A415500936D68 /* PBXTargetDependency */,
+				9BED5CF1239A417B00936D68 /* PBXTargetDependency */,
+			);
+			name = SpotUITestAppForSwiftUI;
+			productName = SpotUITestAppForSwiftUI;
+			productReference = 9BED5CD7239A405300936D68 /* SpotUITestAppForSwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
 		9BF48E81204AC09800A06458 /* SpotUI iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9BF48E8A204AC09800A06458 /* Build configuration list for PBXNativeTarget "SpotUI iOS" */;
@@ -475,7 +569,7 @@
 		9BF48E79204AC09800A06458 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1000;
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Shawn Clovie";
 				TargetAttributes = {
@@ -488,6 +582,9 @@
 						CreatedOnToolsVersion = 9.4;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
+					};
+					9BED5CD6239A405300936D68 = {
+						CreatedOnToolsVersion = 11.2.1;
 					};
 					9BF48E81204AC09800A06458 = {
 						CreatedOnToolsVersion = 9.2;
@@ -516,6 +613,7 @@
 				9BF48E81204AC09800A06458 /* SpotUI iOS */,
 				9BC821CA2133F5AB001E1F28 /* SpotUITests */,
 				9B3E59B02185820D002A3F33 /* SpotUITestApp */,
+				9BED5CD6239A405300936D68 /* SpotUITestAppForSwiftUI */,
 			);
 		};
 /* End PBXProject section */
@@ -539,6 +637,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BC821D72133F5C4001E1F28 /* action_font_family.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9BED5CD5239A405300936D68 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BED5CF3239A52AE00936D68 /* images in Resources */,
+				9BED5CE6239A405700936D68 /* LaunchScreen.storyboard in Resources */,
+				9BED5CE3239A405700936D68 /* Preview Assets.xcassets in Resources */,
+				9BED5CE0239A405700936D68 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,6 +676,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BE29363230BAB73004D6120 /* SpotUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9BED5CD3239A405300936D68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BED5CDA239A405300936D68 /* AppDelegate.swift in Sources */,
+				9BED5CDC239A405300936D68 /* SceneDelegate.swift in Sources */,
+				9BED5CDE239A405300936D68 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +761,16 @@
 			target = 9BF48E81204AC09800A06458 /* SpotUI iOS */;
 			targetProxy = 9BCF052E21C7B96000B6B858 /* PBXContainerItemProxy */;
 		};
+		9BED5CEC239A415500936D68 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9BF48E81204AC09800A06458 /* SpotUI iOS */;
+			targetProxy = 9BED5CEB239A415500936D68 /* PBXContainerItemProxy */;
+		};
+		9BED5CF1239A417B00936D68 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9BF48E81204AC09800A06458 /* SpotUI iOS */;
+			targetProxy = 9BED5CF0239A417B00936D68 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -649,6 +778,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				9B3E59BD2185820F002A3F33 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		9BED5CE4239A405700936D68 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9BED5CE5239A405700936D68 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -733,6 +870,51 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = club.spotlit.SpotUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9BED5CE8239A405700936D68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SpotUITestAppForSwiftUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = SpotUITestAppForSwiftUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = club.spotlit.SpotUITestAppForSwiftUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9BED5CE9239A405700936D68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"SpotUITestAppForSwiftUI/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = SpotUITestAppForSwiftUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = club.spotlit.SpotUITestAppForSwiftUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -922,6 +1104,15 @@
 			buildConfigurations = (
 				9BC821D32133F5AB001E1F28 /* Debug */,
 				9BC821D42133F5AB001E1F28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9BED5CEA239A405700936D68 /* Build configuration list for PBXNativeTarget "SpotUITestAppForSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9BED5CE8239A405700936D68 /* Debug */,
+				9BED5CE9239A405700936D68 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
