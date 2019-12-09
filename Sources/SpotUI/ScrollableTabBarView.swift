@@ -347,7 +347,7 @@ public final class ScrollableTabBarView: UIView {
 					if indicatorFrame.minX < offset.x {
 						offset.x = max(indicatorFrame.minX, 0)
 					} else if indicatorFrame.maxX > offset.x + containerSize.width {
-						offset.x = min(indicatorFrame.minX, container.contentSize.width - containerSize.width)
+						offset.x = min(indicatorFrame.maxX - containerSize.width, container.contentSize.width - containerSize.width)
 					}
 					container.setContentOffset(offset, animated: false)
 				}
@@ -361,7 +361,7 @@ public final class ScrollableTabBarView: UIView {
 					if indicatorFrame.minY < offset.y {
 						offset.y = max(indicatorFrame.minY, 0)
 					} else if indicatorFrame.maxY > offset.y + containerSize.height {
-						offset.y = min(indicatorFrame.minY, container.contentSize.height - containerSize.height)
+						offset.y = min(indicatorFrame.maxY - containerSize.height, container.contentSize.height - containerSize.height)
 					}
 					container.setContentOffset(offset, animated: false)
 				}

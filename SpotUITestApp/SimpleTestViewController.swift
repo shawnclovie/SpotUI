@@ -192,14 +192,14 @@ class SimpleTestViewController: UIViewController {
 				\.buttonStack: Style().stackDistribution(.fill),
 				\.selectIndicator: ScrollableTabBarStyleSet.shared.selectIndicator.duplicate.cornerRadius{_ in 2},
 			])
-			let leftButton = ScrollableTabBarButton(title: "close") { [weak root] _, _ in
+			let leftButton = ScrollableTabBarButton(title: "🚫") { [weak root] _, _ in
 				root?.dismiss(animated: true, completion: nil)
 			}
 			leftButton.style.font{_ in .systemFont(ofSize: 12)}
 				.image{_ in .name("images/action_color_picker.pdf", size: .init(width: 16, height: 16))}
 			root.setBar(sideButtons: [
 				.leading: leftButton,
-				.trailing: .init(title: "switch tab pos") { [weak root] _, _ in
+				.trailing: .init(title: "🔃TabPos") { [weak root] _, _ in
 					guard let root = root else {return}
 					root.tabBarPosition = root.tabBarPosition == .top ? .bottom : .top
 				},
