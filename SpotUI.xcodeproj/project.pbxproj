@@ -53,6 +53,7 @@
 		9BED5CEE239A417B00936D68 /* SpotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; };
 		9BED5CEF239A417B00936D68 /* SpotUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF48E82204AC09800A06458 /* SpotUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9BED5CF3239A52AE00936D68 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 9B3E59CA218588FF002A3F33 /* images */; };
+		9BED5CF523A0AD3A00936D68 /* ScrollableTabBarTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BED5CF423A0AD3A00936D68 /* ScrollableTabBarTestViewController.swift */; };
 		9BF48E87204AC09800A06458 /* SpotUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BF48E85204AC09800A06458 /* SpotUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BF48EB3204AC0BE00A06458 /* UIView+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E8E204AC0BE00A06458 /* UIView+Constraint.swift */; };
 		9BF48EB7204AC0BE00A06458 /* CG+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF48E92204AC0BE00A06458 /* CG+.swift */; };
@@ -199,6 +200,7 @@
 		9BED5CE2239A405700936D68 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9BED5CE5239A405700936D68 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9BED5CE7239A405700936D68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9BED5CF423A0AD3A00936D68 /* ScrollableTabBarTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTabBarTestViewController.swift; sourceTree = "<group>"; };
 		9BF48E82204AC09800A06458 /* SpotUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BF48E85204AC09800A06458 /* SpotUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotUI.h; sourceTree = "<group>"; };
 		9BF48E86204AC09800A06458 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				9B3E59C521858389002A3F33 /* style_defines.json */,
 				9B3E59C32185837D002A3F33 /* style.json */,
 				9BC2895323446BB000391013 /* TestingDataSourceTableViewController.swift */,
+				9BED5CF423A0AD3A00936D68 /* ScrollableTabBarTestViewController.swift */,
 			);
 			path = SpotUITestApp;
 			sourceTree = "<group>";
@@ -666,6 +669,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B3E59C8218583B1002A3F33 /* SimpleTestViewController.swift in Sources */,
+				9BED5CF523A0AD3A00936D68 /* ScrollableTabBarTestViewController.swift in Sources */,
 				9B3E59B42185820D002A3F33 /* AppDelegate.swift in Sources */,
 				9BC2895423446BB000391013 /* TestingDataSourceTableViewController.swift in Sources */,
 			);

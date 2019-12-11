@@ -41,19 +41,17 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	public weak var delegate: ScrollableTabBarControllerDelegate?
 	
-	public var tabBarPosition: ScrollableTabBarPosition = .top {
-		didSet {
-			updateVStackArrangedSubviews()
-		}
-	}
+	public private(set) var tabBarPosition: ScrollableTabBarPosition = .top
+	public private(set) var shouldTabBarCoverContentView = false
+	
 	public var style: StyleSet = .shared
 	
 	public private(set) var contentViewControllers: ContiguousArray<UIViewController> = []
 	
-	private var tabBarHiddenConstraint: NSLayoutConstraint?
-	private let vStack = UIStackView()
 	private let tabBar: ScrollableTabBarView
+	private var tabBarConstraints: [NSLayoutConstraint.Attribute: NSLayoutConstraint] = [:]
 	private let contentView = UIScrollView()
+	private var contentViewConstraints: [NSLayoutConstraint.Attribute: NSLayoutConstraint] = [:]
 	
 	public init(barAlignment: ScrollableTabBarView.Alignment) {
 		tabBar = .init(frame: .zero, axis: .horizontal, alignment: barAlignment)
@@ -71,10 +69,6 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		}
 		automaticallyAdjustsScrollViewInsets = false
 		
-		vStack.axis = .vertical
-		vStack.alignment = .fill
-		vStack.distribution = .fill
-		view.addSubview(vStack)
 		tabBar.setContentHuggingPriority(.required, for: .vertical)
 		tabBar.setContentCompressionResistancePriority(.required, for: .vertical)
 		tabBar.delegate = self
@@ -83,14 +77,14 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		contentView.isPagingEnabled = true
 		contentView.bounces = false
 		contentView.showsHorizontalScrollIndicator = false
-		
-		[
-			vStack.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
-			vStack.leftAnchor.constraint(equalTo: view.leftAnchor),
-			vStack.rightAnchor.constraint(equalTo: view.rightAnchor),
-			vStack.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor),
-		].spot_set(active: true)
-		tabBarHiddenConstraint = tabBar.heightAnchor.constraint(equalToConstant: 0)
+		view.addSubview(contentView)
+		view.spot.constraints(contentView).forEach{
+			contentViewConstraints[$0.firstAttribute] = $0
+		}
+		view.addSubview(tabBar)
+		view.spot.constraints(tabBar).forEach {
+			tabBarConstraints[$0.firstAttribute] = $0
+		}
 		
 		updateVStackArrangedSubviews()
 		resetStyle()
@@ -145,10 +139,29 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	public var isBarHidden: Bool {
 		get {tabBar.isHidden}
-		set {
-			tabBar.isHidden = newValue
-			tabBarHiddenConstraint?.isActive = newValue
+		set {tabBar.isHidden = newValue}
+	}
+	
+	/// Set bar hidden with animation
+	public func setBar(hidden: Bool, duration: TimeInterval = 0.2) {
+		let oldHidden = tabBar.isHidden
+		guard hidden != oldHidden else {return}
+		let height = tabBar.bounds.height
+		let isTop = tabBarPosition == .top
+		let transOnHidden = CGAffineTransform(translationX: 0, y: isTop ? -height : height)
+		tabBar.transform = oldHidden ? transOnHidden : .identity
+		tabBar.isHidden = false
+		UIView.animate(withDuration: duration, animations: {
+			self.tabBar.transform = hidden ? transOnHidden : .identity
+		}) { _ in
+			self.tabBar.isHidden = hidden
 		}
+	}
+	
+	public func setBar(position: ScrollableTabBarPosition, cover: Bool) {
+		tabBarPosition = position
+		shouldTabBarCoverContentView = cover
+		updateVStackArrangedSubviews()
 	}
 	
 	// MARK: - Content View Controller
@@ -183,15 +196,15 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	}
 	
 	private func updateVStackArrangedSubviews() {
-		if vStack.arrangedSubviews.isEmpty {
-			vStack.addArrangedSubview(contentView)
-		} else {
-			vStack.removeArrangedSubview(tabBar)
-		}
-		if tabBarPosition == .top {
-			vStack.insertArrangedSubview(tabBar, at: 0)
-		} else {
-			vStack.addArrangedSubview(tabBar)
+		let isTop = tabBarPosition == .top
+		let attrOld: NSLayoutConstraint.Attribute = isTop ? .bottom : .top
+		let attrNew: NSLayoutConstraint.Attribute = isTop ? .top : .bottom
+		tabBarConstraints[attrOld]?.isActive = false
+		tabBarConstraints[attrNew]?.isActive = true
+		if !shouldTabBarCoverContentView {
+			let barHeight = tabBar.isHidden ? 0 : tabBar.bounds.height
+			contentViewConstraints[attrOld]?.constant = 0
+			contentViewConstraints[attrNew]?.constant = attrNew == .bottom ? -barHeight : barHeight
 		}
 	}
 	
