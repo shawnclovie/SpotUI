@@ -15,7 +15,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		tabController.setBar(position: .bottom, cover: false)
+		tabController.setBar(position: .top, cover: false)
 		tabController.setBar(styles: [
 			\.buttonStack: Style().stackDistribution(.fill),
 			\.selectIndicator: ScrollableTabBarStyleSet.shared.selectIndicator.duplicate.cornerRadius{_ in 2},
@@ -31,6 +31,9 @@ class ScrollableTabBarTestViewController: UIViewController {
 		info.selectedStyle.textColor(StyleShared.tintColorProducer)
 		tabController.add(viewController: {
 			let vc = UIViewController()
+			vc.view.backgroundColor = .lightGray
+			vc.view.layer.borderColor = UIColor.green.cgColor
+			vc.view.layer.borderWidth = 10
 			let viewV = UIView()
 			var info = ScrollableTabBarButton()
 			info.style
@@ -159,6 +162,9 @@ class ScrollableTabBarEqualTestViewController: UIViewController {
 		view.spot.constraints(tabController.view)
 		
 		let actionBar = ScrollableTabBarView(frame: .zero, axis: .horizontal, alignment: .justified)
+		actionBar.add(button: .init(title: "🚫") { [weak self] (_, _) in
+			self?.dismiss(animated: true, completion: nil)
+		})
 		actionBar.add(button: .init(title: "🔃Hidden") { [weak self] (_, _) in
 			guard let self = self else {return}
 			self.tabController.setBar(hidden: !self.tabController.isBarHidden)

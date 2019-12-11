@@ -85,14 +85,13 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		view.spot.constraints(tabBar).forEach {
 			tabBarConstraints[$0.firstAttribute] = $0
 		}
-		
-		updateVStackArrangedSubviews()
 		resetStyle()
 	}
 	
 	open override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		updateContentView()
+		updateLayout()
 		if tabBar.selectedIndex < 0 {
 			tabBar.set(selectedIndex: 0, highlightButton: true, animated: false)
 		}
@@ -161,7 +160,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	public func setBar(position: ScrollableTabBarPosition, cover: Bool) {
 		tabBarPosition = position
 		shouldTabBarCoverContentView = cover
-		updateVStackArrangedSubviews()
+		updateLayout()
 	}
 	
 	// MARK: - Content View Controller
@@ -195,7 +194,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 		contentView.setContentOffset(CGPoint(x: CGFloat(selectedIndex) * view.bounds.width, y: 0), animated: animated)
 	}
 	
-	private func updateVStackArrangedSubviews() {
+	private func updateLayout() {
 		let isTop = tabBarPosition == .top
 		let attrOld: NSLayoutConstraint.Attribute = isTop ? .bottom : .top
 		let attrNew: NSLayoutConstraint.Attribute = isTop ? .top : .bottom
