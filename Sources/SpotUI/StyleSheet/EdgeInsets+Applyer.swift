@@ -54,6 +54,8 @@ struct PaddingApplyer: StyleApplyer {
 		case let view as UICollectionView:
 			guard let layout = view.collectionViewLayout as? UICollectionViewFlowLayout else {break}
 			layout.sectionInset = producer(trait)
+		case let view as UIScrollView:
+			view.contentInset = producer(trait)
 		default:break
 		}
 	}
