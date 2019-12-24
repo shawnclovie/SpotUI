@@ -34,6 +34,15 @@ public final class Style {
 		.init(applyers: applyers, loadedData: loadedData)
 	}
 	
+	public func append(_ other: Style) {
+		for it in other.applyers {
+			applyers[it.key] = it.value
+		}
+		for it in other.loadedData {
+			loadedData[it.key] = it.value
+		}
+	}
+	
 	@discardableResult
 	public func set(_ op: StyleApplyer) -> Self {
 		applyers["\(type(of: op))"] = op
