@@ -202,12 +202,6 @@ public final class ScrollableTabBarView: UIView {
 		contentView.contentInset = inset
 		contentView.contentSize = contentSize
 		
-		let indicatorH_2 = style.selectIndicatorSize * 0.5
-		if isHorizontal {
-			selectIndicator.center.y = style.selectIndicatorPosition == .leading ? indicatorH_2 : size.height - indicatorH_2
-		} else {
-			selectIndicator.center.x = style.selectIndicatorPosition == .leading ? indicatorH_2 : size.width - indicatorH_2
-		}
 		updateSelectIndicator(from: indicatorIndexPosition, highlightButton: true, animated: false)
 	}
 	
@@ -337,6 +331,7 @@ public final class ScrollableTabBarView: UIView {
 		let btnFrame1 = model1.button.frame
 		let btnFrame2 = model2.button.frame
 		let containerSize = container.bounds.size
+		let isLeading = style.selectIndicatorPosition == .leading
 		let fn = {
 			if highlightButton {
 				if let oldModel = self.models.spot_value(at: self.selectedIndex) {
@@ -345,11 +340,11 @@ public final class ScrollableTabBarView: UIView {
 				model1.info.selectedStyle.apply(to: model1.button, with: self.traitCollection)
 				self.selectedIndex = indexRange.lowerBound
 			}
+			let indicatorFrame: CGRect
 			if self.axis == .horizontal {
 				let x = btnFrame1.minX + (btnFrame2.minX - btnFrame1.minX) * progress
 				let width = btnFrame1.width + (btnFrame2.width - btnFrame1.width) * progress
-				let indicatorFrame = CGRect(x: x, y: btnFrame1.maxY - indicatorSize, width: width, height: indicatorSize)
-				indicator.frame = indicatorFrame
+				indicatorFrame = CGRect(x: x, y: isLeading ? 0 : btnFrame1.maxY - indicatorSize, width: width, height: indicatorSize)
 				if containerSize.width > 0 {
 					var offset = container.contentOffset
 					if indicatorFrame.minX < offset.x {
@@ -362,8 +357,7 @@ public final class ScrollableTabBarView: UIView {
 			} else {
 				let y = btnFrame1.minY + (btnFrame2.minY - btnFrame1.minY) * progress
 				let height = btnFrame1.height + (btnFrame2.height - btnFrame1.height) * progress
-				let indicatorFrame = CGRect(x: btnFrame1.maxX - indicatorSize, y: y, width: indicatorSize, height: height)
-				indicator.frame = indicatorFrame
+				indicatorFrame = CGRect(x: isLeading ? 0 : btnFrame1.maxX - indicatorSize, y: y, width: indicatorSize, height: height)
 				if containerSize.height > 0 {
 					var offset = container.contentOffset
 					if indicatorFrame.minY < offset.y {
@@ -374,6 +368,7 @@ public final class ScrollableTabBarView: UIView {
 					container.setContentOffset(offset, animated: false)
 				}
 			}
+			indicator.frame = indicatorFrame
 		}
 		if animated {
 			UIView.animate(withDuration: 0.2, animations: fn)

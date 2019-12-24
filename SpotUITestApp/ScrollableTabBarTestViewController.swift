@@ -55,7 +55,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 				] as [BarTest]).enumerated()
 			{
 				let bar = ScrollableTabBarView(frame: .zero, axis: .vertical, alignment: it.align)
-				bar.style.selectIndicatorPosition = .leading
+				bar.style.selectIndicatorPosition = i >= 1 ? .leading : .trailing
 				bar.style.buttonStack = Style()
 					.stackAlignment(.fill)
 					.stackDistribution(.fillProportionally)
@@ -70,6 +70,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 				viewV.spot.constraints(bar, attributes: [.top, .bottom])
 				viewV.spot.constraints(bar, attributes: [it.attr], constant: BarTest.size * CGFloat(i))
 				bar.widthAnchor.constraint(equalToConstant: BarTest.size).spot.setActived()
+				bar.set(selectedIndex: 0, highlightButton: true, animated: false)
 			}
 			let viewH = UIView()
 			for (i, it) in ([
@@ -81,7 +82,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 				] as [BarTest]).enumerated()
 			{
 				let bar = ScrollableTabBarView(frame: .zero, axis: .horizontal, alignment: it.align)
-				bar.style.selectIndicatorPosition = .leading
+				bar.style.selectIndicatorPosition = i >= 1 ? .leading : .trailing
 				bar.style.buttonStack = Style()
 					.stackAlignment(.fill)
 					.stackDistribution(.fillProportionally)
@@ -96,6 +97,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 				viewH.spot.constraints(bar, attributes: [.left, .right])
 				viewH.spot.constraints(bar, attributes: [it.attr], constant: BarTest.size * CGFloat(i))
 				bar.heightAnchor.constraint(equalToConstant: BarTest.size).spot.setActived()
+				bar.set(selectedIndex: 0, highlightButton: true, animated: false)
 			}
 			let stack = UIStackView(arrangedSubviews: [viewV, viewH])
 			stack.axis = .vertical
