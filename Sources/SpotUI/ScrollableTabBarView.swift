@@ -256,6 +256,7 @@ public final class ScrollableTabBarView: UIView {
 		managedContraints += spot.constraints(contentView, attributes: contentViewAttrs)
 	}
 	
+	/// Replace side buttons, all exist buttons would be removed.
 	public func set(sideButtons: [Side: ScrollableTabBarButton]) {
 		for it in self.sideButtons {
 			it.value.button.removeFromSuperview()
@@ -285,6 +286,13 @@ public final class ScrollableTabBarView: UIView {
 		models.append(Model(button: button, originalSize: button.bounds.size, info: info))
 		buttonStack.addArrangedSubview(button)
 		selectIndicator.isHidden = models.count <= 1
+	}
+	
+	/// Replace exist buttons
+	public func reset(buttons: [ScrollableTabBarButton]) {
+		models.forEach{$0.button.removeFromSuperview()}
+		models.removeAll()
+		buttons.forEach(add(button:))
 	}
 	
 	public func set(selectedIndex: CGFloat, highlightButton: Bool, animated: Bool) {

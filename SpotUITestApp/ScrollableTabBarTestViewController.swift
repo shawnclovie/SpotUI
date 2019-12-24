@@ -12,6 +12,7 @@ import SpotUI
 
 class ScrollableTabBarTestViewController: UIViewController {
 	let tabController = ScrollableTabBarController(barAlignment: .leading)
+	let testBar = ScrollableTabBarView(frame: .zero, axis: .horizontal, alignment: .leading)
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -136,8 +137,20 @@ class ScrollableTabBarTestViewController: UIViewController {
 			guard let self = self else {return}
 			self.tabController.setBar(position: self.tabController.tabBarPosition == .top ? .bottom : .top, cover: false)
 		})
+		actionBar.add(button: .init(title: "🔃TestBar") { [weak self] (_, _) in
+			self?.resetTestBar()
+		})
 		view.addSubview(actionBar)
 		view.spot.constraints(actionBar, attributes: [.centerX, .centerY, .width])
+		view.addSubview(testBar)
+		view.spot.constraints(testBar, attributes: [.centerX, .width])
+		testBar.topAnchor.constraint(equalTo: view.centerYAnchor, constant: 50).spot.setActived()
+	}
+	
+	func resetTestBar() {
+		testBar.reset(buttons: (1...(Int.random(in: 2...5))).map{
+			ScrollableTabBarButton(title: "\($0)") { (_, _) in}
+		})
 	}
 }
 
