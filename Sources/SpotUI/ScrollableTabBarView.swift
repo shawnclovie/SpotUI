@@ -149,6 +149,10 @@ public final class ScrollableTabBarView: UIView {
 	
 	public override func layoutSubviews() {
 		super.layoutSubviews()
+		layoutContentViews()
+	}
+	
+	private func layoutContentViews() {
 		let size = bounds.size
 		let isHorizontal = axis == .horizontal
 		contentView.layoutIfNeeded()
@@ -287,6 +291,8 @@ public final class ScrollableTabBarView: UIView {
 		models.forEach{$0.button.removeFromSuperview()}
 		models.removeAll()
 		buttons.forEach(add(button:))
+		buttonStack.layoutIfNeeded()
+		layoutContentViews()
 	}
 	
 	public func set(selectedIndex: CGFloat, highlightButton: Bool, animated: Bool) {

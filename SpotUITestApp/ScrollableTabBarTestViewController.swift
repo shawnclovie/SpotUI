@@ -150,9 +150,13 @@ class ScrollableTabBarTestViewController: UIViewController {
 	}
 	
 	func resetTestBar() {
-		testBar.reset(buttons: (1...(Int.random(in: 2...5))).map{
-			ScrollableTabBarButton(title: "\($0)") { (_, _) in}
+		let count = Int.random(in: 10...25)
+		testBar.reset(buttons: (1...count).map{
+			ScrollableTabBarButton(title: "\($0)") { [weak self] (_, index) in
+				self?.testBar.set(selectedIndex: CGFloat(index), highlightButton: true, animated: true)
+			}
 		})
+		testBar.set(selectedIndex: CGFloat(count - 1), highlightButton: true, animated: true)
 	}
 }
 
