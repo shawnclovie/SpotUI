@@ -217,6 +217,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	}
 	
 	open func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		guard view.bounds.width > 0 else {return}
 		let pagePosition = scrollView.contentOffset.x / view.bounds.width
 		let pageRange = floor(pagePosition)...ceil(pagePosition)
 		for index in [Int(pageRange.lowerBound), Int(pageRange.upperBound)] {
