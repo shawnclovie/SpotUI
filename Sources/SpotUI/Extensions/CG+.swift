@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreGraphics
+import Spot
 
 /// Convert value to rect
 public func AnyToCGRect(_ value: Any?) -> CGRect? {
@@ -15,14 +16,16 @@ public func AnyToCGRect(_ value: Any?) -> CGRect? {
 		return nil
 	}
 	switch value {
-	case let values as [AnyHashable: Double]:
-		return CGRect(x: values["x", default: 0],
-					  y: values["y", default: 0],
-					  width: values["width", default: 0],
-					  height: values["height", default: 0])
-	case let values as [Double] where values.count >= 4:
-		return CGRect(x: values[0], y: values[1],
-					  width: values[2], height: values[3])
+	case let values as [AnyHashable: Any]:
+		return CGRect(x: AnyToDouble(values["x"]) ?? 0,
+					  y: AnyToDouble(values["y"]) ?? 0,
+					  width: AnyToDouble(values["width"]) ?? 0,
+					  height: AnyToDouble(values["height"]) ?? 0)
+	case let values as [Any] where values.count >= 4:
+		return CGRect(x: AnyToDouble(values[0]) ?? 0,
+					  y: AnyToDouble(values[1]) ?? 0,
+					  width: AnyToDouble(values[2]) ?? 0,
+					  height: AnyToDouble(values[3]) ?? 0)
 	default:
 		return nil
 	}
@@ -70,13 +73,12 @@ public func AnyToCGPoint(_ value: Any?) -> CGPoint? {
 	case let value as NSNumber:
 		let number = value.doubleValue
 		return CGPoint(x: number, y: number)
-	case let values as [AnyHashable: Double]:
-		return CGPoint(x: values["x", default: 0],
-					   y: values["y", default: 0])
-	case let values as [Double] where values.count >= 2:
-		return CGPoint(x: values[0], y: values[1])
-	case let values as [Int] where values.count >= 2:
-		return CGPoint(x: values[0], y: values[1])
+	case let values as [AnyHashable: Any]:
+		return CGPoint(x: AnyToDouble(values["x"]) ?? 0,
+					   y: AnyToDouble(values["y"]) ?? 0)
+	case let values as [Any] where values.count >= 2:
+		return CGPoint(x: AnyToDouble(values[0]) ?? 0,
+					   y: AnyToDouble(values[1]) ?? 0)
 	default:
 		return nil
 	}
@@ -92,13 +94,12 @@ public func AnyToCGSize(_ value: Any?) -> CGSize? {
 	case let value as NSNumber:
 		let number = value.doubleValue
 		return CGSize(width: number, height: number)
-	case let values as [AnyHashable:Double]:
-		return CGSize(width: values["width", default: 0],
-					  height: values["height", default: 0])
-	case let values as [Double] where values.count >= 2:
-		return CGSize(width: values[0], height: values[1])
-	case let values as [Int] where values.count >= 2:
-		return CGSize(width: values[0], height: values[1])
+	case let values as [AnyHashable: Any]:
+		return CGSize(width: AnyToDouble(values["width"]) ?? 0,
+					  height: AnyToDouble(values["height"]) ?? 0)
+	case let values as [Any] where values.count >= 2:
+		return CGSize(width: AnyToDouble(values[0]) ?? 0,
+					  height: AnyToDouble(values[1]) ?? 0)
 	default:
 		return nil
 	}
