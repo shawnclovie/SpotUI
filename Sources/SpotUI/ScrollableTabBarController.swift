@@ -115,6 +115,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	// MARK: - Access TabBar
 	
 	public var barSelectedIndex: Int {tabBar.selectedIndex}
+	public var barButtons: [ScrollableTabBarButton] {tabBar.buttons}
 	
 	public func setBar(alignment: ScrollableTabBarView.Alignment) {
 		tabBar.set(axis: .horizontal, alignment: alignment)
@@ -172,14 +173,43 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	public func add(viewControllers infos: [(UIViewController, ScrollableTabBarButton)]) {
 		guard let first = infos.first else {return}
 		if contentViewControllers.isEmpty {
-			contentView.addSubview(first.0.view)
-			addChild(first.0)
+			spot.addChild(first.0, parentView: contentView)
 		}
 		for it in infos {
 			contentViewControllers.append(it.0)
 			tabBar.add(button: it.1)
 		}
 		updateContentView()
+	}
+	
+	public func insert(viewController: UIViewController, tab: ScrollableTabBarButton, at: Int) {
+		guard contentViewControllers.indices.contains(at) else {
+			add(viewController: viewController, tab: tab)
+			return
+		}
+		if contentViewControllers.isEmpty {
+			spot.addChild(viewController, parentView: contentView)
+		}
+		contentViewControllers.insert(viewController, at: at)
+		updateContentView()
+		let tabSelectedIndex = tabBar.selectedIndex
+		tabBar.insert(button: tab, at: at, animated: false)
+		let newIndex = tabSelectedIndex + (tabSelectedIndex >= at ? 1 : 0)
+		setContentOffset(selectedIndex: newIndex, animated: false)
+	}
+	
+	@discardableResult
+	public func removeViewController(at: Int) -> ScrollableTabBarButton? {
+		guard contentViewControllers.indices.contains(at) else {return nil}
+		let tabSelectedIndex = tabBar.selectedIndex
+		let newIndex = min(tabSelectedIndex - (tabSelectedIndex > at ? 1 : 0), contentViewControllers.count - 1)
+		let tab = tabBar.removeButton(at: at)
+		let vc = contentViewControllers.remove(at: at)
+		vc.spot.removeFromParent()
+		updateContentView()
+		setContentOffset(selectedIndex: newIndex, animated: false)
+		scrollViewDidScroll(contentView)
+		return tab
 	}
 	
 	public func set(selected vc: UIViewController, animated: Bool) {
@@ -226,8 +256,7 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 			}
 			let vc = contentViewControllers[index]
 			if vc.parent == nil {
-				contentView.addSubview(vc.view)
-				addChild(vc)
+				spot.addChild(vc, parentView: contentView)
 				updateContentView()
 			}
 		}
@@ -240,7 +269,11 @@ open class ScrollableTabBarController: UIViewController, UIScrollViewDelegate, S
 	
 	open func scrollableTabBar(view: ScrollableTabBarView, didSelect index: Int, info: ScrollableTabBarButton) {
 		let animated = delegate?.scrollableTabBar(controller: self, shouldAnimatingScrollToTab: index)
-		let offset = CGPoint(x: CGFloat(index) * contentView.bounds.width, y: 0)
-		contentView.setContentOffset(offset, animated: animated ?? true)
+		setContentOffset(selectedIndex: index, animated: animated ?? true)
+	}
+	
+	private func setContentOffset(selectedIndex: Int, animated: Bool) {
+		let offset = CGPoint(x: CGFloat(selectedIndex) * contentView.bounds.width, y: 0)
+		contentView.setContentOffset(offset, animated: animated)
 	}
 }

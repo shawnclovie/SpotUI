@@ -160,6 +160,14 @@ class ScrollableTabBarTestViewController: UIViewController {
 	}
 }
 
+private func makeViewController(backgroundColor: UIColor, borderColor: UIColor) -> UIViewController {
+	let vc = UIViewController()
+	vc.view.backgroundColor = backgroundColor
+	vc.view.layer.borderColor = borderColor.cgColor
+	vc.view.layer.borderWidth = 10
+	return vc
+}
+
 class ScrollableTabBarEqualTestViewController: UIViewController {
 	let tabController = ScrollableTabBarController(barAlignment: .justified)
 	override func viewDidLoad() {
@@ -168,13 +176,11 @@ class ScrollableTabBarEqualTestViewController: UIViewController {
 		tabController.setBar(styles: [\.buttonStack : Style()
 			.stackDistribution(.fillProportionally).spacing{_ in 10}])
 		let style = Style()
+			.font{_ in .systemFont(ofSize: 12)}
 			.textColor(StyleShared.foregroundTextColorProducer)
 			.padding{_ in .init(top: 10, left: 20, bottom: 10, right: 20)}
 		for color in [UIColor.red, UIColor.yellow, UIColor.blue] {
-			let vc = UIViewController()
-			vc.view.backgroundColor = color
-			vc.view.layer.borderColor = UIColor.green.cgColor
-			vc.view.layer.borderWidth = 10
+			let vc = makeViewController(backgroundColor: color, borderColor: .green)
 			tabController.add(viewController: vc, tab: .init(title: "\(DecimalColor(with: color).hexString)", style: style))
 		}
 		spot.addChild(tabController)
@@ -191,6 +197,16 @@ class ScrollableTabBarEqualTestViewController: UIViewController {
 		actionBar.add(button: .init(title: "🔃Position") { [weak self] (_, _) in
 			guard let self = self else {return}
 			self.tabController.setBar(position: self.tabController.tabBarPosition == .top ? .bottom : .top, cover: true)
+		})
+		actionBar.add(button: .init(title: "+ at:1") { [weak self] (_, _) in
+			guard let self = self else {return}
+			let gray = UInt8.random(in: 0...(.max))
+			let vc = makeViewController(backgroundColor: DecimalColor(gray: gray).colorValue, borderColor: .blue)
+			self.tabController.insert(viewController: vc, tab: .init(title: "\(gray)", style: style), at: 1)
+		})
+		actionBar.add(button: .init(title: "- at:1") { [weak self] (_, _) in
+			guard let self = self else {return}
+			self.tabController.removeViewController(at: 1)
 		})
 		view.addSubview(actionBar)
 		view.spot.constraints(actionBar, attributes: [.centerX, .centerY, .width])

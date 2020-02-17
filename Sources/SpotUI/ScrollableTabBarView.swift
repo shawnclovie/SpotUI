@@ -276,14 +276,43 @@ public final class ScrollableTabBarView: UIView {
 		models.spot_value(at: index)?.info
 	}
 	
+	public var buttons: [ScrollableTabBarButton] {
+		models.map{$0.info}
+	}
+	
 	public func add(button info: ScrollableTabBarButton) {
+		insert(button: info, at: models.count, animated: false)
+	}
+	
+	public func insert(button info: ScrollableTabBarButton, at: Int, animated: Bool) {
 		let button = UIButton(type: .custom)
 		info.apply(button)
 		button.addTarget(self, action: #selector(touchUp(item:)), for: .touchUpInside)
-		button.tag = models.count
-		models.append(Model(button: button, originalSize: button.bounds.size, info: info))
-		buttonStack.addArrangedSubview(button)
+		let model = Model(button: button, originalSize: button.bounds.size, info: info)
+		if models.indices.contains(at) {
+			button.tag = at
+			models[at...].forEach{$0.button.tag += 1}
+			models.insert(model, at: at)
+			buttonStack.insertArrangedSubview(button, at: at)
+			let newIndex = selectedIndex + (selectedIndex >= at ? 1 : 0)
+			set(selectedIndex: CGFloat(newIndex), highlightButton: true, animated: animated)
+		} else {
+			button.tag = models.count
+			models.append(model)
+			buttonStack.addArrangedSubview(button)
+		}
 		selectIndicator.isHidden = models.count <= 1
+	}
+	
+	public func removeButton(at: Int) -> ScrollableTabBarButton? {
+		guard let model = models.spot_value(at: at) else {return nil}
+		models.remove(at: at)
+		buttonStack.removeArrangedSubview(model.button)
+		selectIndicator.isHidden = models.count <= 1
+		models[at...].forEach{$0.button.tag -= 1}
+		let newIndex = min(selectedIndex - (selectedIndex > at ? 1 : 0), models.count - 1)
+		set(selectedIndex: CGFloat(newIndex), highlightButton: true, animated: false)
+		return model.info
 	}
 	
 	/// Replace exist buttons
