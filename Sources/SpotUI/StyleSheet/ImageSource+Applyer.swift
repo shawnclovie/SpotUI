@@ -59,24 +59,38 @@ public struct StyleImageSource {
 		switch source {
 		case .empty:
 			return nil
-		case .name(let it):
-			let image = loadImage(name: it.0, fitSize: it.size)
-			return it.template ? image?.withRenderingMode(.alwaysTemplate) : image
-		case .solidColor(let it):
-			return it.0.cgColor
-				.spot.solidImage(width: Int(it.size.width), height: Int(it.size.height))
+		case .name(let name, let size, let template):
+			let image = Self.loadImage(name: name, fitSize: size)
+			return template ? image?.withRenderingMode(.alwaysTemplate) : image
+		case .solidColor(let color, let size):
+			return color.cgColor
+				.spot.solidImage(width: Int(size.width), height: Int(size.height))
 				.map(UIImage.init(cgImage:))
 		}
 	}
 }
 
-private func loadImage(name: String, fitSize: CGSize) -> UIImage? {
-	guard !name.isEmpty else {return nil}
-	if name.hasSuffix(".pdf") {
-		return .spot_fromPDF(named: name, contentSize: fitSize)
+extension StyleImageSource {
+	public typealias ImageLoader = (_ name: String, _ contentSize: CGSize)->UIImage?
+	
+	static var registeredImageLoader: [String: ImageLoader] = [
+		"pdf": {UIImage.spot_fromPDF(named: $0, contentSize: $1)},
+	]
+	
+	public static func registerImageLoader(ext: String, _ fn: @escaping ImageLoader) {
+		let suffix = ext.hasPrefix(".") ? ext.dropFirst().lowercased() : ext.lowercased()
+		registeredImageLoader[suffix] = fn
 	}
-	let image = UIImage(named: name)
-	return fitSize == .zero ? image : image?.spot.scaled(toFit: fitSize, by: .scaleToFill)
+	
+	private static func loadImage(name: String, fitSize: CGSize) -> UIImage? {
+		guard !name.isEmpty else {return nil}
+		if let ext = name.spot.pathExtension,
+			let fn = registeredImageLoader[ext.lowercased()] {
+			return fn(name, fitSize)
+		}
+		let image = UIImage(named: name)
+		return fitSize == .zero ? image : image?.spot.scaled(toFit: fitSize, by: .scaleToFill)
+	}
 }
 
 struct StillImageApplyer: StyleApplyer {
