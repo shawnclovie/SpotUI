@@ -30,6 +30,7 @@ public struct ActionSheetStyleSet {
 		.padding{_ in .init(top: 12, left: 12, bottom: 12, right: 12)}
 	
 	public var buttonHeight: CGFloat = 40
+	public var buttonSpacing: CGFloat = 10
 	public var button = Style()
 		.font{_ in .systemFont(ofSize: 12)}
 		.padding{_ in .init(top: 10, left: 10, bottom: 10, right: 10)}
@@ -92,7 +93,7 @@ open class ActionSheetViewController: UIViewController {
 			titleView.topAnchor.constraint(equalTo: panel.topAnchor),
 			titleView.leftAnchor.constraint(equalTo: panel.leftAnchor),
 			titleView.rightAnchor.constraint(equalTo: panel.rightAnchor),
-			contentView.topAnchor.constraint(equalTo: titleView.topAnchor),
+			contentView.topAnchor.constraint(equalTo: titleView.bottomAnchor),
 			buttonWrapper.leftAnchor.constraint(equalTo: panel.leftAnchor),
 			buttonWrapper.rightAnchor.constraint(equalTo: panel.rightAnchor),
 			].spot_set(active: true)
@@ -100,14 +101,15 @@ open class ActionSheetViewController: UIViewController {
 	
 	override open func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		let wrapperSize = buttonWrapper.bounds.size
-		let spacing: CGFloat = 10
-		var buttonPos = CGPoint(x: 0, y: wrapperSize.height * 0.5)
-		for sub in buttonWrapper.subviews {
-			sub.center = buttonPos
-			buttonPos.x += spacing + sub.bounds.width
+		if !buttonWrapper.subviews.isEmpty {
+			let wrapperSize = buttonWrapper.bounds.size
+			var buttonPos = CGPoint(x: 0, y: wrapperSize.height * 0.5)
+			for sub in buttonWrapper.subviews {
+				sub.center = buttonPos
+				buttonPos.x += actionSheetStyle.buttonSpacing + sub.bounds.width
+			}
+			buttonWrapper.transform = .init(translationX: (wrapperSize.width - buttonPos.x) * 0.5, y: 0)
 		}
-		buttonWrapper.transform = CGAffineTransform(translationX: (wrapperSize.width - buttonPos.x) * 0.5, y: 0)
 	}
 	
 	override open func viewWillAppear(_ animated: Bool) {

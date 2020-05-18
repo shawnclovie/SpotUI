@@ -171,6 +171,10 @@ class SimpleTestViewController: UIViewController {
 		("ActionSheet", { vc in
 			let newVC = ActionSheetViewController(nibName: nil, bundle: nil)
 			newVC.titleView.text = "Title"
+			newVC.contentView.backgroundColor = .yellow
+			let button = UIButton(type: .system)
+			button.setTitle("no press button", for: .normal)
+			newVC.add(button: button, style: .default)
 			_ = newVC.touchUpOnEdgeEvent.subscribe { (newVC) in
 				newVC.dismiss(animated: true, completion: nil)
 			}
