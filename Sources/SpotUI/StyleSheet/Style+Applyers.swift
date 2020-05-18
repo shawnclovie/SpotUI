@@ -62,7 +62,7 @@ extension Style {
 		(applyer() as BoolApplyer<UserInteractionEnabledApplying>?)?.value ?? `default`
 	}
 	
-	// MARK: - ContentMode & Axis & LineBreakMode
+	// MARK: - ContentMode
 	
 	/// UIButton.imageView?.contentMode |
 	/// UIView.contentMode
@@ -80,6 +80,8 @@ extension Style {
 		(applyer() as ContentModeApplyer?)?.value
 	}
 	
+	// MARK: Axis
+	
 	/// UIStackView.axis |
 	/// UICollectionView.UICollectionViewFlowLayout.scrollDirection
 	@discardableResult
@@ -91,6 +93,8 @@ extension Style {
 		(applyer() as LayoutConstraintAxisApplyer?)?.value
 	}
 	
+	// MARK: LineBreakMode
+	
 	/// UILabel.lineBreakMode |
 	/// UITextView.textContainer.lineBreakMode |
 	/// UIButton.titleLabel?.lineBreakMode
@@ -101,6 +105,17 @@ extension Style {
 	
 	public var optLineBreakMode: NSLineBreakMode? {
 		(applyer() as LineBreakModeApplyer?)?.value
+	}
+	
+	// MARK: MasedCorner
+	
+	@discardableResult
+	public func maskedCorners(_ v: CACornerMask) -> Self {
+		set(MaskedCornersApplyer(v))
+	}
+	
+	public var optMaskedCorners: CACornerMask? {
+		(applyer() as MaskedCornersApplyer?)?.value
 	}
 	
 	// MARK: - Alignment
@@ -552,10 +567,9 @@ extension Style {
 		"user-interaction-enabled": BoolApplyer<UserInteractionEnabledApplying>.self,
 		
 		"content-mode": ContentModeApplyer.self,
-		
 		"axis": LayoutConstraintAxisApplyer.self,
-		
 		"line-break-mode": LineBreakModeApplyer.self,
+		"masked-corners": MaskedCornersApplyer.self,
 		
 		"text-align": TextAlignmentApplyer.self,
 		"vertical-align": VerticalAlignmentApplyer.self,

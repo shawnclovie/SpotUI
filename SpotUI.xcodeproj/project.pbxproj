@@ -30,6 +30,7 @@
 		9B54C5F42273F70E006B79BC /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B54C5F32273F70D006B79BC /* AlertController.swift */; };
 		9B57ED752384DDA70007368C /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B57ED742384DDA70007368C /* UIViewController+.swift */; };
 		9B6477EE21E9F2DA00E0E21F /* WeakProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */; };
+		9B6F46CD2472AAC300992AF5 /* MaskedCornersApplyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6F46CC2472AAC300992AF5 /* MaskedCornersApplyer.swift */; };
 		9B6FE86320A2BF15000D6148 /* PDFRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */; };
 		9B9BD59323580F8000A8705B /* UIImagePickerController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9BD59123580F7F00A8705B /* UIImagePickerController+.swift */; };
 		9B9BD59423580F8000A8705B /* EmptyResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9BD59223580F8000A8705B /* EmptyResultView.swift */; };
@@ -177,6 +178,7 @@
 		9B54C5F32273F70D006B79BC /* AlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		9B57ED742384DDA70007368C /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
 		9B6477ED21E9F2DA00E0E21F /* WeakProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakProxy.swift; sourceTree = "<group>"; };
+		9B6F46CC2472AAC300992AF5 /* MaskedCornersApplyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskedCornersApplyer.swift; sourceTree = "<group>"; };
 		9B6FE86220A2BF15000D6148 /* PDFRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFRenderer.swift; sourceTree = "<group>"; };
 		9B9BD59123580F7F00A8705B /* UIImagePickerController+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+.swift"; sourceTree = "<group>"; };
 		9B9BD59223580F8000A8705B /* EmptyResultView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResultView.swift; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 				9BF48E98204AC0BE00A06458 /* LayoutConstraintAxisApplyer.swift */,
 				9BF48EA5204AC0BE00A06458 /* LineBreakModeApplyer.swift */,
 				9BF48E9E204AC0BE00A06458 /* LineDashPatternApplyer.swift */,
+				9B6F46CC2472AAC300992AF5 /* MaskedCornersApplyer.swift */,
 				9BF48E9D204AC0BE00A06458 /* Number+Applyer.swift */,
 				9BF48E99204AC0BE00A06458 /* ShadowApplyer.swift */,
 				9BF48EA3204AC0BE00A06458 /* Style.swift */,
@@ -726,6 +729,7 @@
 				9B07ED92230D426500F376B9 /* WindowTraitCollectionAdjuster.swift in Sources */,
 				9BF48EBF204AC0BE00A06458 /* AlignmentApplyer.swift in Sources */,
 				9B6477EE21E9F2DA00E0E21F /* WeakProxy.swift in Sources */,
+				9B6F46CD2472AAC300992AF5 /* MaskedCornersApplyer.swift in Sources */,
 				9BF48EC6204AC0BE00A06458 /* EdgeInsets+Applyer.swift in Sources */,
 				9BF48EC8204AC0BE00A06458 /* Bool+Applyer.swift in Sources */,
 				9B54C5F42273F70E006B79BC /* AlertController.swift in Sources */,

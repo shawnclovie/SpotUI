@@ -178,9 +178,7 @@ class SimpleTestViewController: UIViewController {
 			_ = newVC.touchUpOnEdgeEvent.subscribe { (newVC) in
 				newVC.dismiss(animated: true, completion: nil)
 			}
-			vc.present(newVC, animated: true) {
-				newVC.panel.spot.setRoundCornerMask(corners: [.topLeft, .topRight], radius: 12)
-			}
+			vc.present(newVC, animated: true) {}
 		}),
 		("EmptyResultView", { vc in
 			let view = EmptyResultView(frame: vc.view.bounds)
@@ -213,6 +211,9 @@ class SimpleTestViewController: UIViewController {
 			.numberOfLines(0)
 			.padding{_ in .init(top: 4, left: 15, bottom: 20, right: 50)}
 			.textColor(StyleShared.foregroundTextColorProducer)
+			.backgroundColor{_ in .green}
+			.cornerRadius{_ in 30}
+			.maskedCorners([.layerMinXMinYCorner, .layerMaxXMaxYCorner])
 			.statefulImage{_ in [
 				.normal: .solidColor(.red, size: .init(width: 10, height: 20)),
 				.highlighted: .solidColor(.blue, size: .init(width: 20, height: 10)),
