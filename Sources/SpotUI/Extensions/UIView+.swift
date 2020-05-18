@@ -33,5 +33,16 @@ extension Suffix where Base: UIView {
 		base.spot.constraint(line, .top).with(view, toAttr, constant: spacing)
 		base.spot.constraints(line, attributes: [.left, .right])
 	}
+	
+	/// Set round corner mask to view, should call after the view did layout
+	/// - Parameters:
+	///   - corners: Corner position
+	///   - radius: Radius for each corner
+	public func setRoundCornerMask(corners: UIRectCorner, radius: CGFloat) {
+		let path = UIBezierPath(roundedRect: base.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+		let mask = CAShapeLayer()
+		mask.path = path.cgPath
+		base.layer.mask = mask
+	 }
 }
 #endif

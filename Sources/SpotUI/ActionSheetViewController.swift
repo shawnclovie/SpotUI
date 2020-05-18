@@ -44,6 +44,7 @@ public struct ActionSheetStyleSet {
 
 open class ActionSheetViewController: UIViewController {
 	
+	public let panel = UIView()
 	public let titleView = UITextView()
 	public let contentView = UIView()
 	
@@ -52,7 +53,6 @@ open class ActionSheetViewController: UIViewController {
 	private var contentViewLeftConstraint: NSLayoutConstraint?
 	private var contentViewRightConstraint: NSLayoutConstraint?
 	private var contentViewBottomConstraint: NSLayoutConstraint?
-	private let panel = UIView()
 	private var panelHeightConstraint: NSLayoutConstraint?
 	private let buttonWrapper = UIView()
 	private var buttonWrapperHeightConstraint: NSLayoutConstraint?
@@ -115,10 +115,12 @@ open class ActionSheetViewController: UIViewController {
 	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		resetStyle()
-		panel.transform = .init(translationX: 0, y: panel.bounds.height)
-		UIView.animate(withDuration: 0.3, animations: {
-			self.panel.transform = .identity
-		}) 
+		if animated {
+			panel.transform = .init(translationX: 0, y: panel.bounds.height)
+			UIView.animate(withDuration: 0.3, animations: {
+				self.panel.transform = .identity
+			})
+		}
 	}
 	
 	open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -178,7 +178,9 @@ class SimpleTestViewController: UIViewController {
 			_ = newVC.touchUpOnEdgeEvent.subscribe { (newVC) in
 				newVC.dismiss(animated: true, completion: nil)
 			}
-			vc.present(newVC, animated: true, completion: nil)
+			vc.present(newVC, animated: true) {
+				newVC.panel.spot.setRoundCornerMask(corners: [.topLeft, .topRight], radius: 12)
+			}
 		}),
 		("EmptyResultView", { vc in
 			let view = EmptyResultView(frame: vc.view.bounds)
