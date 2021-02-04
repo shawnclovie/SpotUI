@@ -107,10 +107,11 @@ class ScrollableTabBarTestViewController: UIViewController {
 			vc.view.spot.constraints(stack)
 			return vc
 		}(), tab: info)
-		tabController.add(viewControllers: ([
-			"SQ": .red,
-			"实现实现实现🂨😦实现实": .yellow,
-			"🙀🎉": .blue,
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+			self.tabController.add(viewControllers: ([
+				"SQ": .red,
+				"实现实现实现🂨😦实现实": .yellow,
+				"🙀🎉": .blue,
 			] as [String: UIColor]).map{
 				let vc = UIViewController()
 				vc.view.backgroundColor = $0.value
@@ -119,6 +120,7 @@ class ScrollableTabBarTestViewController: UIViewController {
 				info.title = $0.key
 				return (vc, info)
 			})
+		}
 		let leftButton = ScrollableTabBarButton(title: "🚫") { [weak self] _, _ in
 			self?.dismiss(animated: true, completion: nil)
 		}

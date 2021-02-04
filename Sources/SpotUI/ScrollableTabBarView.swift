@@ -302,6 +302,7 @@ public final class ScrollableTabBarView: UIView {
 			buttonStack.addArrangedSubview(button)
 		}
 		selectIndicator.isHidden = models.count <= 1
+		layoutContentViews()
 	}
 	
 	public func removeButton(at: Int) -> ScrollableTabBarButton? {
@@ -312,6 +313,7 @@ public final class ScrollableTabBarView: UIView {
 		models[at...].forEach{$0.button.tag -= 1}
 		let newIndex = min(selectedIndex - (selectedIndex > at ? 1 : 0), models.count - 1)
 		set(selectedIndex: CGFloat(newIndex), highlightButton: true, animated: false)
+		layoutContentViews()
 		return model.info
 	}
 	
